@@ -1,1 +1,3 @@
-## Dnet- Dedup
+## Dnet-Dedup
+
+powered by D-Net
