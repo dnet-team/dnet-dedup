@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import com.google.common.collect.Maps;
 /**
  * The Class MapDocument.
  */
-public class MapDocument implements Document {
+public class MapDocument implements Document, Serializable {
 
 	/** The identifier. */
 	private String identifier;

@@ -22,9 +22,12 @@ public class BlacklistAwareClusteringCombiner extends ClusteringCombiner {
 
 	private static final Log log = LogFactory.getLog(BlacklistAwareClusteringCombiner.class);
 
-	public static Collection<String> filterAndCombine(final MapDocument a, final Config conf, final Map<String, List<String>> blacklists) {
 
-		final Document filtered = new BlacklistAwareClusteringCombiner().filter(a, blacklists);
+
+
+	public static Collection<String> filterAndCombine(final MapDocument a, final Config conf) {
+
+		final Document filtered = new BlacklistAwareClusteringCombiner().filter(a, conf.blacklists());
 		return combine(filtered, conf);
 	}
 

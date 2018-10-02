@@ -2,10 +2,12 @@ package eu.dnetlib.pace.model;
 
 import eu.dnetlib.pace.config.Type;
 
+import java.io.Serializable;
+
 /**
  * The Interface Field.
  */
-public interface Field extends Iterable<Field> {
+public interface Field extends Iterable<Field>, Serializable {
 
 	/**
 	 * Gets the name.

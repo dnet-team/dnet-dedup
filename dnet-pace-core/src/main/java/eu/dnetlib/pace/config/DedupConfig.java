@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.config;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import eu.dnetlib.pace.model.FieldDef;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DedupConfig implements Config {
+public class DedupConfig implements Config, Serializable {
 
 	private static final Log log = LogFactory.getLog(DedupConfig.class);
 
