@@ -1,0 +1,15 @@
+^(Corpus Oral Dialectal \(COD\)\.).*$
+^(Kiri Karl Morgensternile).*$
+^(\[Eksliibris Aleksandr).*\]$
+^(Kiri A\. de Vignolles).*$
+^(2 kirja Karl Morgensternile).*$
+^(Pirita kloostri idaosa arheoloogilised).*$
+^(Kiri tundmatule).*$
+^(Kiri Jenaer Allgemeine Literaturzeitung toimetusele).*$
+^(Eksliibris Nikolai Birukovile).*$
+^(Eksliibris Nikolai Issakovile).*$
+^(\[Eksliibris Aleksandr).*$
+^(WHP Cruise Summary Information of section).*$
+^(Measurement of the top quark\-pair production cross section with ATLAS in pp collisions at).*$
+^(Measurement of the spin\-dependent structure function).*
+^(lorem ipsum).*
