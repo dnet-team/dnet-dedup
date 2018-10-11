@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.config;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,7 +10,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
 
-public class WfConfig {
+public class WfConfig implements Serializable {
 
 	/**
 	 * Entity type.

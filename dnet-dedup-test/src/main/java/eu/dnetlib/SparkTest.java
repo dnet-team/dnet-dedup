@@ -1,63 +1,99 @@
 package eu.dnetlib;
 
 import com.google.common.collect.Sets;
+import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.utils.PaceUtils;
+import eu.dnetlib.reporter.SparkCounter;
+import eu.dnetlib.reporter.SparkReporter;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.graphx.Edge;
+import org.apache.spark.rdd.RDD;
 import scala.Tuple2;
-
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 public class SparkTest {
-
-    class Results extends HashMap<String, Set<String>> {
-        public Results(Set<String> keys) {
-            super(keys.size());
-            keys.forEach(k -> put(k, new HashSet<>()));
-        }
-    }
-
+    public static SparkCounter counter ;
+    private static final Log log = LogFactory.getLog(SparkTest.class);
 
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Hello World").setMaster("local[*]"));
-        final JavaRDD<String> dataRDD = context.textFile("file:///Users/sandro/Downloads/organizations.json");
+        final JavaRDD<String> dataRDD = context.textFile("file:///Users/sandro/Downloads/organizations_complete.json");
 
-        final Counters c = new Counters();
+        counter = new SparkCounter(context);
 
-        long count = dataRDD.mapToPair(it -> {
-            final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
+        BlockProcessor.constructAccumulator(config);
+
+        BlockProcessor.accumulators.forEach(acc -> {
+
+            final String[] values = acc.split("::");
+            counter.incrementCounter(values[0], values[1], 0);
+
+        });
+
+        JavaPairRDD<String, MapDocument> mapDocs = dataRDD.mapToPair(it -> {
             MapDocument mapDocument = PaceUtils.asMapDocument(config, it);
             return new Tuple2<>(mapDocument.getIdentifier(), mapDocument);
-        }).reduceByKey((a, b) -> a).flatMapToPair(a -> {
-            final MapDocument currentDocument = a._2();
-            final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
-            return getGroupingKeys(config, currentDocument).stream()
-                    .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
-        }).groupByKey().flatMapToPair(it -> {
-            final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
-            return process(config, it, c).iterator();
-        }).count();
+        });
 
 
-        System.out.println("total Element = " + count);
+        final JavaPairRDD<String, String> relationRDD = mapDocs.reduceByKey((a, b) -> a)
+                .flatMapToPair(a -> {
+                    final MapDocument currentDocument = a._2();
+                    return getGroupingKeys(config, currentDocument).stream()
+                            .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
+                }).groupByKey().flatMapToPair(it -> {
 
-//        final MapDocument resA = result(config, "A", "Recent results from CDF");
-//        final MapDocument resB = result(config, "B", "Recent results from CDF");
-//
-//        final ScoreResult sr = new PaceDocumentDistance().between(resA, resB, config);
-//        final double d = sr.getScore();
-//        System.out.println(String.format(" d ---> %s", d));
+                    final SparkReporter reporter = new SparkReporter(counter);
+                    new BlockProcessor(config).process(it._1(), it._2(), reporter);
+                    return reporter.getReport().iterator();
+                });
+
+        RDD<Tuple2<Object, String>> vertexes = relationRDD.groupByKey().map(it -> {
+
+            Long id = (long) it._1().hashCode();
+            return new Tuple2<Object, String>(id, it._1());
+
+        }).rdd();
+
+        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(it._1().hashCode(), it._2().hashCode(), "similarTo")).rdd();
+
+        Tuple2<Object, RDD<String>> cc = GraphProcessor.findCCs(vertexes, edgeRdd, 20);
+
+        final Long total = (Long) cc._1();
+
+
+
+        final JavaRDD<String> map = mapDocs.map(Tuple2::_1);
+
+
+        final JavaRDD<String> duplicatesRDD = cc._2().toJavaRDD();
+
+
+        final JavaRDD<String> nonDuplicates = map.subtract(duplicatesRDD);
+
+
+
+        System.out.println("Non duplicates: "+ nonDuplicates.count());
+        System.out.println("Connected Components: "+ total);
+
+
+
+
 
     }
 
@@ -78,24 +114,6 @@ public class SparkTest {
     }
 
 
-    static List<Tuple2<String, String>> process(DedupConfig conf, Tuple2<String, Iterable<MapDocument>> entry, Counters c) {
-        try {
-            return new BlockProcessor(conf).process(entry._1(), StreamSupport.stream(entry._2().spliterator(),false), new Reporter() {
-                @Override
-                public void incrementCounter(String counterGroup, String counterName, long delta) {
-                    c.get(counterGroup, counterName).addAndGet(delta);
-                }
-
-                @Override
-                public void emit(String type, String from, String to) {
-
-                }
-            });
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-    }
 
 
 

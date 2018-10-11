@@ -1,12 +1,13 @@
 package eu.dnetlib.pace.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.gson.Gson;
 import eu.dnetlib.pace.condition.*;
 import eu.dnetlib.pace.config.Cond;
 
-public class CondDef {
+public class CondDef implements Serializable {
 
 	private Cond name;
 

@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.config;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,7 +13,7 @@ import eu.dnetlib.pace.model.CondDef;
 import eu.dnetlib.pace.model.FieldDef;
 import org.apache.commons.collections.CollectionUtils;
 
-public class PaceConfig {
+public class PaceConfig implements Serializable {
 
 	private List<FieldDef> model;
 	private List<CondDef> strictConditions;

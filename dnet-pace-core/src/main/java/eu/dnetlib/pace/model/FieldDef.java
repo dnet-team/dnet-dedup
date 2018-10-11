@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import eu.dnetlib.pace.distance.algo.*;
 /**
  * The schema is composed by field definitions (FieldDef). Each field has a type, a name, and an associated distance algorithm.
  */
-public class FieldDef {
+public class FieldDef implements Serializable {
 
 	public final static String PATH_SEPARATOR = "/";
 

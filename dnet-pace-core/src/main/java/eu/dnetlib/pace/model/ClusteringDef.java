@@ -1,12 +1,13 @@
 package eu.dnetlib.pace.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import eu.dnetlib.pace.clustering.*;
 
-public class ClusteringDef {
+public class ClusteringDef implements Serializable {
 
 	private Clustering name;
 

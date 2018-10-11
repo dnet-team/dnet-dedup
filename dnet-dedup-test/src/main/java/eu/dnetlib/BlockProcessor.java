@@ -12,38 +12,46 @@ import eu.dnetlib.pace.model.MapDocumentComparator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import scala.Tuple2;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class BlockProcessor {
+
+    public static final List<String> accumulators= new ArrayList<>();
 
     private static final Log log = LogFactory.getLog(BlockProcessor.class);
 
     private DedupConfig dedupConf;
 
+
+    public static void constructAccumulator( final DedupConfig dedupConf) {
+        accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "records per hash key = 1"));
+        accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "missing " + dedupConf.getWf().getOrderField()));
+        accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), String.format("Skipped records for count(%s) >= %s", dedupConf.getWf().getOrderField(), dedupConf.getWf().getGroupMaxSize())));
+        accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "skip list"));
+        accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)"));
+        accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold()));
+    }
+
     public BlockProcessor(DedupConfig dedupConf) {
         this.dedupConf = dedupConf;
     }
 
-    public List<Tuple2<String, String>> process(final String key, final Stream<MapDocument> documents, final Reporter context) throws IOException, InterruptedException {
+    public void process(final String key, final Iterable<MapDocument> documents, final Reporter context)  {
 
         final Queue<MapDocument> q = prepare(documents);
 
         if (q.size() > 1) {
             log.info("reducing key: '" + key + "' records: " + q.size());
             //process(q, context);
-            return process(simplifyQueue(q, key, context), context);
+            process(simplifyQueue(q, key, context), context);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
-            return new ArrayList<>();
         }
     }
 
-    private Queue<MapDocument> prepare(final Stream<MapDocument> documents) {
-        final Queue<MapDocument> queue = new PriorityQueue<MapDocument>(100, new MapDocumentComparator(dedupConf.getWf().getOrderField()));
+    private Queue<MapDocument> prepare(final Iterable<MapDocument> documents) {
+        final Queue<MapDocument> queue = new PriorityQueue<>(100, new MapDocumentComparator(dedupConf.getWf().getOrderField()));
 
         final Set<String> seen = new HashSet<String>();
         final int queueMaxSize = dedupConf.getWf().getQueueMaxSize();
@@ -63,7 +71,7 @@ public class BlockProcessor {
     }
 
     private Queue<MapDocument> simplifyQueue(final Queue<MapDocument> queue, final String ngram, final Reporter context) {
-        final Queue<MapDocument> q = new LinkedList<MapDocument>();
+        final Queue<MapDocument> q = new LinkedList<>();
 
         String fieldRef = "";
         final List<MapDocument> tempResults = Lists.newArrayList();
@@ -106,10 +114,9 @@ public class BlockProcessor {
         }
     }
 
-    private List<Tuple2<String, String>> process(final Queue<MapDocument> queue, final Reporter context) throws IOException, InterruptedException {
+    private void process(final Queue<MapDocument> queue, final Reporter context)  {
 
         final PaceDocumentDistance algo = new PaceDocumentDistance();
-        List<Tuple2<String, String>> resultEmit = new ArrayList<>();
 
         while (!queue.isEmpty()) {
 
@@ -144,21 +151,20 @@ public class BlockProcessor {
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
                         final ScoreResult sr = similarity(algo, pivot, curr);
-                        emitOutput(sr, idPivot, idCurr,context, resultEmit);
+                        emitOutput(sr, idPivot, idCurr, context);
                         i++;
                     }
                 }
             }
         }
-        return resultEmit;
     }
 
-    private void emitOutput(final ScoreResult sr, final String idPivot, final String idCurr, final Reporter context,List<Tuple2<String, String>> emitResult) throws IOException, InterruptedException {
+    private void emitOutput(final ScoreResult sr, final String idPivot, final String idCurr, final Reporter context)  {
         final double d = sr.getScore();
 
         if (d >= dedupConf.getWf().getThreshold()) {
 
-            writeSimilarity(idPivot, idCurr,  emitResult);
+            writeSimilarity(context, idPivot, idCurr);
             context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1);
@@ -182,9 +188,11 @@ public class BlockProcessor {
         return StringUtils.substringBetween(id, "|", "::");
     }
 
-    private void writeSimilarity( final String from, final String to, List<Tuple2<String, String>> emitResult){
-        emitResult.add(new Tuple2<>(from, to));
-        emitResult.add(new Tuple2<>( to, from));
+    private void writeSimilarity(final Reporter context, final String from, final String to)  {
+        final String type = dedupConf.getWf().getEntityType();
+
+        context.emit(type, from, to);
+        context.emit(type, to, from);
     }
 
 }
