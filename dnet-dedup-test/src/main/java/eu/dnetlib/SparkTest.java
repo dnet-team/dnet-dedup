@@ -31,11 +31,11 @@ public class SparkTest {
 
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Hello World").setMaster("local[*]"));
-        final JavaRDD<String> dataRDD = context.textFile("file:///Users/sandro/Downloads/organizations_complete.json");
+        final JavaRDD<String> dataRDD = context.textFile("file:///Users/sandro/Downloads/software.json");
 
         counter = new SparkCounter(context);
 
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/software.pace.conf"));
         BlockProcessor.constructAccumulator(config);
 
         BlockProcessor.accumulators.forEach(acc -> {
@@ -77,7 +77,6 @@ public class SparkTest {
         final Long total = (Long) cc._1();
 
 
-
         final JavaRDD<String> map = mapDocs.map(Tuple2::_1);
 
 
@@ -87,9 +86,12 @@ public class SparkTest {
         final JavaRDD<String> nonDuplicates = map.subtract(duplicatesRDD);
 
 
+        relationRDD.collect().forEach(it-> System.out.println(it._1()+"<--->"+it._2()));
 
         System.out.println("Non duplicates: "+ nonDuplicates.count());
         System.out.println("Connected Components: "+ total);
+
+        counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
 
 
 

@@ -151,6 +151,7 @@ public class BlockProcessor {
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
                         final ScoreResult sr = similarity(algo, pivot, curr);
+                        log.info(sr.toString()+"SCORE "+ sr.getScore());
                         emitOutput(sr, idPivot, idCurr, context);
                         i++;
                     }
