@@ -33,8 +33,6 @@ public class SparkReporter implements Reporter {
 
     @Override
     public void emit(String type, String from, String to) {
-
-
         report.add(new Tuple2<>(from, to));
     }
 

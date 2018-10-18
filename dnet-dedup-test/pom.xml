@@ -41,6 +41,7 @@
             <!--</exclusions>-->
         <!--</dependency>-->
 
+
         <dependency>
             <groupId>eu.dnetlib</groupId>
             <artifactId>dnet-openaire-data-protos</artifactId>

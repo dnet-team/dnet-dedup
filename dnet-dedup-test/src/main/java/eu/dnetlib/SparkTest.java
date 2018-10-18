@@ -1,5 +1,6 @@
 package eu.dnetlib;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
@@ -18,9 +19,11 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.graphx.Edge;
 import org.apache.spark.rdd.RDD;
 import scala.Tuple2;
+import scala.collection.Iterable;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,12 +33,12 @@ public class SparkTest {
     private static final Log log = LogFactory.getLog(SparkTest.class);
 
     public static void main(String[] args) {
-        final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Hello World").setMaster("local[*]"));
-        final JavaRDD<String> dataRDD = context.textFile("file:///Users/sandro/Downloads/software.json");
+        final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
+        final JavaRDD<String> dataRDD = context.textFile("file:///Users/miconis/Downloads/dumps/organizations_sample.json");
 
         counter = new SparkCounter(context);
 
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/software.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
         BlockProcessor.constructAccumulator(config);
 
         BlockProcessor.accumulators.forEach(acc -> {
@@ -45,60 +48,46 @@ public class SparkTest {
 
         });
 
+        //create vertexes of the graph: <ID, MapDocument>
         JavaPairRDD<String, MapDocument> mapDocs = dataRDD.mapToPair(it -> {
             MapDocument mapDocument = PaceUtils.asMapDocument(config, it);
             return new Tuple2<>(mapDocument.getIdentifier(), mapDocument);
         });
+        RDD<Tuple2<Object, MapDocument>> vertexes = mapDocs.mapToPair(t -> new Tuple2<Object, MapDocument>( (long) t._1().hashCode(), t._2())).rdd();
 
-
-        final JavaPairRDD<String, String> relationRDD = mapDocs.reduceByKey((a, b) -> a)
+        //create relations between documents
+        final JavaPairRDD<String, String> relationRDD = mapDocs.reduceByKey((a, b) -> a)    //the reduce is just to be sure that we haven't document with same id
+                //from <id, doc> to List<groupkey,doc>
                 .flatMapToPair(a -> {
                     final MapDocument currentDocument = a._2();
                     return getGroupingKeys(config, currentDocument).stream()
                             .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
-                }).groupByKey().flatMapToPair(it -> {
-
+                }).groupByKey()     //group documents basing on the key
+                //create relations by comparing only elements in the same group
+                .flatMapToPair(it -> {
                     final SparkReporter reporter = new SparkReporter(counter);
                     new BlockProcessor(config).process(it._1(), it._2(), reporter);
                     return reporter.getReport().iterator();
                 });
 
-        RDD<Tuple2<Object, String>> vertexes = relationRDD.groupByKey().map(it -> {
+        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(it._1().hashCode(),it._2().hashCode(), "similarTo")).rdd();
 
-            Long id = (long) it._1().hashCode();
-            return new Tuple2<Object, String>(id, it._1());
+        JavaRDD<ConnectedComponent> ccs = GraphProcessor.findCCs(vertexes, edgeRdd, 20).toJavaRDD();
 
-        }).rdd();
+        final JavaRDD<ConnectedComponent> connectedComponents = ccs.filter(cc -> cc.getDocs().size()>1);
+        final JavaRDD<ConnectedComponent> nonDeduplicated = ccs.filter(cc -> cc.getDocs().size()==1);
 
-        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(it._1().hashCode(), it._2().hashCode(), "similarTo")).rdd();
-
-        Tuple2<Object, RDD<String>> cc = GraphProcessor.findCCs(vertexes, edgeRdd, 20);
-
-        final Long total = (Long) cc._1();
-
-
-        final JavaRDD<String> map = mapDocs.map(Tuple2::_1);
-
-
-        final JavaRDD<String> duplicatesRDD = cc._2().toJavaRDD();
-
-
-        final JavaRDD<String> nonDuplicates = map.subtract(duplicatesRDD);
-
-
-        relationRDD.collect().forEach(it-> System.out.println(it._1()+"<--->"+it._2()));
-
-        System.out.println("Non duplicates: "+ nonDuplicates.count());
-        System.out.println("Connected Components: "+ total);
+        System.out.println("Non duplicates: " + nonDeduplicated.count());
+        System.out.println("Duplicates: " + connectedComponents.flatMap(cc -> cc.getDocs().iterator()).count());
+        System.out.println("Connected Components: " + connectedComponents.count());
 
         counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
 
-
-
-
+        //print ids
+//        ccs.foreach(cc -> System.out.println(cc.getId()));
+        ccs.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
 
     }
-
 
     static String readFromClasspath(final String filename) {
         final StringWriter sw = new StringWriter();

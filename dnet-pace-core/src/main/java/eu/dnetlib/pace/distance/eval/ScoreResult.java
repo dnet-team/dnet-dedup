@@ -50,6 +50,7 @@ public class ScoreResult {
 	@Override
 	public String toString() {
 		final GsonBuilder b = new GsonBuilder();
+		b.serializeSpecialFloatingPointValues();
 		return b.setPrettyPrinting().create().toJson(this);
 	}
 }

@@ -1,24 +1,43 @@
 package  eu.dnetlib.graph
+import java.lang
+
+import eu.dnetlib.ConnectedComponent
+import eu.dnetlib.pace.model.MapDocument
 import org.apache.spark.graphx._
 import org.apache.spark.rdd.RDD
+
+import scala.collection.JavaConversions
 ;
 
 
 object GraphProcessor {
 
-  def findCCs(vertexes: RDD[(VertexId,String)], edges:RDD[Edge[String]], maxIterations: Int): (Long, RDD[String]) = {
-    val graph: Graph[String, String] = Graph(vertexes, edges)
+  def findCCs(vertexes: RDD[(VertexId,MapDocument)], edges:RDD[Edge[String]], maxIterations: Int): RDD[ConnectedComponent] = {
+    val graph: Graph[MapDocument, String] = Graph(vertexes, edges)
     val cc = graph.connectedComponents(maxIterations).vertices
 
+    val joinResult = vertexes.leftOuterJoin(cc).map {
+      case (id, (openaireId, cc)) => {
+        if (cc.isEmpty){
+          (id, openaireId)
+        }
+        else {
+          (cc.get, openaireId)
+        }
+      }
+    }
 
-    val totalCC =cc.map{
-      case (openaireId, ccId) =>ccId
-    }.distinct().count()
+    val connectedComponents = joinResult.groupByKey().map[ConnectedComponent](cc => asConnectedComponent(cc))
 
-   val connectedComponents: RDD[String] = vertexes.join(cc).map {
-     case (id, (openaireId, ccId)) => openaireId
-   }.distinct()
-    (totalCC, connectedComponents)
+    (connectedComponents)
+
+  }
+
+  def asConnectedComponent(group: (VertexId, Iterable[MapDocument])) : ConnectedComponent = {
+    val docs = group._2.toSet[MapDocument]
+    val connectedComponent = new ConnectedComponent("empty", JavaConversions.setAsJavaSet[MapDocument](docs));
+    connectedComponent.initializeID();
+    connectedComponent
   }
 
 }
