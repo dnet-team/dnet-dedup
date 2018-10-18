@@ -1,0 +1,121 @@
+{
+  "dateoftransformation": "2018-08-07T06:48:42.668Z",
+  "originalId": [
+    "oai:rua.ua.es:10045/34236"
+  ],
+  "oaiprovenance": {
+    "originDescription": {
+      "metadataNamespace": "http://www.openarchives.org/OAI/2.0/oai_dc/",
+      "altered": true,
+      "baseURL": "http://rua.ua.es/dspace-oai/request",
+      "datestamp": "2016-04-28T11:28:35Z",
+      "harvestDate": "2018-06-14T13:53:42.185Z",
+      "identifier": "oai:rua.ua.es:10045/34236"
+    }
+  },
+  "result": {
+    "instance": [
+      {
+        "hostedby": {
+          "value": "Repositorio Institucional de la Universidad de Alicante",
+          "key": "10|opendoar____::e820a45f1dfc7b95282d10b6087e11c0"
+        },
+        "url": [
+          "http://hdl.handle.net/10045/34236"
+        ],
+        "dateofacceptance": {
+          "value": "2013-11-27"
+        },
+        "collectedfrom": {
+          "value": "Repositorio Institucional de la Universidad de Alicante",
+          "key": "10|opendoar____::e820a45f1dfc7b95282d10b6087e11c0"
+        },
+        "accessright": {
+          "classid": "OPEN",
+          "classname": "Open Access",
+          "schemename": "dnet:access_modes",
+          "schemeid": "dnet:access_modes"
+        },
+        "instancetype": {
+          "classid": "0010",
+          "classname": "Lecture",
+          "schemename": "dnet:publication_resource",
+          "schemeid": "dnet:publication_resource"
+        }
+      }
+    ],
+    "metadata": {
+      "language": {
+        "classid": "eng",
+        "classname": "English",
+        "schemename": "dnet:languages",
+        "schemeid": "dnet:languages"
+      },
+      "title": [
+        {
+          "qualifier": {
+            "classid": "main title",
+            "classname": "main title",
+            "schemename": "dnet:dataCite_title",
+            "schemeid": "dnet:dataCite_title"
+          },
+          "value": "Henry James (1843-1916)"
+        }
+      ],
+      "journal": {
+        "name": ""
+      },
+      "author": [
+        {
+          "fullname": "Gómez Reus, Teresa",
+          "surname": "Gómez Reus",
+          "name": "Teresa",
+          "rank": 1
+        }
+      ],
+      "resulttype": {
+        "classid": "other",
+        "classname": "other",
+        "schemename": "dnet:result_typologies",
+        "schemeid": "dnet:result_typologies"
+      },
+      "dateofacceptance": {
+        "value": "2013-11-27"
+      },
+      "contributor": [
+        {
+          "value": "Universidad de Alicante. Departamento de Filología Inglesa"
+        }
+      ],
+      "subject": [
+        {
+          "qualifier": {
+            "classid": "keyword",
+            "classname": "keyword",
+            "schemename": "dnet:result_subject",
+            "schemeid": "dnet:result_subject"
+          },
+          "value": "James, Henry"
+        },
+        {
+          "qualifier": {
+            "classid": "keyword",
+            "classname": "keyword",
+            "schemename": "dnet:result_subject",
+            "schemeid": "dnet:result_subject"
+          },
+          "value": "Filología Inglesa"
+        }
+      ]
+    }
+  },
+  "collectedfrom": [
+    {
+      "value": "Repositorio Institucional de la Universidad de Alicante",
+      "key": "10|opendoar____::e820a45f1dfc7b95282d10b6087e11c0"
+    }
+  ],
+  "dateofcollection": "2018-06-14T13:53:42.185Z",
+  "type": 50,
+  "id": "50|od_______935::2b908ad38030168759c568f49af50784"
+}

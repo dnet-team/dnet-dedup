@@ -1,0 +1,34 @@
+{
+  "dateoftransformation": "2018-06-04",
+  "originalId": [
+    "opendoar____::Institute_of_Information_Science_and_Technology_&quot;A._Faedo&quot;"
+  ],
+  "collectedfrom": [
+    {
+      "value": "OpenDOAR",
+      "key": "10|openaire____::47ce9e9f4fad46e732cff06419ecaabb"
+    }
+  ],
+  "organization": {
+    "metadata": {
+      "legalshortname": {
+        "value": "CNR-ISTI"
+      },
+      "websiteurl": {
+        "value": "http://www.isti.cnr.it/aaaaa"
+      },
+      "country": {
+        "classid": "IT",
+        "classname": "IT",
+        "schemename": "dnet:countries",
+        "schemeid": "dnet:countries"
+      },
+      "legalname": {
+        "value": "Institute of Information Science and Technology &quot;A. Faedo&quot;"
+      }
+    }
+  },
+  "dateofcollection": "2015-08-24",
+  "type": 20,
+  "id": "20|opendoar____::68d8b122736484cb07f75885af22e82f"
+}

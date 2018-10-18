@@ -1,0 +1,48 @@
+{
+  "collectedfrom": [
+    {
+      "value": "GRID - Global Research Identifier Database",
+      "key": "10|openaire____::ff4a008470319a22d9cf3d14af485977"
+    }
+  ],
+  "organization": {
+    "metadata": {
+      "legalshortname": {
+        "value": "ISTI"
+      },
+      "websiteurl": {
+        "value": "http://www.isti.cnr.it/aaaaaa"
+      },
+      "country": {
+        "classid": "IT",
+        "classname": "Italy",
+        "schemename": "dnet:countries",
+        "schemeid": "dnet:countries"
+      },
+      "alternativeNames": [
+        {
+          "value": "Istituto di Scienza e Tecnologie dell'Informazione \"A. Faedo\""
+        },
+        {
+          "value": "ISTI"
+        }
+      ],
+      "legalname": {
+        "value": "CNR - Institute of Information Science and Technologies"
+      }
+    }
+  },
+  "pid": [
+    {
+      "qualifier": {
+        "classid": "grid",
+        "classname": "grid",
+        "schemename": "dnet:pid_types",
+        "schemeid": "dnet:pid_types"
+      },
+      "value": "grid.451498.5"
+    }
+  ],
+  "type": 20,
+  "id": "20|grid________::e4095563f4e9d34dff7d47fb98af042f"
+}

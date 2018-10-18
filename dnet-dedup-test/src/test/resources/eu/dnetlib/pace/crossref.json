@@ -1,0 +1,78 @@
+{
+  "pid": [
+    {
+      "qualifier": {
+        "classid": "doi",
+        "classname": "doi",
+        "schemename": "dnet:pid_types",
+        "schemeid": "dnet:pid_types"
+      },
+      "value": "10.1002/9781444393675.ch6"
+    }
+  ],
+  "result": {
+    "instance": [
+      {
+        "url": [
+          "http://dx.doi.org/10.1002/9781444393675.ch6"
+        ],
+        "collectedfrom": {
+          "value": "CrossRef",
+          "key": "10|openaire____::081b82f96300b6a6e3d282bad31cb6e2"
+        },
+        "hostedby": {
+          "value": "Unknown Repository",
+          "key": "10|openaire____::55045bd2a65019fd8e6741a755395c8c"
+        },
+        "accessright": {
+          "classid": "CLOSED",
+          "classname": "Closed Access",
+          "schemename": "dnet:access_modes",
+          "schemeid": "dnet:access_modes"
+        },
+        "instancetype": {
+          "classid": "0013",
+          "classname": "Part of book or chapter of book",
+          "schemename": "dnet:publication_resource",
+          "schemeid": "dnet:publication_resource"
+        }
+      }
+    ],
+    "metadata": {
+      "title": [
+        {
+          "qualifier": {
+            "classid": "main title",
+            "classname": "main title",
+            "schemename": "dnet:dataCite_title",
+            "schemeid": "dnet:dataCite_title"
+          },
+          "value": "Henry James (1843-1916)"
+        }
+      ],
+      "resulttype": {
+        "classid": "publication",
+        "classname": "publication",
+        "schemename": "dnet:result_typologies",
+        "schemeid": "dnet:result_typologies"
+      }
+    }
+  },
+  "collectedfrom": [
+    {
+      "value": "Microsoft Academic Graph",
+      "key": "10|openaire____::5f532a3fc4f1ea403f37070f59a7a53a"
+    },
+    {
+      "value": "CrossRef",
+      "key": "10|openaire____::081b82f96300b6a6e3d282bad31cb6e2"
+    },
+    {
+      "value": "UnpayWall",
+      "key": "10|openaire____::8ac8380272269217cb09a928c8caa993"
+    }
+  ],
+  "dateofcollection": "2018-08-07 12:24:48Z",
+  "type": 50,
+  "id": "50|crossref____::0000002a9885b7ec89b7b9d8ff3331a0"
+}
