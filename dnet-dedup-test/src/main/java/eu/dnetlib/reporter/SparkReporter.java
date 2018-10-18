@@ -1,18 +1,12 @@
 package eu.dnetlib.reporter;
 
-import eu.dnetlib.DnetAccumulator;
-import eu.dnetlib.Reporter;
+import eu.dnetlib.pace.util.Reporter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.glassfish.jersey.internal.util.collection.StringIgnoreCaseKeyComparator;
 import scala.Tuple2;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SparkReporter implements Reporter {
 

@@ -1,70 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>eu.dnetlib</groupId>
-		<artifactId>dnet45-parent</artifactId>
-		<version>1.0.0</version>
-		<relativePath />
+		<artifactId>dnet-dedup</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.dnetlib</groupId>
+
 	<artifactId>dnet-pace-core</artifactId>
-	<packaging>jar</packaging>
-	<version>2.6.8-SNAPSHOT</version>
-	<scm>
-		<developerConnection>scm:svn:https://svn.driver.research-infrastructures.eu/driver/dnet45/modules/dnet-pace-core/trunk</developerConnection>
-	</scm>
+    <packaging>jar</packaging>
+
 	<dependencies>
 		<dependency>
 			<groupId>edu.cmu</groupId>
 			<artifactId>secondstring</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>15.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>${google.gson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>${commons.lang.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>${commons.io.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-			<version>${commons.collections.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.protobuf-java-format</groupId>
 			<artifactId>protobuf-java-format</artifactId>
-			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>stringtemplate</artifactId>
-			<version>3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>${commons.logging.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 </project>

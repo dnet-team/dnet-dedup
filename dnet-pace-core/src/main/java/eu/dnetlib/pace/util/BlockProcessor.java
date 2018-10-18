@@ -1,4 +1,4 @@
-package eu.dnetlib;
+package eu.dnetlib.pace.util;
 
 import com.google.common.collect.Lists;
 import eu.dnetlib.pace.clustering.NGramUtils;

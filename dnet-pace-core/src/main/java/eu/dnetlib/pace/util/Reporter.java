@@ -1,4 +1,4 @@
-package eu.dnetlib;
+package eu.dnetlib.pace.util;
 
 
 import java.io.Serializable;

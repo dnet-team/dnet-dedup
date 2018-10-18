@@ -1,11 +1,11 @@
 package eu.dnetlib;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.util.BlockProcessor;
 import eu.dnetlib.pace.utils.PaceUtils;
 import eu.dnetlib.reporter.SparkCounter;
 import eu.dnetlib.reporter.SparkReporter;
@@ -19,11 +19,9 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.graphx.Edge;
 import org.apache.spark.rdd.RDD;
 import scala.Tuple2;
-import scala.collection.Iterable;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,8 +37,8 @@ public class SparkTest {
         counter = new SparkCounter(context);
 
         final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
-        BlockProcessor.constructAccumulator(config);
 
+        BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {
 
             final String[] values = acc.split("::");
@@ -103,15 +101,6 @@ public class SparkTest {
     static Set<String> getGroupingKeys(DedupConfig conf, MapDocument doc) {
         return Sets.newHashSet(BlacklistAwareClusteringCombiner.filterAndCombine(doc, conf));
     }
-
-
-
-
-
-
-
-
-
 
 
 }
