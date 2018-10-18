@@ -34,6 +34,14 @@
         <url>https://issue.openaire.research-infrastructures.eu/projects/openaire</url>
     </issueManagement>
 
+    <distributionManagement>
+        <repository>
+            <id>dnet45-releases</id>
+            <name>D-Net 45 Releases</name>
+            <url>http://maven.research-infrastructures.eu/nexus/content/repositories/dnet45-releases</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
