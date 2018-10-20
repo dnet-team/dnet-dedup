@@ -108,8 +108,8 @@ public class DetectorTest extends AbstractProtoPaceTest {
 	public void testDistanceResultMissingTwoDate() {
 		final Config config = getResultConf();
 
-		final MapDocument resA = result(config, "A", "title title title 6BESR");
-		final MapDocument resB = result(config, "B", "title title title 6CLER");
+		final MapDocument resA = result(config, "A", "bellaciao");
+		final MapDocument resB = result(config, "B", "bellocioa");
 
 		final ScoreResult sr = new PaceDocumentDistance().between(resA, resB, config);
 		double d = sr.getScore();
@@ -322,6 +322,51 @@ public class DetectorTest extends AbstractProtoPaceTest {
 		final ScoreResult sr = new PaceDocumentDistance().between(resA, resB, config);
 		final double d = sr.getScore();
 		log.info(String.format(" d ---> %s", d));
+
+		// assertTrue(d.getScore() == 0.0);
+	}
+
+	@Test
+	public void testDistanceResultNoPidsConf() {
+
+		final Config config = getResultFullConf();
+
+		final MapDocument resA =
+				result(config, "A", "Presentations of perforated colonic pathology in patients with polymyalgia rheumatica: two case reports", "2010");
+
+		final MapDocument resB =
+				result(config, "B", "Presentations of perforated colonic pathology in patients with polymyalgia rheumatica: two case reportsX", "2010");
+
+		final ScoreResult sr = new PaceDocumentDistance().between(resA, resB, config);
+		final double s = sr.getScore();
+
+		log.info(sr.toString());
+		log.info(String.format(" s ---> %s", s));
+		// assertTrue(d.getScore() == 0.0);
+	}
+
+	@Test
+	public void testDistanceResultPidsConf() {
+
+		final Config config = getResultFullConf();
+
+		final List<String> authorsA = Lists.newArrayList("Nagarajan Pranesh", "Guy Vautier", "Punyanganie de Silva");
+		final List<String> authorsB = Lists.newArrayList("Pranesh Nagarajan", "Vautier Guy", "de Silva Punyanganie");
+
+		final List<String> pidA = Lists.newArrayList("10.1186/1752-1947-4-299", "a", "b");
+		final MapDocument resA =
+				result(config, "A", "Presentations of perforated colonic pathology in patients with polymyalgia rheumatica: two case reports", "2010",
+						pidA, authorsA);
+
+		final List<String> pidB = Lists.newArrayList("c", "a", "10.1186/1752-1947-4-299", "d");
+		final MapDocument resB =
+				result(config, "B", "Presentations of perforated colonic pathology in patients with polymyalgia rheumatica: two case reportsX", "2010",
+						pidB, authorsB);
+
+		final ScoreResult sr = new PaceDocumentDistance().between(resA, resB, config);
+		final double s = sr.getScore();
+		log.info(sr.toString());
+		log.info(String.format(" s ---> %s", s));
 
 		// assertTrue(d.getScore() == 0.0);
 	}

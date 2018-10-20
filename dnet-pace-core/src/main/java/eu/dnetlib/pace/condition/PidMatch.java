@@ -1,7 +1,11 @@
 package eu.dnetlib.pace.condition;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.Sets;
 import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
@@ -33,20 +37,21 @@ public class PidMatch extends AbstractCondition {
 		final List<Pid> pal = Pid.fromOafJson(sa);
 		final List<Pid> pbl = Pid.fromOafJson(sb);
 
-		int result = 0;
-		for(Pid pa : pal) {
-			final String ta = pa.getType();
+		final Set<String> pidAset = toHashSet(pal);
+		final Set<String> pidBset = toHashSet(pbl);
 
-			for(Pid pb : pbl) {
-				final String tb = pb.getType();
+		int incommon = Sets.intersection(pidAset, pidBset).size();
+		int simDiff = Sets.symmetricDifference(pidAset, pidBset).size();
 
-				if (tb.equalsIgnoreCase(ta)) {
-					result += pa.getValue().equalsIgnoreCase(pb.getValue()) ? 1 : -1;
-				}
-			}
-		}
+		int result = incommon / (incommon + simDiff) > 0.5 ? 1 : -1;
 
 		return new ConditionEval(cond, a, b, result);
+	}
+
+	private Set<String> toHashSet(List<Pid> pbl) {
+		return pbl.stream()
+					.map(pid -> pid.getType() + pid.getValue())
+					.collect(Collectors.toCollection(HashSet::new));
 	}
 
 }

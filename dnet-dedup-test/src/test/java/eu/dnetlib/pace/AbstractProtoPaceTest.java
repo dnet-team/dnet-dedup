@@ -1,6 +1,7 @@
 package eu.dnetlib.pace;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import eu.dnetlib.data.proto.FieldTypeProtos.Author;
 import eu.dnetlib.data.proto.FieldTypeProtos.Qualifier;
@@ -21,12 +22,14 @@ import eu.dnetlib.pace.model.gt.GTAuthor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -101,6 +104,13 @@ public abstract class AbstractProtoPaceTest extends OafTest {
 		return result(config, id, title, date, Lists.newArrayList(pid), authors);
 	}
 
+	static List<String> pidTypes = Lists.newArrayList();
+	static {
+		pidTypes.add("doi");
+		//pidTypes.add("oai");
+		//pidTypes.add("pmid");
+	}
+
 	protected MapDocument result(final Config config, final String id, final String title, final String date, final List<String> pid, final List<String> authors) {
 		final Result.Metadata.Builder metadata = Result.Metadata.newBuilder();
 		if (!StringUtils.isBlank(title)) {
@@ -126,7 +136,7 @@ public abstract class AbstractProtoPaceTest extends OafTest {
 		if (pid != null) {
 			for(String p : pid) {
 				if (!StringUtils.isBlank(p)) {
-					entity.addPid(sp(p, "doi"));
+					entity.addPid(sp(p, pidTypes.get(RandomUtils.nextInt(0, pidTypes.size() - 1))));
 					//entity.addPid(sp(RandomStringUtils.randomAlphabetic(10), "oai"));
 				}
 			}

@@ -83,8 +83,6 @@ public class FieldDef implements Serializable {
 			return new LevensteinTitle(getWeight());
 		case SubStringLevenstein:
 			return new SubStringLevenstein(getWeight(), getLimit());
-		case YearLevenstein:
-			return new YearLevenstein(getWeight(), getLimit());
 		case SortedJaroWinkler:
 			return new SortedJaroWinkler(getWeight());
 		case SortedLevel2JaroWinkler:
