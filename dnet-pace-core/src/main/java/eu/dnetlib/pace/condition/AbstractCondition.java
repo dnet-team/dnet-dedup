@@ -2,7 +2,6 @@ package eu.dnetlib.pace.condition;
 
 import java.util.List;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.distance.eval.ConditionEvalMap;
 import eu.dnetlib.pace.model.Document;
@@ -17,12 +16,22 @@ import eu.dnetlib.pace.model.FieldDef;
  */
 public abstract class AbstractCondition extends AbstractPaceFunctions implements ConditionAlgo {
 
-	protected Cond cond;
+	protected String cond;
 
 	protected List<FieldDef> fields;
 
-	public AbstractCondition(final Cond cond, final List<FieldDef> fields) {
+	public AbstractCondition(final String cond, final List<FieldDef> fields) {
 		this.cond = cond;
+		this.fields = fields;
+	}
+
+	public AbstractCondition(){}
+
+	public void setCond(String cond){
+		this.cond = cond;
+	}
+
+	public void setFields(List<FieldDef> fields){
 		this.fields = fields;
 	}
 

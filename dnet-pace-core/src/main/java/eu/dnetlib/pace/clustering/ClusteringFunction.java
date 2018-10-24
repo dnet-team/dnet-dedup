@@ -12,4 +12,5 @@ public interface ClusteringFunction {
 	
 	public Map<String, Integer> getParams();
 
+	public void setParams(Map<String, Integer> params);
 }

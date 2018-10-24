@@ -1,9 +1,15 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+@DistanceClass("LevensteinTitle")
 public class LevensteinTitle extends SecondStringDistanceAlgo {
+
+	public LevensteinTitle(){
+		super(new com.wcohen.ss.Levenstein());
+	}
 
 	public LevensteinTitle(final double w) {
 		super(w, new com.wcohen.ss.Levenstein());

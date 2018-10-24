@@ -2,7 +2,6 @@ package eu.dnetlib.pace.condition;
 
 import java.util.List;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
@@ -13,10 +12,15 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author claudio
  */
+@ConditionClass("exactMatch")
 public class ExactMatch extends AbstractCondition {
 
-	public ExactMatch(final Cond cond, final List<FieldDef> fields) {
+	public ExactMatch(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
+	}
+
+	public ExactMatch(){
+		super();
 	}
 
 	@Override

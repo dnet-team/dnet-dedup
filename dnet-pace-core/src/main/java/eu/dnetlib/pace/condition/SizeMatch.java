@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Iterables;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
@@ -14,6 +13,7 @@ import eu.dnetlib.pace.model.FieldDef;
  *
  * @author claudio
  */
+@ConditionClass("sizeMatch")
 public class SizeMatch extends AbstractCondition {
 
 	/**
@@ -22,7 +22,7 @@ public class SizeMatch extends AbstractCondition {
 	 * @param fields
 	 *            the fields
 	 */
-	public SizeMatch(final Cond cond, final List<FieldDef> fields) {
+	public SizeMatch(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
 

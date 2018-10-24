@@ -1,6 +1,8 @@
 package eu.dnetlib.pace.distance;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.wcohen.ss.AbstractStringDistance;
 
@@ -24,6 +26,27 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	/** The weight. */
 	protected double weight = 0.0;
 
+	private Map<String, Number> params;
+
+	protected SecondStringDistanceAlgo(){
+	}
+
+	protected SecondStringDistanceAlgo(Map<String, Number> params){
+		this.params = params;
+	}
+
+	public void setWeight(double w){
+		this.weight = w;
+	}
+
+	public Map<String, Number> getParams(){
+		return this.params;
+	}
+
+	public void setParams(Map<String, Number> params){
+		this.params = params;
+	}
+
 	/**
 	 * Instantiates a new second string distance algo.
 	 * 
@@ -35,6 +58,10 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	protected SecondStringDistanceAlgo(final double weight, final AbstractStringDistance ssalgo) {
 		this.ssalgo = ssalgo;
 		this.weight = weight;
+	}
+
+	protected SecondStringDistanceAlgo(final AbstractStringDistance ssalgo){
+		this.ssalgo = ssalgo;
 	}
 
 	/**

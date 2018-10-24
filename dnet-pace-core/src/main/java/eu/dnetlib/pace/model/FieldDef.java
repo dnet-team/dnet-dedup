@@ -1,13 +1,13 @@
 package eu.dnetlib.pace.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import eu.dnetlib.pace.config.Algo;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.distance.*;
 import eu.dnetlib.pace.distance.algo.*;
@@ -19,7 +19,7 @@ public class FieldDef implements Serializable {
 
 	public final static String PATH_SEPARATOR = "/";
 
-	private Algo algo;
+	private String algo;
 
 	private String name;
 
@@ -36,6 +36,8 @@ public class FieldDef implements Serializable {
 	private int limit = -1;
 
 	private Map<String, Number> params;
+
+	private DistanceResolver distanceResolver = new DistanceResolver();
 
 	public FieldDef() {}
 
@@ -66,40 +68,22 @@ public class FieldDef implements Serializable {
 	}
 
 	public DistanceAlgo getDistanceAlgo() {
-		switch (getAlgo()) {
-		case JaroWinkler:
-			return new JaroWinkler(getWeight());
-		case JaroWinklerTitle:
-			return new JaroWinklerTitle(getWeight());
-		case Level2JaroWinkler:
-			return new Level2JaroWinkler(getWeight());
-		case Level2JaroWinklerTitle:
-			return new Level2JaroWinklerTitle(getWeight());
-		case Level2Levenstein:
-			return new Level2Levenstein(getWeight());
-		case Levenstein:
-			return new Levenstein(getWeight());
-		case LevensteinTitle:
-			return new LevensteinTitle(getWeight());
-		case SubStringLevenstein:
-			return new SubStringLevenstein(getWeight(), getLimit());
-		case SortedJaroWinkler:
-			return new SortedJaroWinkler(getWeight());
-		case SortedLevel2JaroWinkler:
-			return new SortedLevel2JaroWinkler(getWeight());
-		case urlMatcher:
-			return new UrlMatcher(getWeight(), getParams());
-		case ExactMatch:
-			return new ExactMatch(getWeight());
-		case MustBeDifferent:
-			return new MustBeDifferent(getWeight());
-		case AlwaysMatch:
-			return new AlwaysMatch(getWeight());
-		case Null:
-			return new NullDistanceAlgo();
-		default:
+
+		try {
+			if (params == null) {
+				params = new HashMap<>();
+			}
+			params.put("limit", getLimit());
+			params.put("weight", getWeight());
+			DistanceAlgo distanceAlgo = distanceResolver.resolve(getAlgo());
+			distanceAlgo.setParams(params);
+			distanceAlgo.setWeight(getWeight());
+			return distanceAlgo;
+		} catch (IllegalAccessException | InstantiationException e) {
+			e.printStackTrace();
 			return new NullDistanceAlgo();
 		}
+
 	}
 
 	public boolean isIgnoreMissing() {
@@ -135,11 +119,11 @@ public class FieldDef implements Serializable {
 		this.weight = weight;
 	}
 
-	public Algo getAlgo() {
+	public String getAlgo() {
 		return algo;
 	}
 
-	public void setAlgo(final Algo algo) {
+	public void setAlgo(final String algo) {
 		this.algo = algo;
 	}
 

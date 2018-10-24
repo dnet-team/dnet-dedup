@@ -1,8 +1,10 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+@DistanceClass("MustBeDifferent")
 public class MustBeDifferent extends SecondStringDistanceAlgo {
 
 	public MustBeDifferent(final double weight) {

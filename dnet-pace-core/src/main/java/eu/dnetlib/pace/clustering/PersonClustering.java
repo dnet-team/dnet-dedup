@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.clustering;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.gt.Author;
 import eu.dnetlib.pace.model.gt.GTAuthor;
 
+@ClusteringClass("personclustering")
 public class PersonClustering extends AbstractPaceFunctions implements ClusteringFunction {
 
 	private Map<String, Integer> params;
@@ -25,6 +27,10 @@ public class PersonClustering extends AbstractPaceFunctions implements Clusterin
 	private static final int MAX_TOKENS = 5;
 
 	public PersonClustering(final Map<String, Integer> params) {
+		this.params = params;
+	}
+
+	public void setParams(Map<String, Integer> params){
 		this.params = params;
 	}
 

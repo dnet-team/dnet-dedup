@@ -36,6 +36,7 @@ public class SparkTest {
 
         counter = new SparkCounter(context);
 
+        //read the configuration from the classpath
         final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
 
         BlockProcessor.constructAccumulator(config);
@@ -55,7 +56,7 @@ public class SparkTest {
 
         //create relations between documents
         final JavaPairRDD<String, String> relationRDD = mapDocs.reduceByKey((a, b) -> a)    //the reduce is just to be sure that we haven't document with same id
-                //from <id, doc> to List<groupkey,doc>
+                //Clustering: from <id, doc> to List<groupkey,doc>
                 .flatMapToPair(a -> {
                     final MapDocument currentDocument = a._2();
                     return getGroupingKeys(config, currentDocument).stream()
@@ -83,7 +84,7 @@ public class SparkTest {
 
         //print ids
 //        ccs.foreach(cc -> System.out.println(cc.getId()));
-        ccs.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
+//        ccs.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
 
     }
 

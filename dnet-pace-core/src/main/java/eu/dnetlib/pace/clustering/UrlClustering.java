@@ -11,11 +11,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@ClusteringClass("urlclustering")
 public class UrlClustering extends AbstractPaceFunctions implements ClusteringFunction {
 
     protected Map<String, Integer> params;
 
     public UrlClustering(final Map<String, Integer> params) {
+        this.params = params;
+    }
+
+    public UrlClustering() {
+        super();
+    }
+
+    public void setParams(Map<String, Integer> params){
         this.params = params;
     }
 

@@ -1,9 +1,9 @@
 package eu.dnetlib.pace.condition;
 
-import java.util.Map;
-
+import java.util.List;
 import eu.dnetlib.pace.distance.eval.ConditionEvalMap;
 import eu.dnetlib.pace.model.Document;
+import eu.dnetlib.pace.model.FieldDef;
 
 /**
  * Allows to express general conditions to be satisfied or not between two Documents.
@@ -23,5 +23,8 @@ public interface ConditionAlgo {
 	 *         the condition is not verified.
 	 */
 	public abstract ConditionEvalMap verify(Document a, Document b);
+
+	public void setFields(List<FieldDef> fields);
+	public void setCond(String name);
 
 }

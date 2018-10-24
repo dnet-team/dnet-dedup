@@ -3,7 +3,6 @@ package eu.dnetlib.pace.condition;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
@@ -13,6 +12,7 @@ import eu.dnetlib.pace.model.FieldDef;
  *
  * @author claudio
  */
+@ConditionClass("mustBeDifferent")
 public class MustBeDifferent extends AbstractCondition {
 
 	/**
@@ -20,7 +20,7 @@ public class MustBeDifferent extends AbstractCondition {
 	 *
 	 * @param fields the fields
 	 */
-	public MustBeDifferent(final Cond cond, final List<FieldDef> fields) {
+	public MustBeDifferent(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
 

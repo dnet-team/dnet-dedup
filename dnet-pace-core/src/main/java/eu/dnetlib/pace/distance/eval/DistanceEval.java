@@ -1,6 +1,5 @@
 package eu.dnetlib.pace.distance.eval;
 
-import eu.dnetlib.pace.config.Algo;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
 

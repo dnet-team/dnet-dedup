@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.model;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -9,49 +10,36 @@ import eu.dnetlib.pace.clustering.*;
 
 public class ClusteringDef implements Serializable {
 
-	private Clustering name;
+	private String name;
 
 	private List<String> fields;
 
 	private Map<String, Integer> params;
 
+	private ClusteringResolver clusteringResolver = new ClusteringResolver();
+
 	public ClusteringDef() {}
 
-	public Clustering getName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setName(final Clustering name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
 	public ClusteringFunction getClusteringFunction() {
-		switch (getName()) {
-		case acronyms:
-			return new Acronyms(getParams());
-		case ngrams:
-			return new Ngrams(getParams());
-		case ngrampairs:
-			return new NgramPairs(getParams());
-		case sortedngrampairs:
-			return new SortedNgramPairs(getParams());
-		case suffixprefix:
-			return new SuffixPrefix(getParams());
-		case spacetrimmingfieldvalue:
-			return new SpaceTrimmingFieldValue(getParams());
-		case immutablefieldvalue:
-			return new ImmutableFieldValue(getParams());
-		case personhash:
-			return new PersonHash(getParams());
-		case personclustering:
-			return new PersonClustering(getParams());
-		case lowercase:
-			return new LowercaseClustering(getParams());
-		case urlclustering:
-			return new UrlClustering(getParams());
-		default:
+
+		try {
+			ClusteringFunction clusteringFunction = clusteringResolver.resolve(getName());
+			clusteringFunction.setParams(params);
+			return clusteringFunction;
+
+		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+			e.printStackTrace();
 			return new RandomClusteringFunction(getParams());
 		}
+
 	}
 
 	public List<String> getFields() {

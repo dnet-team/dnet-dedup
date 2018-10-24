@@ -25,7 +25,7 @@ public class DistanceScorer {
 	}
 
 	public ScoreResult distance(final Document a, final Document b) {
-		final ScoreResult sr = new ScoreResult();
+		final ScoreResult sr = new ScoreResult();	//to keep track of the result of the comparison
 
 		sr.setStrictConditions(verify(a, b, config.strictConditions()));
 		sr.setConditions(verify(a, b, config.conditions()));

@@ -2,7 +2,6 @@ package eu.dnetlib.pace.condition;
 
 import java.util.List;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
@@ -12,9 +11,10 @@ import eu.dnetlib.pace.model.FieldDef;
  *
  * @author claudio
  */
+@ConditionClass("exactMatchIgnoreCase")
 public class ExactMatchIgnoreCase extends AbstractCondition {
 
-	public ExactMatchIgnoreCase(final Cond cond, final List<FieldDef> fields) {
+	public ExactMatchIgnoreCase(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
 

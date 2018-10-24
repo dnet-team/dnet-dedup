@@ -1,6 +1,5 @@
 package eu.dnetlib.pace.distance.eval;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.model.Field;
 
 /**
@@ -8,7 +7,7 @@ import eu.dnetlib.pace.model.Field;
  */
 public class ConditionEval {
 
-	private Cond cond;
+	private String cond;
 
 	private Field a;
 
@@ -16,7 +15,7 @@ public class ConditionEval {
 
 	private int result;
 
-	public ConditionEval(final Cond cond, final Field a, final Field b, final int result) {
+	public ConditionEval(final String cond, final Field a, final Field b, final int result) {
 		this.cond = cond;
 		this.a = a;
 		this.b = b;
@@ -47,11 +46,11 @@ public class ConditionEval {
 		this.result = result;
 	}
 
-	public Cond getCond() {
+	public String getCond() {
 		return cond;
 	}
 
-	public void setCond(final Cond cond) {
+	public void setCond(final String cond) {
 		this.cond = cond;
 	}
 }

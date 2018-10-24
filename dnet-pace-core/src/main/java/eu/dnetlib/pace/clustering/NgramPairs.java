@@ -6,7 +6,12 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+@ClusteringClass("ngrampairs")
 public class NgramPairs extends Ngrams {
+
+	public NgramPairs() {
+		super();
+	}
 
 	public NgramPairs(Map<String, Integer> params) {
 		super(params);

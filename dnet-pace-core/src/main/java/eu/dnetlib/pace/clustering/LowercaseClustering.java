@@ -9,10 +9,15 @@ import com.google.common.collect.Sets;
 import eu.dnetlib.pace.model.Field;
 import org.apache.commons.lang.StringUtils;
 
+@ClusteringClass("lowercase")
 public class LowercaseClustering extends AbstractClusteringFunction {
 
 	public LowercaseClustering(final Map<String, Integer> params) {
 		super(params);
+	}
+
+	public LowercaseClustering(){
+		super();
 	}
 
 	@Override

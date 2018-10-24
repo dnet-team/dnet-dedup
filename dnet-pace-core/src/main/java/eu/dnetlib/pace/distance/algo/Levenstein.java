@@ -1,9 +1,15 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+@DistanceClass("Levenstein")
 public class Levenstein extends SecondStringDistanceAlgo {
+
+	public Levenstein(){
+		super(new com.wcohen.ss.Levenstein());
+	}
 
 	public Levenstein(double w) {
 		super(w, new com.wcohen.ss.Levenstein());

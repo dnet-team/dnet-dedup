@@ -9,6 +9,10 @@ public class RandomClusteringFunction extends AbstractClusteringFunction {
 		super(params);
 	}
 
+	public RandomClusteringFunction(){
+		super();
+	}
+
 	@Override
 	protected Collection<String> doApply(String s) {
 		// TODO Auto-generated method stub

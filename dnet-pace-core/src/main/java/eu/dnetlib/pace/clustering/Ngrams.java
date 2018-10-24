@@ -5,12 +5,17 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+@ClusteringClass("ngrams")
 public class Ngrams extends AbstractClusteringFunction {
 
 	public Ngrams(Map<String, Integer> params) {
 		super(params);
 	}
-	
+
+	public Ngrams() {
+        super();
+    }
+
 	@Override
 	protected Collection<String> doApply(String s) {
 		return getNgrams(s, param("ngramLen"), param("max"), param("maxPerToken"), param("minNgramLen"));

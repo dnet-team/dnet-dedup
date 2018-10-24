@@ -7,10 +7,15 @@ import java.util.StringTokenizer;
 
 import com.google.common.collect.Sets;
 
+@ClusteringClass("acronyms")
 public class Acronyms extends AbstractClusteringFunction {
 
 	public Acronyms(Map<String, Integer> params) {
 		super(params);
+	}
+
+	public Acronyms(){
+		super();
 	}
 
 	@Override

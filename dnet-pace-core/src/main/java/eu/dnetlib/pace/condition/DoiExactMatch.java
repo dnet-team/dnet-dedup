@@ -2,7 +2,6 @@ package eu.dnetlib.pace.condition;
 
 import java.util.List;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
 
@@ -11,11 +10,12 @@ import eu.dnetlib.pace.model.FieldDef;
  *
  * @author claudio
  */
+@ConditionClass("doiExactMatch")
 public class DoiExactMatch extends ExactMatchIgnoreCase {
 
 	public final String PREFIX = "(http:\\/\\/dx\\.doi\\.org\\/)|(doi:)";
 
-	public DoiExactMatch(final Cond cond, final List<FieldDef> fields) {
+	public DoiExactMatch(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
 

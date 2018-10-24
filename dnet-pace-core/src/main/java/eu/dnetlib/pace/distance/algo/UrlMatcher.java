@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.distance.algo;
 
+import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.model.Field;
 import org.apache.commons.lang.StringUtils;
 
@@ -7,12 +8,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+@DistanceClass("urlMatcher")
 public class UrlMatcher extends Levenstein {
 
     private Map<String, Number> params;
 
+    public UrlMatcher(){
+        super();
+    }
+
     public UrlMatcher(double weight, Map<String, Number> params) {
         super(weight);
+        this.params = params;
+    }
+
+    public void setParams(Map<String, Number> params) {
         this.params = params;
     }
 

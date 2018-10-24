@@ -1,8 +1,8 @@
 package eu.dnetlib.pace.condition;
 
+import java.time.Year;
 import java.util.List;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import org.apache.commons.lang.StringUtils;
 
@@ -14,13 +14,16 @@ import eu.dnetlib.pace.model.FieldDef;
  *
  * @author claudio
  */
+@ConditionClass("yearMatch")
 public class YearMatch extends AbstractCondition {
 
 	private int limit = 4;
 
-	public YearMatch(final Cond cond, final List<FieldDef> fields) {
+	public YearMatch(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
+
+	public YearMatch(){}
 
 	// @Override
 	// public boolean verify(final Document a, final Document b) {

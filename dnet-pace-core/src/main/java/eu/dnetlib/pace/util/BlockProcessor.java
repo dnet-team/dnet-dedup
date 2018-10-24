@@ -23,7 +23,6 @@ public class BlockProcessor {
 
     private DedupConfig dedupConf;
 
-
     public static void constructAccumulator( final DedupConfig dedupConf) {
         accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "records per hash key = 1"));
         accumulators.add(String.format("%s::%s",dedupConf.getWf().getEntityType(), "missing " + dedupConf.getWf().getOrderField()));

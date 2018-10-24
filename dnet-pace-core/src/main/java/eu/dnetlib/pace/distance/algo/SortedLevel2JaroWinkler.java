@@ -1,10 +1,12 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.distance.DistanceClass;
 
 /**
  * The Class SortedJaroWinkler.
  */
+@DistanceClass("Sorted2JaroWinkler")
 public class SortedLevel2JaroWinkler extends SortedSecondStringDistanceAlgo {
 
 	/**

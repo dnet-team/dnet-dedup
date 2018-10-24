@@ -9,10 +9,15 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.common.collect.Lists;
 
+@ClusteringClass("spacetrimmingfieldvalue")
 public class SpaceTrimmingFieldValue extends AbstractClusteringFunction {
 
 	public SpaceTrimmingFieldValue(final Map<String, Integer> params) {
 		super(params);
+	}
+
+	public SpaceTrimmingFieldValue(){
+		super();
 	}
 
 	@Override

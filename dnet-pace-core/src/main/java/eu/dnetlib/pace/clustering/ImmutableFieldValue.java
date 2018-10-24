@@ -6,10 +6,15 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+@ClusteringClass("immutablefieldvalue")
 public class ImmutableFieldValue extends AbstractClusteringFunction {
 
 	public ImmutableFieldValue(final Map<String, Integer> params) {
 		super(params);
+	}
+
+	public ImmutableFieldValue() {
+		super();
 	}
 
 	@Override

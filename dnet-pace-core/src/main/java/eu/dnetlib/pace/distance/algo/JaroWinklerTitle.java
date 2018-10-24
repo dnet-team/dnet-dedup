@@ -1,10 +1,22 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+import java.util.Map;
+
 //case class JaroWinkler(w: Double) extends SecondStringDistanceAlgo(w, new com.wcohen.ss.JaroWinkler())
+@DistanceClass("JaroWinklerTitle")
 public class JaroWinklerTitle extends SecondStringDistanceAlgo {
+
+	public JaroWinklerTitle(){
+		super();
+	}
+
+	public JaroWinklerTitle(Map<String, Number> params){
+		super(params);
+	}
 
 	public JaroWinklerTitle(double weight) {
 		super(weight, new com.wcohen.ss.JaroWinkler());

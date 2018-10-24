@@ -6,10 +6,15 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+@ClusteringClass("suffixprefix")
 public class SuffixPrefix extends AbstractClusteringFunction {
 
 	public SuffixPrefix(Map<String, Integer> params) {
 		super(params);
+	}
+
+	public SuffixPrefix(){
+		super();
 	}
 
 	@Override

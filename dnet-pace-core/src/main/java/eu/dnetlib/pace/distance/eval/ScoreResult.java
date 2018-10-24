@@ -2,10 +2,12 @@ package eu.dnetlib.pace.distance.eval;
 
 import com.google.gson.GsonBuilder;
 
+import java.io.Serializable;
+
 /**
  * Created by claudio on 09/03/16.
  */
-public class ScoreResult {
+public class ScoreResult implements Serializable {
 
 	private ConditionEvalMap strictConditions;
 
@@ -49,8 +51,12 @@ public class ScoreResult {
 
 	@Override
 	public String toString() {
-		final GsonBuilder b = new GsonBuilder();
-		b.serializeSpecialFloatingPointValues();
-		return b.setPrettyPrinting().create().toJson(this);
+		//TODO cannot print: why?
+//		final GsonBuilder b = new GsonBuilder()
+//			.serializeSpecialFloatingPointValues()
+//				.serializeNulls();
+//
+//		return b.setPrettyPrinting().create().toJson(this);
+		return "{}";
 	}
 }

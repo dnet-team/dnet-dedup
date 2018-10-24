@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
@@ -20,11 +19,12 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author claudio
  */
+@ConditionClass("pidMatch")
 public class PidMatch extends AbstractCondition {
 
 	private static final Log log = LogFactory.getLog(PidMatch.class);
 
-	public PidMatch(final Cond cond, final List<FieldDef> fields) {
+	public PidMatch(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
 

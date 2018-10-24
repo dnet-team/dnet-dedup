@@ -2,7 +2,6 @@ package eu.dnetlib.pace.condition;
 
 import java.util.List;
 
-import eu.dnetlib.pace.config.Cond;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
@@ -13,9 +12,10 @@ import eu.dnetlib.pace.model.FieldDef;
  * @author claudio
  *
  */
+@ConditionClass("titleVersionMatch")
 public class TitleVersionMatch extends AbstractCondition {
 
-	public TitleVersionMatch(final Cond cond, final List<FieldDef> fields) {
+	public TitleVersionMatch(final String cond, final List<FieldDef> fields) {
 		super(cond, fields);
 	}
 

@@ -8,12 +8,17 @@ import com.google.common.collect.Lists;
 
 import eu.dnetlib.pace.model.Person;
 
+@ClusteringClass("personhash")
 public class PersonHash extends AbstractClusteringFunction {
 
 	private boolean DEFAULT_AGGRESSIVE = false;
 
 	public PersonHash(final Map<String, Integer> params) {
 		super(params);
+	}
+
+	public PersonHash(){
+		super();
 	}
 
 	@Override

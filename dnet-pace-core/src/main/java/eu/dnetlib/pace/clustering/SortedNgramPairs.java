@@ -9,10 +9,15 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
+@ClusteringClass("sortedngrampairs")
 public class SortedNgramPairs extends NgramPairs {
 
 	public SortedNgramPairs(Map<String, Integer> params) {
 		super(params);
+	}
+
+	public SortedNgramPairs(){
+		super();
 	}
 
 	@Override
