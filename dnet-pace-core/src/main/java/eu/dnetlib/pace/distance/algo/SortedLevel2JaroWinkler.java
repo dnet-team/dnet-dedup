@@ -3,6 +3,8 @@ package eu.dnetlib.pace.distance.algo;
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
 
+import java.util.Map;
+
 /**
  * The Class SortedJaroWinkler.
  */
@@ -17,6 +19,10 @@ public class SortedLevel2JaroWinkler extends SortedSecondStringDistanceAlgo {
 	 */
 	public SortedLevel2JaroWinkler(final double weight) {
 		super(weight, new com.wcohen.ss.Level2JaroWinkler());
+	}
+
+	public SortedLevel2JaroWinkler(final Map<String, Number> params){
+		super(params, new com.wcohen.ss.Level2JaroWinkler());
 	}
 
 	/**

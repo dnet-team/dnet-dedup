@@ -13,9 +13,5 @@ public interface DistanceAlgo {
 	public abstract double distance(Field a, Field b);
 
 	public double getWeight();
-	public Map<String, Number> getParams();
-
-	public void setWeight(double w);
-	public void setParams(Map<String, Number> params);
 
 }

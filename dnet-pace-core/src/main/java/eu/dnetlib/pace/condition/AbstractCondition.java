@@ -25,16 +25,6 @@ public abstract class AbstractCondition extends AbstractPaceFunctions implements
 		this.fields = fields;
 	}
 
-	public AbstractCondition(){}
-
-	public void setCond(String cond){
-		this.cond = cond;
-	}
-
-	public void setFields(List<FieldDef> fields){
-		this.fields = fields;
-	}
-
 	protected abstract ConditionEval verify(FieldDef fd, Field a, Field b);
 
 	@Override

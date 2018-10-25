@@ -17,8 +17,8 @@ public class DistanceResolver implements Serializable {
                 .collect(Collectors.toMap(cl -> cl.getAnnotation(DistanceClass.class).value(), cl -> (Class<DistanceAlgo>)cl));
     }
 
-    public DistanceAlgo resolve(String algo) throws IllegalAccessException, InstantiationException {
+    public DistanceAlgo resolve(String algo, Map<String, Number> params) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 
-        return functionMap.get(algo).newInstance();
+        return functionMap.get(algo).getDeclaredConstructor(Map.class).newInstance(params);
     }
 }

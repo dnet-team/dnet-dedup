@@ -13,10 +13,6 @@ public class ImmutableFieldValue extends AbstractClusteringFunction {
 		super(params);
 	}
 
-	public ImmutableFieldValue() {
-		super();
-	}
-
 	@Override
 	protected Collection<String> doApply(final String s) {
 		final List<String> res = Lists.newArrayList();

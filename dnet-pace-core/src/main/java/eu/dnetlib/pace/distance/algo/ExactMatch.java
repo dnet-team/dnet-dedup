@@ -9,12 +9,8 @@ import java.util.Map;
 @DistanceClass("ExactMatch")
 public class ExactMatch extends SecondStringDistanceAlgo {
 
-	public ExactMatch(){
-		super();
-	}
-
 	public ExactMatch(Map<String, Number> params){
-		super(params);
+		super(params, new com.wcohen.ss.JaroWinkler());
 	}
 
 	public ExactMatch(final double weight) {

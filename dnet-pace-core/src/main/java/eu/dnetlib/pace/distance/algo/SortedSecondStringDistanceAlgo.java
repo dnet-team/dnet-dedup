@@ -2,6 +2,7 @@ package eu.dnetlib.pace.distance.algo;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.wcohen.ss.AbstractStringDistance;
@@ -25,6 +26,10 @@ public abstract class SortedSecondStringDistanceAlgo extends SecondStringDistanc
 	 */
 	protected SortedSecondStringDistanceAlgo(final double weight, final AbstractStringDistance ssalgo) {
 		super(weight, ssalgo);
+	}
+
+	protected SortedSecondStringDistanceAlgo(final Map<String, Number> params, final AbstractStringDistance ssalgo){
+		super(params.get("weight").doubleValue(), ssalgo);
 	}
 
 	/*

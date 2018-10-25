@@ -23,8 +23,6 @@ public class YearMatch extends AbstractCondition {
 		super(cond, fields);
 	}
 
-	public YearMatch(){}
-
 	// @Override
 	// public boolean verify(final Document a, final Document b) {
 	// boolean res = true;

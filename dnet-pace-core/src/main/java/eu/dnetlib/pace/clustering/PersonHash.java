@@ -17,10 +17,6 @@ public class PersonHash extends AbstractClusteringFunction {
 		super(params);
 	}
 
-	public PersonHash(){
-		super();
-	}
-
 	@Override
 	protected Collection<String> doApply(final String s) {
 		final List<String> res = Lists.newArrayList();

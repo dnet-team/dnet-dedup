@@ -13,8 +13,9 @@ public class UrlMatcher extends Levenstein {
 
     private Map<String, Number> params;
 
-    public UrlMatcher(){
-        super();
+    public UrlMatcher(Map<String, Number> params){
+        super(params);
+        this.params = params;
     }
 
     public UrlMatcher(double weight, Map<String, Number> params) {

@@ -1,9 +1,6 @@
 package eu.dnetlib.pace.clustering;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @ClusteringClass("ngrams")
 public class Ngrams extends AbstractClusteringFunction {
@@ -11,10 +8,6 @@ public class Ngrams extends AbstractClusteringFunction {
 	public Ngrams(Map<String, Integer> params) {
 		super(params);
 	}
-
-	public Ngrams() {
-        super();
-    }
 
 	@Override
 	protected Collection<String> doApply(String s) {

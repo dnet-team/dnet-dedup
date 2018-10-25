@@ -20,14 +20,6 @@ public class UrlClustering extends AbstractPaceFunctions implements ClusteringFu
         this.params = params;
     }
 
-    public UrlClustering() {
-        super();
-    }
-
-    public void setParams(Map<String, Integer> params){
-        this.params = params;
-    }
-
     @Override
     public Collection<String> apply(List<Field> fields) {
         return fields.stream()

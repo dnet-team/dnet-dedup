@@ -1,7 +1,9 @@
 package eu.dnetlib.pace.distance.eval;
 
 import com.google.gson.GsonBuilder;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -51,12 +53,10 @@ public class ScoreResult implements Serializable {
 
 	@Override
 	public String toString() {
-		//TODO cannot print: why?
-//		final GsonBuilder b = new GsonBuilder()
-//			.serializeSpecialFloatingPointValues()
-//				.serializeNulls();
-//
-//		return b.setPrettyPrinting().create().toJson(this);
-		return "{}";
+		try {
+			return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 }

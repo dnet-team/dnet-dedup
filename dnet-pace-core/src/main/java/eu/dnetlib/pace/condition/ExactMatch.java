@@ -19,10 +19,6 @@ public class ExactMatch extends AbstractCondition {
 		super(cond, fields);
 	}
 
-	public ExactMatch(){
-		super();
-	}
-
 	@Override
 	protected ConditionEval verify(final FieldDef fd, final Field a, final Field b) {
 

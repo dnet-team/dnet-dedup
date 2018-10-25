@@ -10,12 +10,8 @@ import java.util.Map;
 @DistanceClass("JaroWinklerTitle")
 public class JaroWinklerTitle extends SecondStringDistanceAlgo {
 
-	public JaroWinklerTitle(){
-		super();
-	}
-
 	public JaroWinklerTitle(Map<String, Number> params){
-		super(params);
+		super(params, new com.wcohen.ss.JaroWinkler());
 	}
 
 	public JaroWinklerTitle(double weight) {

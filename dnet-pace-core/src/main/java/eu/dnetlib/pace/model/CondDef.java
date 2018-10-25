@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.model;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -19,11 +20,8 @@ public class CondDef implements Serializable {
 	public ConditionAlgo getConditionAlgo(final List<FieldDef> fields) {
 
 		try {
-			ConditionAlgo conditionAlgo = conditionResolver.resolve(getName());
-			conditionAlgo.setFields(fields);
-			conditionAlgo.setCond(getName());
-			return conditionAlgo;
-		} catch (IllegalAccessException | InstantiationException e) {
+			return conditionResolver.resolve(getName(), fields);
+		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
 			e.printStackTrace();
 			return new AlwaysTrueCondition(getName(), fields);
 		}

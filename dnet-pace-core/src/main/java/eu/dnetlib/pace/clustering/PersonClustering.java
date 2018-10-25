@@ -30,10 +30,6 @@ public class PersonClustering extends AbstractPaceFunctions implements Clusterin
 		this.params = params;
 	}
 
-	public void setParams(Map<String, Integer> params){
-		this.params = params;
-	}
-
 	@Override
 	public Collection<String> apply(final List<Field> fields) {
 		final Set<String> hashes = Sets.newHashSet();

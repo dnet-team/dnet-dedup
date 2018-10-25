@@ -4,8 +4,14 @@ import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+import java.util.Map;
+
 @DistanceClass("Level2JaroWinklerTitle")
 public class Level2JaroWinklerTitle extends SecondStringDistanceAlgo {
+
+	public Level2JaroWinklerTitle(Map<String,Number> params){
+		super(params, new com.wcohen.ss.Level2JaroWinkler());
+	}
 
 	public Level2JaroWinklerTitle(final double w) {
 		super(w, new com.wcohen.ss.Level2JaroWinkler());

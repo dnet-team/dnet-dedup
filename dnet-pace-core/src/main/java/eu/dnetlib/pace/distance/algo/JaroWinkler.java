@@ -4,18 +4,15 @@ import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+import java.io.Serializable;
 import java.util.Map;
 
 //case class JaroWinkler(w: Double) extends SecondStringDistanceAlgo(w, new com.wcohen.ss.JaroWinkler())
 @DistanceClass("JaroWinkler")
 public class JaroWinkler extends SecondStringDistanceAlgo {
 
-	public JaroWinkler(){
-		super();
-	}
-
 	public JaroWinkler(Map<String, Number> params){
-		super(params);
+		super(params, new com.wcohen.ss.JaroWinkler());
 	}
 
 	public JaroWinkler(double weight) {

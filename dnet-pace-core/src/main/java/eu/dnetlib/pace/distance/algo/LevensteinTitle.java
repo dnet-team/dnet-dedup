@@ -4,11 +4,13 @@ import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
+import java.util.Map;
+
 @DistanceClass("LevensteinTitle")
 public class LevensteinTitle extends SecondStringDistanceAlgo {
 
-	public LevensteinTitle(){
-		super(new com.wcohen.ss.Levenstein());
+	public LevensteinTitle(Map<String,Number> params){
+		super(params, new com.wcohen.ss.Levenstein());
 	}
 
 	public LevensteinTitle(final double w) {

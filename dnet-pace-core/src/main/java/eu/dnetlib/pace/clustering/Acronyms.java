@@ -14,10 +14,6 @@ public class Acronyms extends AbstractClusteringFunction {
 		super(params);
 	}
 
-	public Acronyms(){
-		super();
-	}
-
 	@Override
 	protected Collection<String> doApply(String s) {
 		return extractAcronyms(s, param("max"), param("minLen"), param("maxLen"));

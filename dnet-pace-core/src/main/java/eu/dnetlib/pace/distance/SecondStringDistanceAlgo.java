@@ -28,23 +28,10 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 
 	private Map<String, Number> params;
 
-	protected SecondStringDistanceAlgo(){
-	}
-
-	protected SecondStringDistanceAlgo(Map<String, Number> params){
+	protected SecondStringDistanceAlgo(Map<String, Number> params, final AbstractStringDistance ssalgo){
 		this.params = params;
-	}
-
-	public void setWeight(double w){
-		this.weight = w;
-	}
-
-	public Map<String, Number> getParams(){
-		return this.params;
-	}
-
-	public void setParams(Map<String, Number> params){
-		this.params = params;
+		this.weight = params.get("weight").doubleValue();
+		this.ssalgo = ssalgo;
 	}
 
 	/**

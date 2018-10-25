@@ -1,9 +1,6 @@
 package eu.dnetlib.pace.clustering;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -14,10 +11,6 @@ public class SortedNgramPairs extends NgramPairs {
 
 	public SortedNgramPairs(Map<String, Integer> params) {
 		super(params);
-	}
-
-	public SortedNgramPairs(){
-		super();
 	}
 
 	@Override

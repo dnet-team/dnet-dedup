@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.model;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,13 +76,10 @@ public class FieldDef implements Serializable {
 			}
 			params.put("limit", getLimit());
 			params.put("weight", getWeight());
-			DistanceAlgo distanceAlgo = distanceResolver.resolve(getAlgo());
-			distanceAlgo.setParams(params);
-			distanceAlgo.setWeight(getWeight());
-			return distanceAlgo;
-		} catch (IllegalAccessException | InstantiationException e) {
+			return distanceResolver.resolve(getAlgo(), params);
+		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
 			e.printStackTrace();
-			return new NullDistanceAlgo();
+			return new NullDistanceAlgo(params);
 		}
 
 	}

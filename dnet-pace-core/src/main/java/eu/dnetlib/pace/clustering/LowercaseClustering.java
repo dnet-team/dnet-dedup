@@ -16,10 +16,6 @@ public class LowercaseClustering extends AbstractClusteringFunction {
 		super(params);
 	}
 
-	public LowercaseClustering(){
-		super();
-	}
-
 	@Override
 	public Collection<String> apply(List<Field> fields) {
 		Collection<String> c = Sets.newLinkedHashSet();

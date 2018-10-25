@@ -24,7 +24,4 @@ public interface ConditionAlgo {
 	 */
 	public abstract ConditionEvalMap verify(Document a, Document b);
 
-	public void setFields(List<FieldDef> fields);
-	public void setCond(String name);
-
 }

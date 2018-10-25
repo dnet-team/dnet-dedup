@@ -13,6 +13,9 @@ import java.util.Map;
 @DistanceClass("Null")
 public class NullDistanceAlgo implements DistanceAlgo {
 
+	public NullDistanceAlgo(Map<String, Number> params){
+	}
+
 	@Override
 	public double distance(Field a, Field b) {
 		return 0.0;
@@ -23,16 +26,4 @@ public class NullDistanceAlgo implements DistanceAlgo {
 		return 0.0;
 	}
 
-	@Override
-	public void setWeight(double w){
-	}
-
-	@Override
-	public Map<String, Number> getParams() {
-		return null;
-	}
-
-	@Override
-	public void setParams(Map<String, Number> params) {
-	}
 }

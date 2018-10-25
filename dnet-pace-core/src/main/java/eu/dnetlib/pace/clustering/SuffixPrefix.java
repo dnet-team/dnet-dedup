@@ -13,10 +13,6 @@ public class SuffixPrefix extends AbstractClusteringFunction {
 		super(params);
 	}
 
-	public SuffixPrefix(){
-		super();
-	}
-
 	@Override
 	protected Collection<String> doApply(String s) {
 		return suffixPrefix(s, param("len"), param("max"));

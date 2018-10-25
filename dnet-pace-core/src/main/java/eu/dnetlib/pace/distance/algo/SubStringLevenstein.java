@@ -20,10 +20,6 @@ public class SubStringLevenstein extends SecondStringDistanceAlgo {
 	/** The limit. */
 	protected int limit;
 
-	public SubStringLevenstein() {
-		super(new com.wcohen.ss.Levenstein());
-	}
-
 	/**
 	 * Instantiates a new sub string levenstein.
 	 * 
@@ -32,6 +28,11 @@ public class SubStringLevenstein extends SecondStringDistanceAlgo {
 	 */
 	public SubStringLevenstein(final double w) {
 		super(w, new com.wcohen.ss.Levenstein());
+	}
+
+	public SubStringLevenstein(Map<String, Number> params){
+		super(params, new com.wcohen.ss.Levenstein());
+		this.limit = params.get("limit").intValue();
 	}
 
 	/**
@@ -93,11 +94,6 @@ public class SubStringLevenstein extends SecondStringDistanceAlgo {
 	@Override
 	protected double normalize(final double d) {
 		return 1 / Math.pow(Math.abs(d) + 1, 0.1);
-	}
-
-	public void setParams(Map<String, Number> params){
-		this.limit = params.get("limit").intValue();	//necessary because this class needs also the limit
-		super.setParams(params);
 	}
 
 }

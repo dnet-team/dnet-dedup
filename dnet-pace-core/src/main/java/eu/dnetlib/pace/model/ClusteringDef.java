@@ -31,15 +31,11 @@ public class ClusteringDef implements Serializable {
 	public ClusteringFunction getClusteringFunction() {
 
 		try {
-			ClusteringFunction clusteringFunction = clusteringResolver.resolve(getName());
-			clusteringFunction.setParams(params);
-			return clusteringFunction;
-
+			return clusteringResolver.resolve(getName(), params);
 		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
 			e.printStackTrace();
 			return new RandomClusteringFunction(getParams());
 		}
-
 	}
 
 	public List<String> getFields() {

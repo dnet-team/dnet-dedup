@@ -3,11 +3,17 @@ package eu.dnetlib.pace.distance.algo;
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
 
+import java.util.Map;
+
 /**
  * The Class SortedJaroWinkler.
  */
 @DistanceClass("SortedJaroWinkler")
 public class SortedJaroWinkler extends SortedSecondStringDistanceAlgo {
+
+	public SortedJaroWinkler(Map<String,Number> params){
+		super(params, new com.wcohen.ss.Levenstein());
+	}
 
 	/**
 	 * Instantiates a new sorted jaro winkler.

@@ -17,8 +17,8 @@ public class ClusteringResolver implements Serializable {
                 .collect(Collectors.toMap(cl -> cl.getAnnotation(ClusteringClass.class).value(), cl -> (Class<ClusteringFunction>)cl));
     }
 
-    public ClusteringFunction resolve(String clusteringFunction) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public ClusteringFunction resolve(String clusteringFunction, Map<String, Integer> params) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 
-        return functionMap.get(clusteringFunction).newInstance();
+        return functionMap.get(clusteringFunction).getDeclaredConstructor(Map.class).newInstance(params);
     }
 }

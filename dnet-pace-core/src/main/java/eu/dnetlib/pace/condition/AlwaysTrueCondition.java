@@ -17,9 +17,6 @@ public class AlwaysTrueCondition extends AbstractCondition {
 		super(cond, fields);
 	}
 
-	public AlwaysTrueCondition(){
-		super();
-	}
 	@Override
 	protected ConditionEval verify(final FieldDef fd, final Field a, final Field b) {
 		return new ConditionEval(cond, a, b, 1);

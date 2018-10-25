@@ -9,12 +9,8 @@ import java.util.Map;
 @DistanceClass("AlwaysMatch")
 public class AlwaysMatch extends SecondStringDistanceAlgo {
 
-	public AlwaysMatch(){
-		super();
-	}
-
 	public AlwaysMatch(final Map<String, Number> params){
-		super(params);
+		super(params, new com.wcohen.ss.JaroWinkler());
 	}
 
 	public AlwaysMatch(final double weight) {

@@ -19,12 +19,6 @@ public abstract class AbstractClusteringFunction extends AbstractPaceFunctions i
 		this.params = params;
 	}
 
-	public AbstractClusteringFunction(){}
-
-	public void setParams(Map<String, Integer> params){
-		this.params = params;
-	}
-
 	protected abstract Collection<String> doApply(String s);
 	
 	@Override
