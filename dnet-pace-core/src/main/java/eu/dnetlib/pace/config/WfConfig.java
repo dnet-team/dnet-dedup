@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.config;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class WfConfig implements Serializable {
 
@@ -249,7 +251,11 @@ public class WfConfig implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+		try {
+			return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
 }

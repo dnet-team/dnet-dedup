@@ -19,6 +19,7 @@ import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class DedupConfig implements Config, Serializable {
 
@@ -96,7 +97,11 @@ public class DedupConfig implements Config, Serializable {
 
 	@Override
 	public String toString() {
-		return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+		try {
+			return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
 	@Override
