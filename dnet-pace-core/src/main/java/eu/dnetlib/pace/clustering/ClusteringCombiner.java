@@ -21,7 +21,7 @@ public class ClusteringCombiner {
 		for (final ClusteringDef cd : defs) {
 			for (final String fieldName : cd.getFields()) {
 				final Field values = a.values(fieldName);
-				res.addAll(cd.getClusteringFunction().apply((List<Field>) values));
+				res.addAll(cd.clusteringFunction().apply((List<Field>) values));
 			}
 		}
 		return res;

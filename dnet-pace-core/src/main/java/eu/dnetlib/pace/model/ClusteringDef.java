@@ -28,7 +28,7 @@ public class ClusteringDef implements Serializable {
 		this.name = name;
 	}
 
-	public ClusteringFunction getClusteringFunction() {
+	public ClusteringFunction clusteringFunction() {
 		try {
 			return PaceConfig.paceResolver.getClusteringFunction(getName(), params);
 		} catch (PaceException e) {

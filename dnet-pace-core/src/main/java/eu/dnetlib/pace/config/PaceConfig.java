@@ -13,6 +13,7 @@ import eu.dnetlib.pace.model.CondDef;
 import eu.dnetlib.pace.model.FieldDef;
 import eu.dnetlib.pace.util.PaceResolver;
 import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class PaceConfig implements Serializable {
 
@@ -57,10 +58,12 @@ public class PaceConfig implements Serializable {
 		return conditions;
 	}
 
+	@JsonIgnore
 	public List<ConditionAlgo> getConditionAlgos() {
 		return asConditionAlgos(getConditions());
 	}
 
+	@JsonIgnore
 	public List<ConditionAlgo> getStrictConditionAlgos() {
 		return asConditionAlgos(getStrictConditions());
 	}
@@ -102,7 +105,7 @@ public class PaceConfig implements Serializable {
 			final List<FieldDef> fields = getModel().stream()
 					.filter(fd -> cd.getFields().contains(fd.getName()))
 					.collect(Collectors.toList());
-			algos.add(cd.getConditionAlgo(fields));
+			algos.add(cd.conditionAlgo(fields));
 		}
 		return algos;
 	}

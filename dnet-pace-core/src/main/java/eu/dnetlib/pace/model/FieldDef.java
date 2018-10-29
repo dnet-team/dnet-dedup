@@ -68,7 +68,7 @@ public class FieldDef implements Serializable {
 		return Lists.newArrayList(Splitter.on(PATH_SEPARATOR).split(getPath()));
 	}
 
-	public DistanceAlgo getDistanceAlgo() {
+	public DistanceAlgo distanceAlgo() {
 
 		if (params == null) {
 			params = new HashMap<>();

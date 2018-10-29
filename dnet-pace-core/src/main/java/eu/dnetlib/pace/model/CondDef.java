@@ -16,7 +16,7 @@ public class CondDef implements Serializable {
 
 	public CondDef() {}
 
-	public ConditionAlgo getConditionAlgo(final List<FieldDef> fields){
+	public ConditionAlgo conditionAlgo(final List<FieldDef> fields){
 		return PaceConfig.paceResolver.getConditionAlgo(getName(), fields);
 	}
 

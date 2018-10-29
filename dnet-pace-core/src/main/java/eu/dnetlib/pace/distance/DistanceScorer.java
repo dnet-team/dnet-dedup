@@ -77,7 +77,7 @@ public class DistanceScorer {
 				}
 			} else {
 				if (va.getType().equals(vb.getType())) {
-					de.setDistance(w * fd.getDistanceAlgo().distance(va, vb));
+					de.setDistance(w * fd.distanceAlgo().distance(va, vb));
 				} else {
 					throw new IllegalArgumentException(String.format("Types are differents type: %s:%s - %s:%s", va, va.getType(), vb, vb.getType()));
 				}
