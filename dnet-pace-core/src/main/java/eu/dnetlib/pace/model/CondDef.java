@@ -1,11 +1,12 @@
 package eu.dnetlib.pace.model;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import com.google.gson.Gson;
 import eu.dnetlib.pace.condition.*;
+import eu.dnetlib.pace.config.PaceConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class CondDef implements Serializable {
 
@@ -13,19 +14,10 @@ public class CondDef implements Serializable {
 
 	private List<String> fields;
 
-	private ConditionResolver conditionResolver = new ConditionResolver();
-
 	public CondDef() {}
 
-	public ConditionAlgo getConditionAlgo(final List<FieldDef> fields) {
-
-		try {
-			return conditionResolver.resolve(getName(), fields);
-		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-			e.printStackTrace();
-			return new AlwaysTrueCondition(getName(), fields);
-		}
-
+	public ConditionAlgo getConditionAlgo(final List<FieldDef> fields){
+		return PaceConfig.paceResolver.getConditionAlgo(getName(), fields);
 	}
 
 	public String getName() {
@@ -46,7 +38,11 @@ public class CondDef implements Serializable {
 
 	@Override
 	public String toString() {
-		return new Gson().toJson(this);
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
 }

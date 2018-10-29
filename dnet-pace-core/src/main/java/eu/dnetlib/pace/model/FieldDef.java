@@ -9,9 +9,11 @@ import java.util.Map;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.distance.*;
 import eu.dnetlib.pace.distance.algo.*;
+import eu.dnetlib.pace.util.PaceException;
 
 /**
  * The schema is composed by field definitions (FieldDef). Each field has a type, a name, and an associated distance algorithm.
@@ -37,8 +39,6 @@ public class FieldDef implements Serializable {
 	private int limit = -1;
 
 	private Map<String, Number> params;
-
-	private DistanceResolver distanceResolver = new DistanceResolver();
 
 	public FieldDef() {}
 
@@ -70,18 +70,12 @@ public class FieldDef implements Serializable {
 
 	public DistanceAlgo getDistanceAlgo() {
 
-		try {
-			if (params == null) {
-				params = new HashMap<>();
-			}
-			params.put("limit", getLimit());
-			params.put("weight", getWeight());
-			return distanceResolver.resolve(getAlgo(), params);
-		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-			e.printStackTrace();
-			return new NullDistanceAlgo(params);
+		if (params == null) {
+			params = new HashMap<>();
 		}
-
+		params.put("limit", getLimit());
+		params.put("weight", getWeight());
+		return PaceConfig.paceResolver.getDistanceAlgo(getAlgo(), params);
 	}
 
 	public boolean isIgnoreMissing() {

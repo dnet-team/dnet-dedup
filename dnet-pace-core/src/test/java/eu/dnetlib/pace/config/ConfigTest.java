@@ -76,8 +76,16 @@ public class ConfigTest extends AbstractPaceTest {
 		final DedupConfig cfgFromSerialization = DedupConfig.load(cfgFromClasspath.toString());
 		String params = "\"params\":{\"limit\":-1,\"weight\":0.0}";
 		//verify if the serialization produces the same result of the input json
-//		assertEquals(cfgFromSerialization.toString().replaceAll("[\n\t\r ]", "").replaceAll("\"params\":null", params), cfgFromClasspath.toString().replaceAll("[\n\t\r ]", ""));
+		assertEquals(cfgFromSerialization.toString().replaceAll("[\n\t\r ]", "").replaceAll("\"params\":null", params), cfgFromClasspath.toString().replaceAll("[\n\t\r ]", ""));
 
+	}
+
+	@Test
+	public void dedupConfigTest() {
+
+		DedupConfig load = DedupConfig.load(readFromClasspath("result.pace.conf.json"));
+
+		System.out.println(load.toString());
 	}
 
 }

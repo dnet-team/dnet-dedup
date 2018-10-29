@@ -1,6 +1,8 @@
 package eu.dnetlib.pace.model.gt;
 
-import com.google.gson.Gson;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
 
 public class ScoredResult extends Result {
 
@@ -20,7 +22,11 @@ public class ScoredResult extends Result {
 
 	@Override
 	public String toString() {
-		return new Gson().toJson(this);
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
 }

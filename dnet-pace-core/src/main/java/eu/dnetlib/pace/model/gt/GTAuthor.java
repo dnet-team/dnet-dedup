@@ -13,7 +13,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eu.dnetlib.pace.model.adaptor.PidOafSerialiser;
 
 public class GTAuthor implements Comparable<GTAuthor> {
 

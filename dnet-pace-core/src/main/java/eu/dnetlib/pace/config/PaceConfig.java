@@ -11,6 +11,7 @@ import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.CondDef;
 import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.util.PaceResolver;
 import org.apache.commons.collections.CollectionUtils;
 
 public class PaceConfig implements Serializable {
@@ -23,6 +24,8 @@ public class PaceConfig implements Serializable {
 
 	private Map<String, FieldDef> modelMap;
 
+	public static PaceResolver paceResolver;
+
 	public PaceConfig() {}
 
 	public void initModel() {
@@ -30,6 +33,8 @@ public class PaceConfig implements Serializable {
 		for(FieldDef fd : getModel()) {
 			modelMap.put(fd.getName(), fd);
 		}
+
+		paceResolver = new PaceResolver();
 	}
 
 	public List<FieldDef> getModel() {

@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import eu.dnetlib.pace.util.PaceException;
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
@@ -35,7 +34,7 @@ public class DedupConfig implements Config, Serializable {
 
 	static {
 		defaults.put("threshold", "0");
-		defaults.put("run", "001");
+		defaults.put("dedupRun", "001");
 		defaults.put("entityType", "result");
 		defaults.put("orderField", "title");
 		defaults.put("queueMaxSize", "2000");
@@ -49,11 +48,15 @@ public class DedupConfig implements Config, Serializable {
 
 	public static DedupConfig load(final String json) {
 
-		final DedupConfig config = new Gson().fromJson(json, DedupConfig.class);
+		final DedupConfig config;
+		try {
+			config = new ObjectMapper().readValue(json, DedupConfig.class);
+			config.getPace().initModel();
+			return config;
+		} catch (IOException e) {
+			throw new PaceException("Error in parsing configuration json", e);
+		}
 
-		config.getPace().initModel();
-
-		return config;
 	}
 
 	public static DedupConfig loadDefault() throws IOException {

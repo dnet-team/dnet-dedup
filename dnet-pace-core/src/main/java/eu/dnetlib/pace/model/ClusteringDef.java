@@ -1,12 +1,14 @@
 package eu.dnetlib.pace.model;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import eu.dnetlib.pace.clustering.*;
+import eu.dnetlib.pace.config.PaceConfig;
+import eu.dnetlib.pace.util.PaceException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class ClusteringDef implements Serializable {
 
@@ -15,8 +17,6 @@ public class ClusteringDef implements Serializable {
 	private List<String> fields;
 
 	private Map<String, Integer> params;
-
-	private ClusteringResolver clusteringResolver = new ClusteringResolver();
 
 	public ClusteringDef() {}
 
@@ -29,12 +29,11 @@ public class ClusteringDef implements Serializable {
 	}
 
 	public ClusteringFunction getClusteringFunction() {
-
 		try {
-			return clusteringResolver.resolve(getName(), params);
-		} catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+			return PaceConfig.paceResolver.getClusteringFunction(getName(), params);
+		} catch (PaceException e) {
 			e.printStackTrace();
-			return new RandomClusteringFunction(getParams());
+			return null;
 		}
 	}
 
@@ -56,7 +55,11 @@ public class ClusteringDef implements Serializable {
 
 	@Override
 	public String toString() {
-		return new Gson().toJson(this);
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
 }
