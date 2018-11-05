@@ -2,7 +2,7 @@ package eu.dnetlib.pace;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
-import eu.dnetlib.data.mapreduce.util.OafDecoder;
+//import eu.dnetlib.data.mapreduce.util.OafDecoder;
 import eu.dnetlib.data.proto.DatasourceOrganizationProtos.DatasourceOrganization;
 import eu.dnetlib.data.proto.DatasourceOrganizationProtos.DatasourceOrganization.Provision;
 import eu.dnetlib.data.proto.DatasourceProtos.Datasource;
@@ -411,36 +411,36 @@ public class OafTest {
 		return sf.build();
 	}
 
-	public static OafDecoder embed(final GeneratedMessage msg,
-	   final Kind kind,
-	   final boolean deletedByInference,
-	   final boolean inferred,
-	   final String provenance,
-	   final String action) {
-
-		final Oaf.Builder oaf = Oaf
-				.newBuilder()
-				.setKind(kind)
-				.setLastupdatetimestamp(System.currentTimeMillis())
-				.setDataInfo(
-						DataInfo.newBuilder().setDeletedbyinference(deletedByInference).setInferred(inferred).setTrust("0.5")
-								.setInferenceprovenance(provenance).setProvenanceaction(getQualifier(action, action)));
-		switch (kind) {
-		case entity:
-			oaf.setEntity((OafEntity) msg);
-			break;
-		case relation:
-			oaf.setRel((OafRel) msg);
-			break;
-		default:
-			break;
-		}
-
-		return OafDecoder.decode(oaf.build());
-	}
-
-	public static OafDecoder embed(final GeneratedMessage msg, final Kind kind) {
-		return embed(msg, kind, false, false, "inference_provenance", "provenance_action");
-	}
+//	public static OafDecoder embed(final GeneratedMessage msg,
+//	   final Kind kind,
+//	   final boolean deletedByInference,
+//	   final boolean inferred,
+//	   final String provenance,
+//	   final String action) {
+//
+//		final Oaf.Builder oaf = Oaf
+//				.newBuilder()
+//				.setKind(kind)
+//				.setLastupdatetimestamp(System.currentTimeMillis())
+//				.setDataInfo(
+//						DataInfo.newBuilder().setDeletedbyinference(deletedByInference).setInferred(inferred).setTrust("0.5")
+//								.setInferenceprovenance(provenance).setProvenanceaction(getQualifier(action, action)));
+//		switch (kind) {
+//		case entity:
+//			oaf.setEntity((OafEntity) msg);
+//			break;
+//		case relation:
+//			oaf.setRel((OafRel) msg);
+//			break;
+//		default:
+//			break;
+//		}
+//
+//		return OafDecoder.decode(oaf.build());
+//	}
+//
+//	public static OafDecoder embed(final GeneratedMessage msg, final Kind kind) {
+//		return embed(msg, kind, false, false, "inference_provenance", "provenance_action");
+//	}
 
 }

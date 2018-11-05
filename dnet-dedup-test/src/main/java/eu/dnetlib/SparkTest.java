@@ -33,13 +33,13 @@ public class SparkTest {
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/orgs.test.json");
+        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/orgs.json");
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         counter = new SparkCounter(context);
 
         //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.test.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
 
         BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {

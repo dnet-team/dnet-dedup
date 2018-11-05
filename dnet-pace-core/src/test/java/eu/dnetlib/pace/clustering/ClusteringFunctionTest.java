@@ -5,6 +5,8 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import eu.dnetlib.pace.AbstractPaceTest;
+import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.model.Field;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +17,16 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	@Before
 	public void setUp() throws Exception {
 		params = Maps.newHashMap();
+	}
+
+	@Test
+	public void testUrlClustering() {
+
+		final ClusteringFunction urlClustering = new UrlClustering(params);
+
+		final String s = "http://www.test.it/path/to/resource";
+		System.out.println(s);
+		System.out.println(urlClustering.apply(Lists.newArrayList(url(s))));
 	}
 
 	@Test

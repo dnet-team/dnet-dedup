@@ -3,11 +3,13 @@ package eu.dnetlib.pace;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import com.sun.webkit.network.URLs;
 import org.apache.commons.io.IOUtils;
 
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldValueImpl;
+import org.junit.Test;
 
 public abstract class AbstractPaceTest {
 
@@ -27,6 +29,10 @@ public abstract class AbstractPaceTest {
 
 	protected Field person(final String s) {
 		return new FieldValueImpl(Type.JSON, "person", s);
+	}
+
+	protected Field url(final String s) {
+		return new FieldValueImpl(Type.URL, "url", s);
 	}
 
 }
