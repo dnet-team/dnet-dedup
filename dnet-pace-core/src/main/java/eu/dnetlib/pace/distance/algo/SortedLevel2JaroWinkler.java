@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * The Class SortedJaroWinkler.
  */
-@DistanceClass("Sorted2JaroWinkler")
+@DistanceClass("SortedLevel2JaroWinkler")
 public class SortedLevel2JaroWinkler extends SortedSecondStringDistanceAlgo {
 
 	/**

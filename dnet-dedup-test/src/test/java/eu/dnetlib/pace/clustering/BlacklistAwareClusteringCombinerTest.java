@@ -1,7 +1,6 @@
 package eu.dnetlib.pace.clustering;
 
 import eu.dnetlib.pace.AbstractProtoPaceTest;
-import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.FieldListImpl;
