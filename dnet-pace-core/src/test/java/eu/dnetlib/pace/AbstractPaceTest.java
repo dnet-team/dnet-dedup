@@ -3,7 +3,6 @@ package eu.dnetlib.pace;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import com.sun.webkit.network.URLs;
 import org.apache.commons.io.IOUtils;
 
 import eu.dnetlib.pace.config.Type;
