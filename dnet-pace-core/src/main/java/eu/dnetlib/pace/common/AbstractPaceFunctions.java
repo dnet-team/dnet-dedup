@@ -1,26 +1,22 @@
 package eu.dnetlib.pace.common;
 
-import java.text.Normalizer;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.google.common.collect.Maps;
-import eu.dnetlib.pace.distance.algo.JaroWinklerNormalizedName;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import eu.dnetlib.pace.clustering.NGramUtils;
+import eu.dnetlib.pace.distance.algo.JaroWinklerNormalizedName;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.FieldListImpl;
-import org.apache.spark.util.CollectionsUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.text.Normalizer;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Set of common functions
