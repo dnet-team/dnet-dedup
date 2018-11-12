@@ -135,4 +135,15 @@ public class FieldDef implements Serializable {
 		this.params = params;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setIgnoreMissing(boolean ignoreMissing) {
+		this.ignoreMissing = ignoreMissing;
+	}
 }

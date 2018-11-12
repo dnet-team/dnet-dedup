@@ -101,9 +101,9 @@ public class DedupConfig implements Config, Serializable {
 	@Override
 	public String toString() {
 		try {
-			return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+			return new ObjectMapper().writeValueAsString(this);
 		} catch (IOException e) {
-			return e.getStackTrace().toString();
+			throw new PaceException("unable to serialise configuration", e);
 		}
 	}
 

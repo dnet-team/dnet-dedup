@@ -9,6 +9,7 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.GsonBuilder;
+import eu.dnetlib.pace.util.PaceException;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -252,9 +253,9 @@ public class WfConfig implements Serializable {
 	@Override
 	public String toString() {
 		try {
-			return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+			return new ObjectMapper().writeValueAsString(this);
 		} catch (IOException e) {
-			return e.getStackTrace().toString();
+			throw new PaceException("unable to serialise " + this.getClass().getName(), e);
 		}
 	}
 

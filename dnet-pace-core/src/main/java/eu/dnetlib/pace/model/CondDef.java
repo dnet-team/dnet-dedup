@@ -6,6 +6,7 @@ import java.util.List;
 
 import eu.dnetlib.pace.condition.*;
 import eu.dnetlib.pace.config.PaceConfig;
+import eu.dnetlib.pace.util.PaceException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class CondDef implements Serializable {
@@ -41,7 +42,7 @@ public class CondDef implements Serializable {
 		try {
 			return new ObjectMapper().writeValueAsString(this);
 		} catch (IOException e) {
-			return e.getStackTrace().toString();
+			throw new PaceException("unable to serialise " + this.getClass().getName(), e);
 		}
 	}
 

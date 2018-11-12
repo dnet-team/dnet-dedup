@@ -58,7 +58,7 @@ public class ClusteringDef implements Serializable {
 		try {
 			return new ObjectMapper().writeValueAsString(this);
 		} catch (IOException e) {
-			return e.getStackTrace().toString();
+			throw new PaceException("unable to serialise " + this.getClass().getName(), e);
 		}
 	}
 
