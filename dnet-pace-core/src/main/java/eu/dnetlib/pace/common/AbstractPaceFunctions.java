@@ -190,13 +190,14 @@ public abstract class AbstractPaceFunctions {
 		final StringBuilder sb = new StringBuilder();
 		while (st.hasMoreTokens()){
 			final String token = st.nextToken();
-			sb.append(" " + translationMap.getOrDefault(token,token) + " ");
+			sb.append(translationMap.getOrDefault(token,token) + " ");
 		}
-		return sb.toString();
+		return sb.toString().trim();
 	}
 
+	//TODO remove also codes of the cities
 	public String removeCodes(String s) {
-		final String regex = " \\d+ ";
+		final String regex = "\\bkey::[0-9]*\\b";
 		return s.replaceAll(regex, "").trim();
 	}
 
@@ -213,17 +214,19 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	//get the list of keywords in a string
-	public List<Integer> getKeywords(String s) {
+	public List<String> getKeywords(String s) {
 
-		final String regex = " \\d+ ";
+//		final String regex = " \\d+ ";
+
+		final String regex = "\\bkey::[0-9]*\\b";
 
 		Pattern p = Pattern.compile(regex, Pattern.MULTILINE);
 		Matcher m = p.matcher(s);
-		List<Integer> codes = new ArrayList<>();
+		List<String> codes = new ArrayList<>();
 		while (m.find()) {
-			codes.add(Integer.parseInt(m.group(0).replace(" ", "")));
+			codes.add(m.group(0));
 			for (int i = 1; i <= m.groupCount(); i++) {
-				codes.add(Integer.parseInt(m.group(0).replace(" ", "")));
+				codes.add(m.group(0));
 			}
 		}
 		return codes;

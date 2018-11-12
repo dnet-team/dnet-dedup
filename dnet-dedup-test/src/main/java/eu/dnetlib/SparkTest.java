@@ -1,5 +1,6 @@
 package eu.dnetlib;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
@@ -39,7 +40,7 @@ public class SparkTest {
         counter = new SparkCounter(context);
 
         //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.test2.pace.conf"));
 
         BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {
@@ -83,6 +84,9 @@ public class SparkTest {
         System.out.println("Connected Components: " + connectedComponents.count());
 
         counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
+
+        connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
+        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
 
         //print ids
 //        ccs.foreach(cc -> System.out.println(cc.getId()));
