@@ -41,7 +41,7 @@ public class BlockProcessor {
         final Queue<MapDocument> q = prepare(documents);
 
         if (q.size() > 1) {
-            log.info("reducing key: '" + key + "' records: " + q.size());
+            log.debug("reducing key: '" + key + "' records: " + q.size());
             //process(q, context);
             process(simplifyQueue(q, key, context), context);
         } else {
@@ -109,7 +109,7 @@ public class BlockProcessor {
             q.addAll(tempResults);
         } else {
             context.incrementCounter(wf.getEntityType(), String.format("Skipped records for count(%s) >= %s", wf.getOrderField(), wf.getGroupMaxSize()), tempResults.size());
-            log.info("Skipped field: " + fieldRef + " - size: " + tempResults.size() + " - ngram: " + ngram);
+            log.debug("Skipped field: " + fieldRef + " - size: " + tempResults.size() + " - ngram: " + ngram);
         }
     }
 
@@ -150,7 +150,7 @@ public class BlockProcessor {
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
                         final ScoreResult sr = similarity(algo, pivot, curr);
-                        log.info(sr.toString()+"SCORE "+ sr.getScore());
+                        log.debug(sr.toString()+"SCORE "+ sr.getScore());
                         emitOutput(sr, idPivot, idCurr, context);
                         i++;
                     }
