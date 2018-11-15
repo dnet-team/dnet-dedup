@@ -1,23 +1,26 @@
-{ 
-	"wf" : { 
-		"configurationId" : "$configurationId$",
-        "threshold" : "$threshold$", 
-        "run" : "$run$", 
-        "entityType" : "$entityType$", 
-        "orderField" : "$orderField$", 
-        "queueMaxSize" : "$queueMaxSize$",
-        "groupMaxSize" : "$groupMaxSize$",
-        "slidingWindowSize" : "$slidingWindowSize$",
-        "rootBuilder" : [ $rootBuilder:{"$it$"};separator=", "$ ],
-        "includeChildren" : "$includeChildren$" 
-    },
-	"pace" : {		
+{
+	"wf" : {
+		"threshold" : "$threshold$",
+		"dedupRun" : "$run$",
+		"entityType" : "$entityType$",
+		"subEntityType" : "$subEntityType$",
+		"subEntityValue" : "$subEntityValue$",
+		"orderField" : "$orderField$",
+		"queueMaxSize" : "$queueMaxSize$",
+		"groupMaxSize" : "$groupMaxSize$",
+		"slidingWindowSize" : "$slidingWindowSize$",
+		"rootBuilder" : [ $rootBuilder:{"$it$"};separator=", "$ ],
+        "includeChildren" : "$includeChildren$"
+	},
+	"pace" : {
 		"clustering" : [
-		],		
-  		"conditions" : [ 
-  		],		
+		],
+		"strictConditions" : [
+		],
+		"conditions" : [
+		],
 		"model" : [
 		],
-		"blacklists" : { } 		
+		"blacklists" : { }
 	}
 }

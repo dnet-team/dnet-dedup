@@ -36,6 +36,8 @@ public class DedupConfig implements Config, Serializable {
 		defaults.put("threshold", "0");
 		defaults.put("dedupRun", "001");
 		defaults.put("entityType", "result");
+		defaults.put("subEntityType", "resulttype");
+		defaults.put("subEntityValue", "publication");
 		defaults.put("orderField", "title");
 		defaults.put("queueMaxSize", "2000");
 		defaults.put("groupMaxSize", "10");
