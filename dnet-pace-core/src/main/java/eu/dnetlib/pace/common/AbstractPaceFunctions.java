@@ -12,6 +12,7 @@ import eu.dnetlib.pace.model.FieldListImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -171,7 +172,7 @@ public abstract class AbstractPaceFunctions {
 				String[] line = s.split(";");
 				String value = line[0];
 				for (String key: line){
-					m.put(fixAliases(key),value);
+					m.put(fixAliases(key).toLowerCase(),value);
 				}
 			}
 		} catch (final Throwable e){
@@ -191,17 +192,21 @@ public abstract class AbstractPaceFunctions {
 		return sb.toString().trim();
 	}
 
-	//TODO remove also codes of the cities
+	public String normalizeCities(String s1, Map<String,String> cityMap){
+		for (String city : cityMap.keySet())
+			s1 = s1.replaceAll(" " + city + " ", " " + cityMap.get(city) + " ");
+		return s1;
+	}
+
 	public String removeCodes(String s) {
-		final String regex = "\\bkey::[0-9]*\\b";
-		return s.replaceAll(regex, "").trim();
+		final String regexKey = "\\bkey::[0-9]*\\b";
+		final String regexCity = "\\bcity::[0-9]*\\b";
+		return s.replaceAll(regexKey, "").replaceAll(regexCity, "").trim();
+
 	}
 
 	//check if 2 strings have same keywords
 	public boolean sameKeywords(String s1, String s2){
-		//all keywords in common
-		//return getKeywords(s1).containsAll(getKeywords(s2)) && getKeywords(s2).containsAll(getKeywords(s1));
-
 		//at least 1 keyword in common
 		if (getKeywords(s1).isEmpty() || getKeywords(s2).isEmpty())
 			return true;
@@ -209,10 +214,35 @@ public abstract class AbstractPaceFunctions {
 			return CollectionUtils.intersection(getKeywords(s1),getKeywords(s2)).size()>0;
 	}
 
+	//returns true if at least 1 city is in common
+	//returns true if a name has no cities
+	public boolean sameCity(String s1, String s2){
+
+		if (getCities(s1).isEmpty() || getCities(s2).isEmpty())
+			return true;
+		else
+			return CollectionUtils.intersection(getCities(s1), getCities(s2)).size()>0;
+	}
+
+	//get the list of keywords in a string
+	public List<String> getCities(String s) {
+
+		final String regex = "\\bcity::[0-9]*\\b";
+
+		Pattern p = Pattern.compile(regex, Pattern.MULTILINE);
+		Matcher m = p.matcher(s);
+		List<String> codes = new ArrayList<>();
+		while (m.find()) {
+			codes.add(m.group(0));
+			for (int i = 1; i <= m.groupCount(); i++) {
+				codes.add(m.group(0));
+			}
+		}
+		return codes;
+	}
+
 	//get the list of keywords in a string
 	public List<String> getKeywords(String s) {
-
-//		final String regex = " \\d+ ";
 
 		final String regex = "\\bkey::[0-9]*\\b";
 

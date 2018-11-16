@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
+import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.BlockProcessor;
@@ -34,7 +35,7 @@ public class SparkTest {
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/orgs.json");
+        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/orgs2.json");
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         counter = new SparkCounter(context);
@@ -85,12 +86,12 @@ public class SparkTest {
 
         counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
 
-        connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
-        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
+//        connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
+//        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
 
         //print ids
 //        ccs.foreach(cc -> System.out.println(cc.getId()));
-//        ccs.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
+//        connectedComponents.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
 
     }
 

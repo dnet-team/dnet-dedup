@@ -1,15 +1,15 @@
 package eu.dnetlib.pace.distance;
 
 import eu.dnetlib.pace.distance.algo.JaroWinklerNormalizedName;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
 
 public class DistanceAlgoTest extends AbstractPaceFunctions {
 
@@ -47,9 +47,18 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 	@Test
 	public void testJaroWinklerNormalizedName() {
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-		double result = jaroWinklerNormalizedName.distance("universita degli studi di genova", "universita di genova");
+		double result = jaroWinklerNormalizedName.distance("Universita di Pisa", "Universita di Parma");
 
-		System.out.println(result);
+		assertEquals(result, 0.0);
+	}
+
+	@Test
+	public void testJaroWinklerNormalizedName2() {
+
+		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+		double result = jaroWinklerNormalizedName.distance("University of Pisa", "Universita degli studi di Pisa");
+
+		assertEquals(result, 1.0);
 	}
 
 }
