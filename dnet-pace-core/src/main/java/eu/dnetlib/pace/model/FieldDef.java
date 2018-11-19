@@ -36,7 +36,15 @@ public class FieldDef implements Serializable {
 
 	private double weight;
 
-	private int limit = -1;
+	/**
+	 * Sets maximum size for the repeatable fields in the model. -1 for unbounded size.
+	 */
+	private int size = -1;
+
+	/**
+	 * Sets maximum length for field values in the model. -1 for unbounded length.
+	 */
+	private int length = -1;
 
 	private Map<String, Number> params;
 
@@ -73,7 +81,12 @@ public class FieldDef implements Serializable {
 		if (params == null) {
 			params = new HashMap<>();
 		}
-		params.put("limit", getLimit());
+
+		//TODO verify that the init signatures for the distance algos are all the same!
+		/*
+		params.put("size", getSize());
+		params.put("length", getLength());
+		*/
 		params.put("weight", getWeight());
 		return PaceConfig.paceResolver.getDistanceAlgo(getAlgo(), params);
 	}
@@ -98,11 +111,6 @@ public class FieldDef implements Serializable {
 		this.overrideMatch = overrideMatch;
 	}
 
-	@Override
-	public String toString() {
-		return new Gson().toJson(this);
-	}
-
 	public double getWeight() {
 		return weight;
 	}
@@ -119,12 +127,21 @@ public class FieldDef implements Serializable {
 		this.algo = algo;
 	}
 
-	public int getLimit() {
-		return limit;
+
+	public int getSize() {
+		return size;
 	}
 
-	public void setLimit(final int limit) {
-		this.limit = limit;
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
 	}
 
 	public Map<String, Number> getParams() {
@@ -146,4 +163,10 @@ public class FieldDef implements Serializable {
 	public void setIgnoreMissing(boolean ignoreMissing) {
 		this.ignoreMissing = ignoreMissing;
 	}
+
+	@Override
+	public String toString() {
+		return new Gson().toJson(this);
+	}
+
 }

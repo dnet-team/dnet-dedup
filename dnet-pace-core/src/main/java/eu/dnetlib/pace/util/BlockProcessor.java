@@ -149,7 +149,7 @@ public class BlockProcessor {
 
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                        final ScoreResult sr = similarity(algo, pivot, curr);
+                        final ScoreResult sr = algo.between(pivot, curr, dedupConf);
                         log.debug(sr.toString()+"SCORE "+ sr.getScore());
                         emitOutput(sr, idPivot, idCurr, context);
                         i++;
@@ -168,15 +168,6 @@ public class BlockProcessor {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1);
-        }
-    }
-
-    private ScoreResult similarity(final PaceDocumentDistance algo, final MapDocument a, final MapDocument b) {
-        try {
-            return algo.between(a, b, dedupConf);
-        } catch(Throwable e) {
-            log.error(String.format("\nA: %s\n----------------------\nB: %s", a, b), e);
-            throw new IllegalArgumentException(e);
         }
     }
 
