@@ -33,7 +33,7 @@ public class SparkTest {
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/results.json");
+        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/result.title.stackoverflow.json");
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         counter = new SparkCounter(context);
@@ -57,13 +57,17 @@ public class SparkTest {
         RDD<Tuple2<Object, MapDocument>> vertexes = mapDocs.mapToPair(t -> new Tuple2<Object, MapDocument>( (long) t._1().hashCode(), t._2())).rdd();
 
         //create relations between documents
-        final JavaPairRDD<String, String> relationRDD = mapDocs.reduceByKey((a, b) -> a)    //the reduce is just to be sure that we haven't document with same id
+        JavaPairRDD<String, Iterable<MapDocument>> blocks = mapDocs.reduceByKey((a, b) -> a)    //the reduce is just to be sure that we haven't document with same id
                 //Clustering: from <id, doc> to List<groupkey,doc>
                 .flatMapToPair(a -> {
                     final MapDocument currentDocument = a._2();
                     return getGroupingKeys(config, currentDocument).stream()
                             .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
-                }).groupByKey()     //group documents basing on the key
+                }).groupByKey(); //group documents basing on the key
+
+        log.info("blocks to process: " + blocks.count());
+
+        final JavaPairRDD<String, String> relationRDD = blocks
                 //create relations by comparing only elements in the same group
                 .flatMapToPair(it -> {
                     final SparkReporter reporter = new SparkReporter(counter);

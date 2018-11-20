@@ -2,12 +2,17 @@ package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
+import eu.dnetlib.pace.distance.DistanceScorer;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Map;
 
 @DistanceClass("LevensteinTitle")
 public class LevensteinTitle extends SecondStringDistanceAlgo {
+
+	private static final Log log = LogFactory.getLog(LevensteinTitle.class);
 
 	public LevensteinTitle(Map<String,Number> params){
 		super(params, new com.wcohen.ss.Levenstein());

@@ -1,22 +1,27 @@
 package eu.dnetlib.pace.distance;
 
-import java.util.Collection;
-import java.util.List;
-
 import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.eval.ConditionEvalMap;
 import eu.dnetlib.pace.distance.eval.DistanceEval;
 import eu.dnetlib.pace.distance.eval.DistanceEvalMap;
 import eu.dnetlib.pace.distance.eval.ScoreResult;
-import eu.dnetlib.pace.model.Document;
-import eu.dnetlib.pace.model.Field;
-import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.model.*;
+import eu.dnetlib.pace.util.PaceException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The distance between two documents is given by the weighted mean of the field distances
  */
 public class DistanceScorer {
+
+	private static final Log log = LogFactory.getLog(DistanceScorer.class);
 
 	private Config config;
 
@@ -79,7 +84,7 @@ public class DistanceScorer {
 				if (va.getType().equals(vb.getType())) {
 					de.setDistance(w * fd.distanceAlgo().distance(va, vb));
 				} else {
-					throw new IllegalArgumentException(String.format("Types are differents type: %s:%s - %s:%s", va, va.getType(), vb, vb.getType()));
+					throw new PaceException(String.format("Types are different: %s:%s - %s:%s", va, va.getType(), vb, vb.getType()));
 				}
 			}
 			return de;
@@ -87,7 +92,27 @@ public class DistanceScorer {
 	}
 
 	private Field getValue(final Document d, final FieldDef fd) {
-		return d.values(fd.getName());
+		final Field v = d.values(fd.getName());
+		if (fd.getLength() > 0) {
+
+			if (v instanceof FieldValueImpl) {
+				((FieldValueImpl) v).setValue(StringUtils.substring(v.stringValue(), 0, fd.getLength()));
+			} else if (v instanceof FieldListImpl) {
+				List<String> strings = ((FieldListImpl) v).stringList();
+				strings = strings.stream()
+						.limit(fd.getSize() > 0 ? fd.getSize() : strings.size())
+						.map(s -> StringUtils.substring(s, 0, fd.getLength()))
+						.collect(Collectors.toList());
+				((FieldListImpl) v).clear();
+				((FieldListImpl) v).addAll(strings.stream()
+						.limit(fd.getSize() > 0 ? fd.getSize() : strings.size())
+						.map(s -> StringUtils.substring(s, 0, fd.getLength()))
+						.map(s -> new FieldValueImpl(v.getType(), v.getName(), s))
+						.collect(Collectors.toList()));
+			}
+		}
+
+		return v;
 	}
 
 	private double sumWeights(final Collection<FieldDef> fields) {
