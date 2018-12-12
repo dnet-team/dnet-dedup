@@ -1,0 +1,13 @@
+package eu.dnetlib.data.proto;
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "TypeProtos";
+
+// entity tags are used as rowkey prefixes on hbase
+enum Type {
+	datasource = 10;
+	organization = 20;
+	person = 30;
+	project = 40;
+	result = 50;
+}

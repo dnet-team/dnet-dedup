@@ -14,4 +14,11 @@ public interface FieldList extends List<Field>, Field {
 	 */
 	public List<String> stringList();
 
+	/**
+	 * Double[] Array
+	 *
+	 * @return the double[] array
+	 */
+	public double[] doubleArray();
+
 }

@@ -9,6 +9,8 @@ import eu.dnetlib.pace.distance.eval.ScoreResult;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.model.MapDocumentComparator;
+import eu.dnetlib.pace.model.TreeNodeDef;
+import eu.dnetlib.pace.tree.support.MatchType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,10 +45,61 @@ public class BlockProcessor {
         if (q.size() > 1) {
 //            log.info("reducing key: '" + key + "' records: " + q.size());
             //process(q, context);
-            process(simplifyQueue(q, key, context), context);
+
+            //process the decision tree if it is specified, otherwise go with conditions and distance algos
+            if (!dedupConf.getPace().getDecisionTree().isEmpty()){
+                processPersons(q, context);
+            }
+            else {
+                process(simplifyQueue(q, key, context), context);
+            }
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
         }
+    }
+
+    private void processPersons(final Queue<MapDocument> queue, final Reporter context) {
+
+        while (!queue.isEmpty()) {
+
+            final MapDocument pivot = queue.remove(); //take first element of the queue
+            final String idPivot = pivot.getIdentifier();
+
+            //compare the first element with all the others
+            for (final MapDocument curr : queue) {
+                final String idCurr = curr.getIdentifier();
+
+                //check if pivot and current element are similar by processing the tree
+                if (navigateTree(pivot, curr))
+                    writeSimilarity(context, idPivot, idCurr);
+            }
+
+
+        }
+    }
+
+    private boolean navigateTree(final MapDocument doc1, final MapDocument doc2){
+
+        final Map<String, TreeNodeDef> decisionTree = dedupConf.getPace().getDecisionTree();
+
+        String current = "start";
+
+        while (!current.equals(MatchType.NO_MATCH.toString()) && !current.equals(MatchType.ORCID_MATCH.toString()) && !current.equals(MatchType.TOPICS_MATCH.toString()) && !current.equals(MatchType.COAUTHORS_MATCH.toString())) {
+
+            TreeNodeDef currentNode = decisionTree.get(current);
+            //throw an exception if the node doesn't exist
+            if (currentNode == null)
+                throw new PaceException("The Tree Node doesn't exist: " + current);
+
+            int compare = currentNode.treeNode().compare(doc1.getFieldMap().get(currentNode.getField()), doc2.getFieldMap().get(currentNode.getField()));
+
+            current = (compare==0)?currentNode.getUndefined():(compare==-1)?currentNode.getNegative():currentNode.getPositive();
+        }
+
+        if (!current.equals(MatchType.NO_MATCH.toString()))
+            return true;
+        else
+            return false;
     }
 
     private Queue<MapDocument> prepare(final Iterable<MapDocument> documents) {

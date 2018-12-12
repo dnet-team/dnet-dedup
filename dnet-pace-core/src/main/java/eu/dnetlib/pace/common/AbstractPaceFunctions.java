@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.common;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -12,7 +13,6 @@ import eu.dnetlib.pace.model.FieldListImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -257,5 +257,14 @@ public abstract class AbstractPaceFunctions {
 		}
 		return codes;
 	}
+
+	protected String firstLC(final String s) {
+		return StringUtils.substring(s, 0, 1).toLowerCase();
+	}
+
+	protected Iterable<String> tokens(final String s, final int maxTokens) {
+		return Iterables.limit(Splitter.on(" ").omitEmptyStrings().trimResults().split(s), maxTokens);
+	}
+
 
 }

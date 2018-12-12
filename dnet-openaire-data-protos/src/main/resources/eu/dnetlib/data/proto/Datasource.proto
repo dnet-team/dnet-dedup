@@ -1,0 +1,61 @@
+package eu.dnetlib.data.proto;
+
+import "FieldType.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "DatasourceProtos";
+
+message Datasource {
+
+	optional Metadata metadata = 2;
+
+	message Metadata {
+	
+		// common fields
+		optional Qualifier datasourcetype = 15;
+		optional Qualifier openairecompatibility = 17;
+
+		optional StringField officialname = 1;
+		optional StringField englishname = 2;
+		optional StringField websiteurl = 3;
+		optional StringField logourl = 4;
+		optional StringField contactemail = 5;
+		optional StringField namespaceprefix = 7;
+
+		optional StringField latitude = 18;
+		optional StringField longitude = 19;
+		optional StringField dateofvalidation = 20;
+		optional StringField description = 21;
+		
+		repeated StructuredProperty subjects = 45; 
+
+		// opendoar specific fields (od*)
+		optional StringField odnumberofitems = 9;
+		optional StringField odnumberofitemsdate = 10;
+		optional StringField odpolicies = 12;
+
+		repeated StringField odlanguages = 13;
+		repeated StringField odcontenttypes = 14;
+		repeated StringField accessinfopackage = 6;
+		
+		// re3data fields
+		optional StringField releasestartdate = 31; 
+		optional StringField releaseenddate = 32;
+		optional StringField missionstatementurl = 33;
+		optional BoolField dataprovider = 34;
+		optional BoolField serviceprovider = 35;
+		optional StringField databaseaccesstype = 36; // {open, restricted or closed} 
+ 		optional StringField datauploadtype = 37; // {open, restricted or closed} 
+ 		optional StringField databaseaccessrestriction = 38; // {feeRequired, registration, other} 
+ 		optional StringField datauploadrestriction = 39; // {feeRequired, registration, other} 
+ 		optional BoolField versioning = 40; 
+ 		optional StringField citationguidelineurl = 41; 
+ 		optional StringField qualitymanagementkind = 42; // {yes, no, uknown} 
+ 		optional StringField pidsystems = 43; 
+ 		optional StringField certificates = 44;		
+
+		repeated KeyValue policies = 46; 
+
+	}
+
+}

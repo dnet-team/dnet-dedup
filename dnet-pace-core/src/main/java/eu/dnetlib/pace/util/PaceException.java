@@ -6,4 +6,8 @@ public class PaceException extends RuntimeException {
         super(s, e);
     }
 
+    public PaceException(String s){
+        super(s);
+    }
+
 }

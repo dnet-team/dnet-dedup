@@ -1,0 +1,9 @@
+package eu.dnetlib.data.proto;
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "SpecialTrustProtos";
+
+enum SpecialTrust {
+	INFINITE = 1;
+	NEUTRAL = 2;
+}

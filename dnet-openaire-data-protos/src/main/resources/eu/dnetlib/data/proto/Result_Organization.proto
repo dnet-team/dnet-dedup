@@ -1,0 +1,23 @@
+package eu.dnetlib.data.proto;
+
+import "RelMetadata.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "ResultOrganizationProtos";
+
+message ResultOrganization {
+
+	optional Affiliation affiliation = 1;
+	
+	message Affiliation {
+
+		enum RelName {
+			isAuthorInstitutionOf = 1; 	// Organization --> Result
+			hasAuthorInstitution = 2;	// Result --> Organization
+		}
+
+		required RelMetadata relMetadata = 1;
+	
+	}
+
+}
