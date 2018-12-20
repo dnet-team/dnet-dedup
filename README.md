@@ -40,7 +40,7 @@ A new comparator (JaroWinklerNormalizedName) has been implemented for the dedupl
 To this aim, two different translation maps have been defined:
  - translation_map.csv: contains keywords codes and the keyword in ~10 different languages
  - city_map.csv: contains cities codes and city names in many different languages
-This csv files are placed into a map like that: <translation, code>.
+> This csv files are placed into a map like that: <translation, code>. The key is the translation, the code is the one associated to the keyword/city. 
 
 The JaroWinklerNormalizedName comparator search for the keyword and the city name into the organization name, substitutes them with the code and then applies the JaroWinkler similarity function on the resulting strings removing identified codes.
 The process to determine if two organization names are equal is the following:
