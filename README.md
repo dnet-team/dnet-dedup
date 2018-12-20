@@ -9,8 +9,8 @@ The decision tree has to be defined into the json configuration. The field decis
 In particular the TreeNodeDef contains:
  - List<FieldConf> : list of fields processed by the node. Each field is associated to:
 	 - field: name of the field
-	 - comparator: name of the comparator to use for that particular field, it produces a similarity score, -1 if the comparison is not possible (missing field or few informations)
-	Each FieldConf contains a comparator name which has to be defined. It is sufficient to implement the Comparator interface that exposes a "compare" method returning the similarity score. The new comparator must be annotated with @ComparatorClass("name") specifying the name used by the FieldConf to access to the right comparator.
+	 - comparator: name of the comparator to use for that particular field, it produces a similarity score, -1 if the comparison is not possible (missing field or few informations).
+	> Each FieldConf contains a comparator name which has to be defined. It is sufficient to implement the Comparator interface that exposes a "compare" method returning the similarity score. The new comparator must be annotated with @ComparatorClass("name") specifying the name used by the FieldConf to access to the right comparator.
 	 - weight: weight to assign to the similarity score of that comparator when aggregating
 	 - params: list of parameters for the comparator
  - threshold: this threshold is applied to the resulting similarity score of the particular treeNode.
@@ -27,7 +27,7 @@ if score<\th  --- negative result
 	 - negative: specifies the key of the next node in case of negative result
 	 - undefined: specifies the key of the next node in case of undefined result
  - ignoreMissing: defines the behavior of the treeNode in case of a missing field
-		e.g. if a comparator on a particular field produces an undefined result (-1), if ignoreMissing=true that field is simply ignored, otherwise the entire treeNode score is considered to be -1
+	> e.g. if a comparator on a particular field produces an undefined result (-1), if ignoreMissing=true that field is simply ignored, otherwise the entire treeNode score is considered to be -1
 
 In order to make the decision tree work, the BlockProcessor has been modified with the following changes:
  - if the decision tree is defined into the JSON configuration the deduplication process relies on it
