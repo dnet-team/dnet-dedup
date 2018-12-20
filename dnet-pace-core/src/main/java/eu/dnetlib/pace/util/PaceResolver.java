@@ -7,8 +7,8 @@ import eu.dnetlib.pace.condition.ConditionClass;
 import eu.dnetlib.pace.distance.DistanceAlgo;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.model.FieldDef;
-import eu.dnetlib.pace.tree.TreeNode;
-import eu.dnetlib.pace.tree.TreeNodeClass;
+import eu.dnetlib.pace.tree.Comparator;
+import eu.dnetlib.pace.tree.ComparatorClass;
 import org.reflections.Reflections;
 
 import java.io.Serializable;
@@ -22,7 +22,7 @@ public class PaceResolver implements Serializable {
     private final Map<String, Class<ClusteringFunction>> clusteringFunctions;
     private final Map<String, Class<ConditionAlgo>> conditionAlgos;
     private final Map<String, Class<DistanceAlgo>> distanceAlgos;
-    private final Map<String, Class<TreeNode>> treeNodes;
+    private final Map<String, Class<Comparator>> comparators;
 
     public PaceResolver() {
 
@@ -38,9 +38,9 @@ public class PaceResolver implements Serializable {
                 .filter(DistanceAlgo.class::isAssignableFrom)
                 .collect(Collectors.toMap(cl -> cl.getAnnotation(DistanceClass.class).value(), cl -> (Class<DistanceAlgo>)cl));
 
-        this.treeNodes = new Reflections("eu.dnetlib").getTypesAnnotatedWith(TreeNodeClass.class).stream()
-                .filter(TreeNode.class::isAssignableFrom)
-                .collect(Collectors.toMap(cl -> cl.getAnnotation(TreeNodeClass.class).value(), cl -> (Class<TreeNode>) cl));
+        this.comparators = new Reflections("eu.dnetlib").getTypesAnnotatedWith(ComparatorClass.class).stream()
+                .filter(Comparator.class::isAssignableFrom)
+                .collect(Collectors.toMap(cl -> cl.getAnnotation(ComparatorClass.class).value(), cl -> (Class<Comparator>) cl));
     }
 
     public ClusteringFunction getClusteringFunction(String name, Map<String, Integer> params) throws PaceException {
@@ -67,9 +67,9 @@ public class PaceResolver implements Serializable {
         }
     }
 
-    public TreeNode getTreeNode(String name, Map<String, Number> params) throws PaceException {
+    public Comparator getComparator(String name, Map<String, Number> params) throws PaceException {
         try {
-            return treeNodes.get(name).getDeclaredConstructor(Map.class).newInstance(params);
+            return comparators.get(name).getDeclaredConstructor(Map.class).newInstance(params);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | NullPointerException e) {
             throw new PaceException(name + " not found ", e);
         }

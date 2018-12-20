@@ -1,60 +1,113 @@
 package eu.dnetlib.pace.model;
 
 import eu.dnetlib.pace.config.PaceConfig;
-import eu.dnetlib.pace.tree.TreeNode;
+import eu.dnetlib.pace.tree.Comparator;
+import eu.dnetlib.pace.tree.support.AggType;
 import eu.dnetlib.pace.util.PaceException;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 public class TreeNodeDef implements Serializable {
 
-    private String name;
-    private String field;
+    private List<FieldConf> fields; //list of fields involved in the tree node (contains comparators to be used and field on which apply the comparator)
+    private AggType aggregation;    //how to aggregate similarity measures for every field
 
-    private String positive;
-    private String negative;
-    private String undefined;
+    private double threshold;       //threshold on the similarity measure
 
-    private Map<String, Number> params;
+    private String positive;        //specifies the next node in case of positive result: similarity>=th
+    private String negative;        //specifies the next node in case of negative result: similarity<th
+    private String undefined;       //specifies the next node in case of undefined result: similarity=-1
+
+    boolean ignoreMissing = true;   //specifies what to do in case of missing field
 
     public TreeNodeDef() {
     }
 
-    public TreeNodeDef(String name, String field, String positive, String negative, String undefined, Map<String, Number> params) {
-        this.name = name;
-        this.field = field;
+    //compute the similarity measure between two documents
+    public double evaluate(MapDocument doc1, MapDocument doc2) {
+
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+
+        for (FieldConf fieldConf : fields) {
+
+            double weight = fieldConf.getWeight();
+
+            double similarity = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()));
+
+            //if similarity is -1 means that a comparator gave undefined, do not add result to the stats
+            if (similarity != -1) {
+                stats.addValue(weight * similarity);
+            }
+            else {
+                if (!ignoreMissing)     //if the missing value has not to be ignored, return -1
+                    return -1;
+            }
+        }
+
+        switch (aggregation){
+
+            case AVG:
+                return stats.getMean();
+            case SUM:
+                return stats.getSum();
+            case MAX:
+                return stats.getMax();
+            case MIN:
+                return stats.getMin();
+            default:
+                return 0.0;
+        }
+
+    }
+
+    private Comparator comparator(final FieldConf field){
+
+        return PaceConfig.paceResolver.getComparator(field.getComparator(), field.getParams());
+    }
+
+    public TreeNodeDef(List<FieldConf> fields, double threshold, AggType aggregation, String positive, String negative, String undefined) {
+        this.fields = fields;
+        this.threshold = threshold;
+        this.aggregation = aggregation;
         this.positive = positive;
         this.negative = negative;
         this.undefined = undefined;
-        this.params = params;
     }
 
-    public TreeNode treeNode() {
-        try {
-            return PaceConfig.paceResolver.getTreeNode(getName(), params);
-        } catch (PaceException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public boolean isIgnoreMissing() {
+        return ignoreMissing;
     }
 
-    public String getName() {
-        return name;
+    public void setIgnoreMissing(boolean ignoreMissing) {
+        this.ignoreMissing = ignoreMissing;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<FieldConf> getFields() {
+        return fields;
     }
 
-    public String getField() {
-        return field;
+    public void setFields(List<FieldConf> fields) {
+        this.fields = fields;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
+    }
+
+    public AggType getAggregation() {
+        return aggregation;
+    }
+
+    public void setAggregation(AggType aggregation) {
+        this.aggregation = aggregation;
     }
 
     public String getPositive() {
@@ -81,20 +134,12 @@ public class TreeNodeDef implements Serializable {
         this.undefined = undefined;
     }
 
-    public Map<String, Number> getParams() {
-        return params;
-    }
-
-    public void setParams(Map<String, Number> params) {
-        this.params = params;
-    }
-
     @Override
     public String toString() {
         try {
             return new ObjectMapper().writeValueAsString(this);
         } catch (IOException e) {
-            return e.getStackTrace().toString();
+            throw new PaceException("Impossible to convert to JSON: ", e);
         }
     }
 }

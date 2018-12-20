@@ -56,9 +56,10 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 	public void testJaroWinklerNormalizedName2() {
 
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-		double result = jaroWinklerNormalizedName.distance("University of Pisa", "Universita degli studi di Pisa");
+		double result = jaroWinklerNormalizedName.distance("University of New York", "Università di New York");
 
 		assertEquals(result, 1.0);
 	}
+
 
 }

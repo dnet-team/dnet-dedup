@@ -4,22 +4,22 @@ import eu.dnetlib.pace.model.Field;
 
 import java.util.Map;
 
-@TreeNodeClass("exactMatch")
-public class ExactMatch extends AbstractTreeNode {
+@ComparatorClass("exactMatch")
+public class ExactMatch extends AbstractComparator {
 
     public ExactMatch(Map<String, Number> params) {
         super(params);
     }
 
     @Override
-    public int compare(Field a, Field b) {
+    public double compare(Field a, Field b) {
 
         if (a.stringValue().isEmpty() || b.stringValue().isEmpty())
-            return 0;
+            return -1;
         else if (a.stringValue().equals(b.stringValue()))
             return 1;
         else
-            return -1;
+            return 0;
     }
 
 }

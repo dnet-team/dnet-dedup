@@ -6,13 +6,13 @@ import eu.dnetlib.pace.model.FieldList;
 import java.util.List;
 import java.util.Map;
 
-@TreeNodeClass("undefined")
-public class UndefinedNode implements TreeNode {
+@ComparatorClass("undefined")
+public class UndefinedNode implements Comparator {
 
     Map<String, Number> params;
 
     @Override
-    public int compare(Field a, Field b) {
+    public double compare(Field a, Field b) {
 
         final List<String> sa = ((FieldList) a).stringList();
         final List<String> sb = ((FieldList) b).stringList();

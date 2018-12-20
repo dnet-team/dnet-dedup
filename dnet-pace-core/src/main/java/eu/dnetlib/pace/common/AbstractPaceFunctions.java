@@ -193,10 +193,37 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	public String normalizeCities(String s1, Map<String,String> cityMap){
+		//TODO change normalization mode
+
 		for (String city : cityMap.keySet())
 			s1 = s1.replaceAll(" " + city + " ", " " + cityMap.get(city) + " ");
 		return s1;
 	}
+
+	public String normalizeCities2 (String s1, Map<String, String> cityMap, int windowSize){
+
+		List<String> tokens = Arrays.asList(s1.split(" "));
+
+		if (tokens.size()<windowSize)
+			windowSize = tokens.size();
+
+		int length = windowSize;
+
+		while (length != 0) {
+
+			for (int i = 0; i<=tokens.size()-length; i++){
+				String candidate = Joiner.on(" ").join(tokens.subList(i, i + length));
+				if (cityMap.containsKey(candidate)) {
+					s1 = (" " + s1 + " ").replaceAll(" " + candidate + " ", " " + cityMap.get(candidate) + " ");
+					return s1;
+				}
+			}
+			length-=1;
+		}
+
+		return s1;
+	}
+
 
 	public String removeCodes(String s) {
 		final String regexKey = "\\bkey::[0-9]*\\b";

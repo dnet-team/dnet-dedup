@@ -70,36 +70,40 @@ public class BlockProcessor {
                 final String idCurr = curr.getIdentifier();
 
                 //check if pivot and current element are similar by processing the tree
-                if (navigateTree(pivot, curr))
+                if (navigateTree(pivot, curr)!=MatchType.NO_MATCH)
                     writeSimilarity(context, idPivot, idCurr);
             }
-
-
         }
     }
 
-    private boolean navigateTree(final MapDocument doc1, final MapDocument doc2){
+    private MatchType navigateTree(final MapDocument doc1, final MapDocument doc2){
 
         final Map<String, TreeNodeDef> decisionTree = dedupConf.getPace().getDecisionTree();
 
         String current = "start";
 
-        while (!current.equals(MatchType.NO_MATCH.toString()) && !current.equals(MatchType.ORCID_MATCH.toString()) && !current.equals(MatchType.TOPICS_MATCH.toString()) && !current.equals(MatchType.COAUTHORS_MATCH.toString())) {
+        while (MatchType.getEnum(current)==MatchType.UNDEFINED) {
 
             TreeNodeDef currentNode = decisionTree.get(current);
             //throw an exception if the node doesn't exist
             if (currentNode == null)
                 throw new PaceException("The Tree Node doesn't exist: " + current);
 
-            int compare = currentNode.treeNode().compare(doc1.getFieldMap().get(currentNode.getField()), doc2.getFieldMap().get(currentNode.getField()));
+            double similarity = currentNode.evaluate(doc1, doc2);
 
-            current = (compare==0)?currentNode.getUndefined():(compare==-1)?currentNode.getNegative():currentNode.getPositive();
+            if (similarity == -1) {
+                current = currentNode.getUndefined();
+            }
+            else if (similarity>=currentNode.getThreshold()){
+                current = currentNode.getPositive();
+            }
+            else {
+                current = currentNode.getNegative();
+            }
+
         }
 
-        if (!current.equals(MatchType.NO_MATCH.toString()))
-            return true;
-        else
-            return false;
+        return MatchType.getEnum(current);
     }
 
     private Queue<MapDocument> prepare(final Iterable<MapDocument> documents) {

@@ -47,9 +47,14 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         ca = translate(ca, translationMap);
         cb = translate(cb, translationMap);
 
-        String norm = normalizeCities(" " + ca + " ||| " + cb + " ", cityMap);
-        ca = norm.split("\\|\\|\\|")[0].trim();
-        cb = norm.split("\\|\\|\\|")[1].trim();
+        //replace cities with codes
+//        String norm = normalizeCities(" " + ca + " ||| " + cb + " ", cityMap);
+//        ca = norm.split("\\|\\|\\|")[0].trim();
+//        cb = norm.split("\\|\\|\\|")[1].trim();
+
+        ca = normalizeCities2(ca, cityMap, 4);
+        cb = normalizeCities2(cb, cityMap, 4);
+
 
         if (sameCity(ca,cb)){
            if (sameKeywords(ca,cb)){

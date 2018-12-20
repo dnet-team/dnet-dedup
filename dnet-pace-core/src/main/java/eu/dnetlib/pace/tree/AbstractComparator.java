@@ -5,17 +5,17 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Map;
 
-public class AbstractTreeNode implements TreeNode {
+abstract class AbstractComparator implements Comparator {
 
     Map<String, Number> params;
 
-    public AbstractTreeNode(Map<String, Number> params){
+    public AbstractComparator(Map<String, Number> params){
         this.params = params;
     }
 
     @Override
-    public int compare(Field a, Field b) {
-        return 0;
+    public double compare(Field a, Field b) {
+        return 0.0;
     }
 
     public static double stringSimilarity(String s1, String s2) {

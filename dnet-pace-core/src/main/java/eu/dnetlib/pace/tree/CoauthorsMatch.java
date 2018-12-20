@@ -6,15 +6,15 @@ import eu.dnetlib.pace.model.FieldList;
 import java.util.List;
 import java.util.Map;
 
-@TreeNodeClass("coauthorsMatch")
-public class CoauthorsMatch extends AbstractTreeNode {
+@ComparatorClass("coauthorsMatch")
+public class CoauthorsMatch extends AbstractComparator {
 
     public CoauthorsMatch(Map<String, Number> params) {
         super(params);
     }
 
     @Override
-    public int compare(Field a, Field b) {
+    public double compare(Field a, Field b) {
 
         final List<String> c1 = ((FieldList) a).stringList();
         final List<String> c2 = ((FieldList) b).stringList();
@@ -24,7 +24,7 @@ public class CoauthorsMatch extends AbstractTreeNode {
 
         //few coauthors or too many coauthors
         if (size1 < params.getOrDefault("minCoauthors", 5).intValue() || size2 < params.getOrDefault("minCoauthors", 5).intValue() || (size1+size2 > params.getOrDefault("maxCoauthors", 200).intValue()))
-            return 0;
+            return -1;
 
         int coauthorship = 0;
         for (String ca1: c1){
@@ -36,11 +36,7 @@ public class CoauthorsMatch extends AbstractTreeNode {
             }
         }
 
-        if (coauthorship>=params.getOrDefault("th", 5).intValue())
-            return 1;
-        else if (coauthorship == 0)
-            return -1;
-        else
-            return 0;
+        return coauthorship;
+
     }
 }
