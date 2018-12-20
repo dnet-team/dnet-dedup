@@ -7,7 +7,7 @@ The decision tree has to be defined into the json configuration. The field decis
 <String nodeName, TreeNodeDef treeNodeDef>: the nodeName is the key, the treeNodeDef contains the definition of the node.
 
 In particular the TreeNodeDef contains:
- - List<FieldConf> : list of fields processed by the node. Each field is associated to:
+ - List of FieldConf : list of fields processed by the node. Each field is associated to:
 	 - field: name of the field
 	 - comparator: name of the comparator to use for that particular field, it produces a similarity score, -1 if the comparison is not possible (missing field or few informations).
 	> Each FieldConf contains a comparator name which has to be defined. It is sufficient to implement the Comparator interface that exposes a "compare" method returning the similarity score. The new comparator must be annotated with @ComparatorClass("name") specifying the name used by the FieldConf to access to the right comparator.
