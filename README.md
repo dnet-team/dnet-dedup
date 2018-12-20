@@ -20,8 +20,8 @@ if score==-1 --- undefined result
 if score<\th  --- negative result
 ```
  - aggregation: defines the type of aggregation to apply to the similarity scores of the fields in the list of fields
-		AVG(average), MAX, MIN, SUM
-		e.g. the similarity scores are multiplied with the weight and then the defined aggregation is applied
+	 - possible values: AVG(average), MAX, MIN, SUM
+	e.g. the similarity scores are multiplied with the weight and then the defined aggregation is applied
  - arcs: define the next node of the tree depending on the result
 		positive: specifies the key of the next node in case of positive result
 		negative: specifies the key of the next node in case of negative result
