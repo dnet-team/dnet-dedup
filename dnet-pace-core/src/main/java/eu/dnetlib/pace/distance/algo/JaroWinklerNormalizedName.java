@@ -23,8 +23,11 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
 
     private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
+    private Map<String, Number> params;
+
     public JaroWinklerNormalizedName(Map<String, Number> params){
         super(params, new com.wcohen.ss.JaroWinkler());
+        this.params = params;
     }
 
     public JaroWinklerNormalizedName(double weight) {
@@ -52,9 +55,8 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
 //        ca = norm.split("\\|\\|\\|")[0].trim();
 //        cb = norm.split("\\|\\|\\|")[1].trim();
 
-        ca = normalizeCities2(ca, cityMap, 4);
-        cb = normalizeCities2(cb, cityMap, 4);
-
+        ca = normalizeCities2(ca, cityMap, params.getOrDefault("windowSize", 4).intValue());
+        cb = normalizeCities2(cb, cityMap, params.getOrDefault("windowSize", 4).intValue());
 
         if (sameCity(ca,cb)){
            if (sameKeywords(ca,cb)){

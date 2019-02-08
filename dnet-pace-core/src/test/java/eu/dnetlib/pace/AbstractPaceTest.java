@@ -1,14 +1,15 @@
 package eu.dnetlib.pace;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import org.apache.commons.io.IOUtils;
-
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
+import eu.dnetlib.pace.model.FieldListImpl;
 import eu.dnetlib.pace.model.FieldValueImpl;
-import org.junit.Test;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AbstractPaceTest {
 
@@ -34,4 +35,14 @@ public abstract class AbstractPaceTest {
 		return new FieldValueImpl(Type.URL, "url", s);
 	}
 
+	protected Field createFieldList(List<String> strings, String fieldName){
+
+		List<FieldValueImpl> fieldValueStream = strings.stream().map(s -> new FieldValueImpl(Type.String, fieldName, s)).collect(Collectors.toList());
+
+		FieldListImpl a = new FieldListImpl();
+		a.addAll(fieldValueStream);
+
+		return a;
+
+	}
 }

@@ -17,9 +17,6 @@ public class UndefinedNode implements Comparator {
         final List<String> sa = ((FieldList) a).stringList();
         final List<String> sb = ((FieldList) b).stringList();
 
-        System.out.println("sa = " + sa.size());
-        System.out.println("sb = " + sb.size());
-
         return 0;
     }
 }

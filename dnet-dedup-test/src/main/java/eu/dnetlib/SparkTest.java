@@ -1,10 +1,8 @@
 package eu.dnetlib;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
-import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.BlockProcessor;
@@ -35,13 +33,13 @@ public class SparkTest {
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/orgs2.json");
+        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/authors.json");//"/eu/dnetlib/pace/orgs2.json");
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         counter = new SparkCounter(context);
 
         //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.test2.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/authors.test.pace.conf"));//"/eu/dnetlib/pace/organization.test2.pace.conf"));
 
         BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {
@@ -63,6 +61,7 @@ public class SparkTest {
                 //Clustering: from <id, doc> to List<groupkey,doc>
                 .flatMapToPair(a -> {
                     final MapDocument currentDocument = a._2();
+
                     return getGroupingKeys(config, currentDocument).stream()
                             .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
                 }).groupByKey()     //group documents basing on the key
@@ -86,8 +85,8 @@ public class SparkTest {
 
         counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
 
-//        connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
-//        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
+        connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
+        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
 
         //print ids
 //        ccs.foreach(cc -> System.out.println(cc.getId()));
@@ -105,10 +104,8 @@ public class SparkTest {
         }
     }
 
-
     static Set<String> getGroupingKeys(DedupConfig conf, MapDocument doc) {
         return Sets.newHashSet(BlacklistAwareClusteringCombiner.filterAndCombine(doc, conf));
     }
-
 
 }

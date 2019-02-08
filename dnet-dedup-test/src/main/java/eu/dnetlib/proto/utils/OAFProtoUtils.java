@@ -32,8 +32,7 @@ public class OAFProtoUtils {
     }
 
     public static FieldTypeProtos.Qualifier.Builder getQualifier(final String classname, final String schemename) {
-        return
-                FieldTypeProtos.Qualifier.newBuilder().setClassid(classname).setClassname(classname).setSchemeid(schemename).setSchemename(schemename);
+        return FieldTypeProtos.Qualifier.newBuilder().setClassid(classname).setClassname(classname).setSchemeid(schemename).setSchemename(schemename);
     }
 
     public static OafProtos.OafEntity.Builder oafEntity(final String id, final eu.dnetlib.data.proto.TypeProtos.Type type) {

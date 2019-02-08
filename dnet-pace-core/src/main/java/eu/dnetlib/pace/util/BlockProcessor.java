@@ -76,7 +76,7 @@ public class BlockProcessor {
         }
     }
 
-    private MatchType navigateTree(final MapDocument doc1, final MapDocument doc2){
+    public MatchType navigateTree(final MapDocument doc1, final MapDocument doc2){
 
         final Map<String, TreeNodeDef> decisionTree = dedupConf.getPace().getDecisionTree();
 
