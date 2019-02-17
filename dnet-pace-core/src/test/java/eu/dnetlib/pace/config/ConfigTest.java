@@ -1,7 +1,11 @@
 package eu.dnetlib.pace.config;
 
+import com.google.common.collect.Maps;
 import eu.dnetlib.pace.AbstractPaceTest;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,7 +40,22 @@ public class ConfigTest extends AbstractPaceTest {
 
 		DedupConfig load = DedupConfig.load(readFromClasspath("result.pace.conf.json"));
 
+		assertNotNull(load);
 		System.out.println(load.toString());
+
 	}
+
+	@Test
+	public void testLoadDefaults() throws IOException {
+
+		final Map<String, String> config = Maps.newHashMap();
+		config.put("entityType", "organization");
+		config.put("configurationId", "dedup-organization-simple");
+		final DedupConfig dedupConf = DedupConfig.loadDefault(config);
+
+		System.out.println("dedupConf = " + dedupConf);
+	}
+
+
 
 }

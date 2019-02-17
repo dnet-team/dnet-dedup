@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 
 import eu.dnetlib.pace.util.PaceException;
 import org.antlr.stringtemplate.StringTemplate;
@@ -73,7 +74,11 @@ public class DedupConfig implements Config, Serializable {
 			template.setAttribute(e.getKey(), e.getValue());
 		}
 		for (final Entry<String, String> e : params.entrySet()) {
-			template.setAttribute(e.getKey(), e.getValue());
+			if (template.getAttribute(e.getKey()) != null) {
+				template.getAttributes().computeIfPresent(e.getKey(), (o, o2) -> e.getValue());
+			} else {
+				template.setAttribute(e.getKey(), e.getValue());
+			}
 		}
 
 		final String json = template.toString();
