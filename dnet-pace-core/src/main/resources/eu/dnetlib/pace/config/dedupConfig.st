@@ -10,7 +10,8 @@
 		"groupMaxSize" : "$groupMaxSize$",
 		"slidingWindowSize" : "$slidingWindowSize$",
 		"rootBuilder" : [ $rootBuilder:{"$it$"};separator=", "$ ],
-        "includeChildren" : "$includeChildren$"
+        "includeChildren" : "$includeChildren$",
+        "configurationId" : "$configurationId$"
 	},
 	"pace" : {
 		"clustering" : [

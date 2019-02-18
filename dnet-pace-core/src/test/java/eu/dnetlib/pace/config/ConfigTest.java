@@ -48,12 +48,20 @@ public class ConfigTest extends AbstractPaceTest {
 	@Test
 	public void testLoadDefaults() throws IOException {
 
+		final String entityType = "organization";
+		final String configurationId = "dedup-organization-simple";
+
 		final Map<String, String> config = Maps.newHashMap();
-		config.put("entityType", "organization");
-		config.put("configurationId", "dedup-organization-simple");
+
+		config.put("entityType", entityType);
+		config.put("configurationId", configurationId);
 		final DedupConfig dedupConf = DedupConfig.loadDefault(config);
 
-		System.out.println("dedupConf = " + dedupConf);
+		//System.out.println("dedupConf = " + dedupConf);
+		assertNotNull(dedupConf);
+		assertNotNull(dedupConf.getWf());
+		assertEquals(dedupConf.getWf().getEntityType(), entityType);
+		assertEquals(dedupConf.getWf().getConfigurationId(), configurationId);
 	}
 
 
