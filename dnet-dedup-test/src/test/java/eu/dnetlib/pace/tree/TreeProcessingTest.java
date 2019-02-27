@@ -36,8 +36,8 @@ public class TreeProcessingTest extends AbstractProtoPaceTest {
         log.info("Author 2 = " + authorB);
         log.info("Author 3 = " + authorC);
 
-        MatchType matchType1 = new BlockProcessor(config).navigateTree(authorA, authorB);
-        MatchType matchType2 = new BlockProcessor(config).navigateTree(authorA, authorC);
+        MatchType matchType1 = new BlockProcessor(config).navigateTree(authorA, authorB, null);
+        MatchType matchType2 = new BlockProcessor(config).navigateTree(authorA, authorC, null);
 
         log.info("1 vs 2 Match Type = " + matchType1);
         log.info("1 vs 3 Match Type = " + matchType2);
@@ -54,7 +54,7 @@ public class TreeProcessingTest extends AbstractProtoPaceTest {
         log.info("Author 1 = " + authorA);
         log.info("Author 2 = " + authorB);
 
-        MatchType matchType = new BlockProcessor(config).navigateTree(authorA, authorB);
+        MatchType matchType = new BlockProcessor(config).navigateTree(authorA, authorB, null);
 
         log.info("Match Type = " + matchType);
 
@@ -69,7 +69,7 @@ public class TreeProcessingTest extends AbstractProtoPaceTest {
         log.info("Author 1 = " + authorA);
         log.info("Author 2 = " + authorB);
 
-        MatchType matchType = new BlockProcessor(config).navigateTree(authorA, authorB);
+        MatchType matchType = new BlockProcessor(config).navigateTree(authorA, authorB, null);
 
         log.info("Match Type = " + matchType);
 
@@ -83,8 +83,8 @@ public class TreeProcessingTest extends AbstractProtoPaceTest {
         final MapDocument authorB = author("id1", "1", "john", "smith", "smith, john", new Double[]{0.0,0.5,0.0,0.5}, "pubID1", "pubDOI1", 1, "0000-0000-0000-0000", Arrays.asList("coauthor1", "coauthor2", "coauthor3", "coauthor4", "coauthor5", "coauthor6"));
         final MapDocument authorC = author("id2", "1", "jesus f.", "smith", "smith, john", new Double[]{0.0,0.5,0.0,0.5}, "pubID1", "pubDOI1", 1, "", Arrays.asList("coauthor1", "coauthor2", "coauthor3", "coauthor4", "coauthor5", "coauthor6"));
 
-        MatchType matchType1 = new BlockProcessor(config).navigateTree(authorA,authorB);
-        MatchType matchType2 = new BlockProcessor(config).navigateTree(authorA,authorC);
+        MatchType matchType1 = new BlockProcessor(config).navigateTree(authorA,authorB, null);
+        MatchType matchType2 = new BlockProcessor(config).navigateTree(authorA,authorC, null);
 
         assertTrue(matchType1 == MatchType.NO_MATCH); //same identifier
         assertTrue(matchType2 == MatchType.NO_MATCH); //not similar firstname

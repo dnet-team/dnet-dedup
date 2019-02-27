@@ -7,8 +7,8 @@ import eu.dnetlib.pace.condition.ConditionClass;
 import eu.dnetlib.pace.distance.DistanceAlgo;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.model.FieldDef;
-import eu.dnetlib.pace.tree.Comparator;
-import eu.dnetlib.pace.tree.ComparatorClass;
+import eu.dnetlib.pace.tree.support.Comparator;
+import eu.dnetlib.pace.tree.support.ComparatorClass;
 import org.reflections.Reflections;
 
 import java.io.Serializable;

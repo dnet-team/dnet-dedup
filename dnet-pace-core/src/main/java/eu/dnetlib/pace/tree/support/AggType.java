@@ -4,6 +4,7 @@ import eu.dnetlib.pace.util.PaceException;
 
 public enum AggType {
 
+    WEIGHTED_MEAN,
     AVG,
     SUM,
     MAX,

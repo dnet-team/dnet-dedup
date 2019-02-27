@@ -2,11 +2,13 @@ package eu.dnetlib.pace.tree;
 
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldListImpl;
+import eu.dnetlib.pace.tree.support.AbstractCondition;
+import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.Map;
 
 @ComparatorClass("topicsMatch")
-public class TopicsMatch extends AbstractComparator {
+public class TopicsMatch extends AbstractCondition {
 
     public TopicsMatch(Map<String, Number> params) {
         super(params);

@@ -35,7 +35,7 @@ public abstract class SortedSecondStringDistanceAlgo extends SecondStringDistanc
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.SecondStringDistanceAlgo#toList(eu.dnetlib.pace.model.Field)
+	 * @see eu.dnetlib.pace.distance.AbstractDistanceAlgo#toList(eu.dnetlib.pace.model.Field)
 	 */
 	@Override
 	protected List<String> toList(final Field list) {

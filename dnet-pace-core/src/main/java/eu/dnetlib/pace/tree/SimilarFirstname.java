@@ -1,13 +1,15 @@
 package eu.dnetlib.pace.tree;
 
 import eu.dnetlib.pace.model.Field;
+import eu.dnetlib.pace.tree.support.AbstractCondition;
+import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.Map;
 
 @ComparatorClass("similar")
-public class SimilarMatch extends AbstractComparator {
+public class SimilarFirstname extends AbstractCondition {
 
-    public SimilarMatch(Map<String, Number> params) {
+    public SimilarFirstname(Map<String, Number> params) {
         super(params);
     }
 

@@ -2,6 +2,7 @@ package eu.dnetlib.pace.tree.support;
 
 public enum MatchType {
 
+    MATCH,
     ORCID_MATCH,
     COAUTHORS_MATCH,
     TOPICS_MATCH,

@@ -2,12 +2,14 @@ package eu.dnetlib.pace.tree;
 
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
+import eu.dnetlib.pace.tree.support.AbstractCondition;
+import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.List;
 import java.util.Map;
 
 @ComparatorClass("coauthorsMatch")
-public class CoauthorsMatch extends AbstractComparator {
+public class CoauthorsMatch extends AbstractCondition {
 
     public CoauthorsMatch(Map<String, Number> params) {
         super(params);

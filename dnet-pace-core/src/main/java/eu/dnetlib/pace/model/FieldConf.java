@@ -13,6 +13,7 @@ public class FieldConf implements Serializable {
     private String comparator;  //comparator name
     private double weight = 1.0;    //weight for the field (to be used in the aggregation)
     private Map<String,Number> params;  //parameters
+    private boolean ignoreMissing; //if true, ignore the field in case of miss
 
     public FieldConf() {
     }
@@ -54,6 +55,14 @@ public class FieldConf implements Serializable {
 
     public void setParams(Map<String, Number> params) {
         this.params = params;
+    }
+
+    public boolean isIgnoreMissing() {
+        return ignoreMissing;
+    }
+
+    public void setIgnoreMissing(boolean ignoreMissing) {
+        this.ignoreMissing = ignoreMissing;
     }
 
     @Override

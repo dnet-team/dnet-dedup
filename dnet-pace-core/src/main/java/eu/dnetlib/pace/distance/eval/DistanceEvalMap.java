@@ -20,7 +20,7 @@ public class DistanceEvalMap extends HashMap<String, DistanceEval> {
 		put(d.getFieldDef().getName(), d);
 		if (d.getDistance() >= 0) {
 			sumDistances += d.getDistance();
-		} else {
+		} else { //if distance is -1, adjust weights sum
 			sumWeights -= d.getFieldDef().getWeight();
 		}
 	}

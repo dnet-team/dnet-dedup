@@ -6,19 +6,15 @@ import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.Map;
 
-@ComparatorClass("undefined")
-public class UndefinedNode extends AbstractCondition {
-
-    Map<String, Number> params;
-
-    public UndefinedNode(Map<String, Number> params) {
+@ComparatorClass("noMatchNode")
+public class NoMatchNode extends AbstractCondition {
+    public NoMatchNode(final Map<String,Number> params) {
         super(params);
     }
 
     @Override
-    public double compare(Field a, Field b){
-
-        return -1;
+    public double compare(final Field a, final Field b) {
+        return 0;
     }
 
 }

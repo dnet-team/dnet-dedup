@@ -66,7 +66,7 @@ public class SubStringLevenstein extends SecondStringDistanceAlgo {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.SecondStringDistanceAlgo#distance(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
+	 * @see eu.dnetlib.pace.distance.AbstractDistanceAlgo#distance(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
 	 */
 	@Override
 	public double distance(final Field a, final Field b) {
@@ -89,7 +89,7 @@ public class SubStringLevenstein extends SecondStringDistanceAlgo {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.SecondStringDistanceAlgo#normalize(double)
+	 * @see eu.dnetlib.pace.distance.AbstractDistanceAlgo#normalize(double)
 	 */
 	@Override
 	protected double normalize(final double d) {

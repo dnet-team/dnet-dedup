@@ -48,7 +48,7 @@ public class BlockProcessor {
 
             //process the decision tree if it is specified, otherwise go with conditions and distance algos
             if (!dedupConf.getPace().getDecisionTree().isEmpty()){
-                processPersons(q, context);
+                processPersons(simplifyQueue(q, key, context), context);
             }
             else {
                 process(simplifyQueue(q, key, context), context);
@@ -70,26 +70,30 @@ public class BlockProcessor {
                 final String idCurr = curr.getIdentifier();
 
                 //check if pivot and current element are similar by processing the tree
-                if (navigateTree(pivot, curr)!=MatchType.NO_MATCH)
+                if (navigateTree(pivot, curr, context)!=MatchType.NO_MATCH)
                     writeSimilarity(context, idPivot, idCurr);
             }
         }
     }
 
-    public MatchType navigateTree(final MapDocument doc1, final MapDocument doc2){
+    public MatchType navigateTree(final MapDocument doc1, final MapDocument doc2, Reporter context){
 
         final Map<String, TreeNodeDef> decisionTree = dedupConf.getPace().getDecisionTree();
 
         String current = "start";
+        double similarity = 0.0;
+        String last = current;
 
         while (MatchType.getEnum(current)==MatchType.UNDEFINED) {
+
+            last = current;
 
             TreeNodeDef currentNode = decisionTree.get(current);
             //throw an exception if the node doesn't exist
             if (currentNode == null)
                 throw new PaceException("The Tree Node doesn't exist: " + current);
 
-            double similarity = currentNode.evaluate(doc1, doc2);
+            similarity = currentNode.evaluate(doc1, doc2);
 
             if (similarity == -1) {
                 current = currentNode.getUndefined();
@@ -102,6 +106,9 @@ public class BlockProcessor {
             }
 
         }
+
+        //TODO fix update counters writing statistics that make sense
+        updateCounters(similarity, decisionTree.get(last).getThreshold(), doc1.getIdentifier(), doc2.getIdentifier(), context);
 
         return MatchType.getEnum(current);
     }
@@ -213,6 +220,19 @@ public class BlockProcessor {
                     }
                 }
             }
+        }
+    }
+
+    private void updateCounters(final double score, final double threshold, final String idPivot, final String idCurr, final Reporter context){
+
+        if (context==null)
+            return;
+
+        if (score >= dedupConf.getWf().getThreshold()) {
+
+            context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
+        } else {
+            context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + threshold, 1);
         }
     }
 

@@ -1,7 +1,7 @@
 package eu.dnetlib.pace.model;
 
 import eu.dnetlib.pace.config.PaceConfig;
-import eu.dnetlib.pace.tree.Comparator;
+import eu.dnetlib.pace.tree.support.Comparator;
 import eu.dnetlib.pace.tree.support.AggType;
 import eu.dnetlib.pace.util.PaceException;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -31,21 +31,33 @@ public class TreeNodeDef implements Serializable {
     public double evaluate(MapDocument doc1, MapDocument doc2) {
 
         DescriptiveStatistics stats = new DescriptiveStatistics();
+        double sumWeights = 0.0;   //for the weighted mean
+
+        int missCount = 0; //counter for the number of miss
+        int fieldsNumber = fields.size();   //number of fields involved in the node
 
         for (FieldConf fieldConf : fields) {
 
             double weight = fieldConf.getWeight();
 
-            double similarity = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()));
+            double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()));
 
-            //if similarity is -1 means that a comparator gave undefined, do not add result to the stats
-            if (similarity != -1) {
-                stats.addValue(weight * similarity);
+            if (result != -1) { //if result is not undefined
+                stats.addValue(weight * result);
+                sumWeights += weight; //sum weights, to be used in case of weighted mean
             }
-            else {
-                if (!ignoreMissing)     //if the missing value has not to be ignored, return -1
-                    return -1;
+            else { //if result is undefined
+                missCount += 1;
+                if (!fieldConf.isIgnoreMissing()){  //if the miss has not to be ignored
+                    stats.addValue(weight * 0);
+                    sumWeights += weight;
+                }
             }
+        }
+
+        //global ignoremissing (if one of the field is missing, return undefined)
+        if (!ignoreMissing && missCount>0) {
+            return -1;
         }
 
         switch (aggregation){
@@ -58,6 +70,8 @@ public class TreeNodeDef implements Serializable {
                 return stats.getMax();
             case MIN:
                 return stats.getMin();
+            case WEIGHTED_MEAN:
+                return stats.getSum()/sumWeights;
             default:
                 return 0.0;
         }

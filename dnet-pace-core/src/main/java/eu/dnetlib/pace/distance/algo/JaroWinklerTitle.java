@@ -6,7 +6,7 @@ import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
 import java.util.Map;
 
-//case class JaroWinkler(w: Double) extends SecondStringDistanceAlgo(w, new com.wcohen.ss.JaroWinkler())
+//case class JaroWinkler(w: Double) extends AbstractDistanceAlgo(w, new com.wcohen.ss.JaroWinkler())
 @DistanceClass("JaroWinklerTitle")
 public class JaroWinklerTitle extends SecondStringDistanceAlgo {
 

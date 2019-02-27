@@ -1,11 +1,13 @@
 package eu.dnetlib.pace.tree;
 
 import eu.dnetlib.pace.model.Field;
+import eu.dnetlib.pace.tree.support.AbstractCondition;
+import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.Map;
 
 @ComparatorClass("exactMatch")
-public class ExactMatch extends AbstractComparator {
+public class ExactMatch extends AbstractCondition {
 
     public ExactMatch(Map<String, Number> params) {
         super(params);
@@ -16,10 +18,8 @@ public class ExactMatch extends AbstractComparator {
 
         if (a.stringValue().isEmpty() || b.stringValue().isEmpty())
             return -1;
-        else if (a.stringValue().equals(b.stringValue()))
-            return 1;
-        else
-            return 0;
+
+        return (a.stringValue().equals(b.stringValue()))? 1:0;
     }
 
 }

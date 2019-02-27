@@ -33,13 +33,13 @@ public class SparkTest {
     public static void main(String[] args) {
         final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/authors.json");//"/eu/dnetlib/pace/orgs2.json");
+        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/orgs2.json");
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         counter = new SparkCounter(context);
 
         //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/authors.test.pace.conf"));//"/eu/dnetlib/pace/organization.test2.pace.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.beta.pace.conf"));
 
         BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {
@@ -86,7 +86,7 @@ public class SparkTest {
         counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
 
         connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
-        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
+//        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
 
         //print ids
 //        ccs.foreach(cc -> System.out.println(cc.getId()));
