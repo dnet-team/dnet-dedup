@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.config.WfConfig;
-import eu.dnetlib.pace.distance.PaceDocumentDistance;
-import eu.dnetlib.pace.distance.eval.ScoreResult;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.model.MapDocumentComparator;
@@ -44,34 +42,50 @@ public class BlockProcessor {
 
         if (q.size() > 1) {
 //            log.info("reducing key: '" + key + "' records: " + q.size());
-            //process(q, context);
+            process(simplifyQueue(q, key, context), context);
 
-            //process the decision tree if it is specified, otherwise go with conditions and distance algos
-            if (!dedupConf.getPace().getDecisionTree().isEmpty()){
-                processPersons(simplifyQueue(q, key, context), context);
-            }
-            else {
-                process(simplifyQueue(q, key, context), context);
-            }
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
         }
     }
 
-    private void processPersons(final Queue<MapDocument> queue, final Reporter context) {
+    private void process(final Queue<MapDocument> queue, final Reporter context) {
 
         while (!queue.isEmpty()) {
 
             final MapDocument pivot = queue.remove(); //take first element of the queue
             final String idPivot = pivot.getIdentifier();
 
-            //compare the first element with all the others
-            for (final MapDocument curr : queue) {
-                final String idCurr = curr.getIdentifier();
+            WfConfig wf = dedupConf.getWf();
+            final Field fieldsPivot = pivot.values(wf.getOrderField());
+            final String fieldPivot = (fieldsPivot == null) || fieldsPivot.isEmpty()? null : fieldsPivot.stringValue();
 
-                //check if pivot and current element are similar by processing the tree
-                if (navigateTree(pivot, curr, context)!=MatchType.NO_MATCH)
-                    writeSimilarity(context, idPivot, idCurr);
+            if (fieldPivot != null) {
+                int i = 0;
+
+                for (final MapDocument curr : queue) {
+                    final String idCurr = curr.getIdentifier();
+
+                    if (mustSkip(idCurr)) {
+                        context.incrementCounter(wf.getEntityType(), "skip list", 1);
+                        break;
+                    }
+
+                    if (i > wf.getSlidingWindowSize()) {
+                        break;
+                    }
+
+                    final Field fieldsCurr = curr.values(wf.getOrderField());
+                    final String fieldCurr = (fieldsCurr == null) || fieldsCurr.isEmpty()? null : fieldsCurr.stringValue();
+
+                    if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
+
+                        if (navigateTree(pivot, curr, context) != MatchType.NO_MATCH) {
+                            writeSimilarity(context,idPivot,idCurr);
+                        }
+                        i++;
+                    }
+                }
             }
         }
     }
@@ -177,52 +191,6 @@ public class BlockProcessor {
         }
     }
 
-    private void process(final Queue<MapDocument> queue, final Reporter context)  {
-
-        final PaceDocumentDistance algo = new PaceDocumentDistance();
-
-        while (!queue.isEmpty()) {
-
-            final MapDocument pivot = queue.remove();
-            final String idPivot = pivot.getIdentifier();
-
-            WfConfig wf = dedupConf.getWf();
-            final Field fieldsPivot = pivot.values(wf.getOrderField());
-            final String fieldPivot = (fieldsPivot == null) || fieldsPivot.isEmpty() ? null : fieldsPivot.stringValue();
-
-            if (fieldPivot != null) {
-                // System.out.println(idPivot + " --> " + fieldPivot);
-
-                int i = 0;
-                for (final MapDocument curr : queue) {
-                    final String idCurr = curr.getIdentifier();
-
-                    if (mustSkip(idCurr)) {
-
-                        context.incrementCounter(wf.getEntityType(), "skip list", 1);
-
-                        break;
-                    }
-
-                    if (i > wf.getSlidingWindowSize()) {
-                        break;
-                    }
-
-                    final Field fieldsCurr = curr.values(wf.getOrderField());
-                    final String fieldCurr = (fieldsCurr == null) || fieldsCurr.isEmpty() ? null : fieldsCurr.stringValue();
-
-                    if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
-
-                        final ScoreResult sr = similarity(algo, pivot, curr);
-//                        log.info(sr.toString()+"SCORE "+ sr.getScore());
-                        emitOutput(sr, idPivot, idCurr, context);
-                        i++;
-                    }
-                }
-            }
-        }
-    }
-
     private void updateCounters(final double score, final double threshold, final String idPivot, final String idCurr, final Reporter context){
 
         if (context==null)
@@ -233,27 +201,6 @@ public class BlockProcessor {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + threshold, 1);
-        }
-    }
-
-    private void emitOutput(final ScoreResult sr, final String idPivot, final String idCurr, final Reporter context)  {
-        final double d = sr.getScore();
-
-        if (d >= dedupConf.getWf().getThreshold()) {
-
-            writeSimilarity(context, idPivot, idCurr);
-            context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
-        } else {
-            context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1);
-        }
-    }
-
-    private ScoreResult similarity(final PaceDocumentDistance algo, final MapDocument a, final MapDocument b) {
-        try {
-            return algo.between(a, b, dedupConf);
-        } catch(Throwable e) {
-            log.error(String.format("\nA: %s\n----------------------\nB: %s", a, b), e);
-            throw new IllegalArgumentException(e);
         }
     }
 
