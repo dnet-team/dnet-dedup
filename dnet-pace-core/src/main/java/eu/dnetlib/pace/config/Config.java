@@ -1,11 +1,11 @@
 package eu.dnetlib.pace.config;
 
-import java.util.List;
-import java.util.Map;
-
-import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.model.TreeNodeDef;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for PACE configuration bean.
@@ -28,19 +28,13 @@ public interface Config {
 	 */
 	public Map<String, FieldDef> modelMap();
 
-	/**
-	 * Strict Pre-Condition definitions.
-	 *
-	 * @return the list of conditions
-	 */
-	public List<ConditionAlgo> strictConditions();
 
 	/**
-	 * Pre-Condition definitions.
+	 * Decision tree.
 	 *
-	 * @return the list of conditions
+	 * @return
 	 */
-	public List<ConditionAlgo> conditions();
+	public Map<String, TreeNodeDef> decisionTree();
 
 	/**
 	 * Clusterings.

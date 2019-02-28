@@ -2,14 +2,10 @@ package eu.dnetlib.pace.distance.eval;
 
 import java.util.HashMap;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
 /**
  * Created by claudio on 09/03/16.
  */
 public class ConditionEvalMap extends HashMap<String, ConditionEval> {
-
 
 	public ConditionEvalMap mergeFrom(ConditionEvalMap map) {
 		putAll(map);

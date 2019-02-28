@@ -1,19 +1,12 @@
 package eu.dnetlib.pace.model;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.config.Type;
-import eu.dnetlib.pace.distance.*;
-import eu.dnetlib.pace.distance.algo.*;
-import eu.dnetlib.pace.util.PaceException;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * The schema is composed by field definitions (FieldDef). Each field has a type, a name, and an associated distance algorithm.
@@ -22,23 +15,15 @@ public class FieldDef implements Serializable {
 
 	public final static String PATH_SEPARATOR = "/";
 
-	private String algo;
-
 	private String name;
 
 	private String path;
-
-	private boolean ignoreMissing;
 
 	private Type type;
 
 	private boolean overrideMatch;
 
-	private double weight;
-
 	private int limit = -1;
-
-	private Map<String, Number> params;
 
 	public FieldDef() {}
 
@@ -68,20 +53,6 @@ public class FieldDef implements Serializable {
 		return Lists.newArrayList(Splitter.on(PATH_SEPARATOR).split(getPath()));
 	}
 
-	public DistanceAlgo distanceAlgo() {
-
-		if (params == null) {
-			params = new HashMap<>();
-		}
-		params.put("limit", getLimit());
-		params.put("weight", getWeight());
-		return PaceConfig.paceResolver.getDistanceAlgo(getAlgo(), params);
-	}
-
-	public boolean isIgnoreMissing() {
-		return ignoreMissing;
-	}
-
 	public Type getType() {
 		return type;
 	}
@@ -103,36 +74,12 @@ public class FieldDef implements Serializable {
 		return new Gson().toJson(this);
 	}
 
-	public double getWeight() {
-		return weight;
-	}
-
-	public void setWeight(final double weight) {
-		this.weight = weight;
-	}
-
-	public String getAlgo() {
-		return algo;
-	}
-
-	public void setAlgo(final String algo) {
-		this.algo = algo;
-	}
-
 	public int getLimit() {
 		return limit;
 	}
 
 	public void setLimit(final int limit) {
 		this.limit = limit;
-	}
-
-	public Map<String, Number> getParams() {
-		return params;
-	}
-
-	public void setParams(final Map<String, Number> params) {
-		this.params = params;
 	}
 
 }

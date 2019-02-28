@@ -1,13 +1,13 @@
 package eu.dnetlib.pace.tree;
 
 import com.wcohen.ss.AbstractStringDistance;
-import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
+import eu.dnetlib.pace.tree.support.AbstractDistanceAlgo;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.Map;
 
 @ComparatorClass("JaroWinklerTitle")
-public class JaroWinklerTitle extends SecondStringDistanceAlgo {
+public class JaroWinklerTitle extends AbstractDistanceAlgo {
 
     public JaroWinklerTitle(Map<String, Number> params){
         super(params, new com.wcohen.ss.JaroWinkler());
