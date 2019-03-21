@@ -47,27 +47,25 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         cb = removeStopwords(cb);
 
         //replace keywords with codes
-        ca = translate(ca, translationMap);
-        cb = translate(cb, translationMap);
+        String codesA = keywordsToCode(ca, translationMap, params.getOrDefault("windowSize", 4).intValue());
+        String codesB = keywordsToCode(cb, translationMap, params.getOrDefault("windowSize",4).intValue());
 
         //replace cities with codes
-//        String norm = normalizeCities(" " + ca + " ||| " + cb + " ", cityMap);
-//        ca = norm.split("\\|\\|\\|")[0].trim();
-//        cb = norm.split("\\|\\|\\|")[1].trim();
+        codesA = keywordsToCode(codesA, cityMap, params.getOrDefault("windowSize", 4).intValue());
+        codesB = keywordsToCode(codesB, cityMap, params.getOrDefault("windowSize", 4).intValue());
 
-        ca = normalizeCities2(ca, cityMap, params.getOrDefault("windowSize", 4).intValue());
-        cb = normalizeCities2(cb, cityMap, params.getOrDefault("windowSize", 4).intValue());
-
-        if (sameCity(ca,cb)){
-           if (sameKeywords(ca,cb)){
-               ca = removeCodes(ca);
-               cb = removeCodes(cb);
-               if (ca.isEmpty() && cb.isEmpty())
-                   return 1.0;
-               else
-                   return normalize(ssalgo.score(ca,cb));
-           }
+        //if two names have same city
+        if (sameCity(codesA,codesB)){
+            if (keywordsCompare(codesA, codesB)>params.getOrDefault("threshold", 0.5).doubleValue()) {
+                ca = removeCodes(codesA);
+                cb = removeCodes(codesB);
+                if (ca.isEmpty() && cb.isEmpty())
+                    return 1.0;
+                else
+                    return normalize(ssalgo.score(ca,cb));
+            }
         }
+
         return 0.0;
 
     }

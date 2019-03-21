@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class DistanceAlgoTest extends AbstractPaceFunctions {
 
@@ -61,5 +62,45 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 		assertEquals(result, 1.0);
 	}
 
+	@Test
+    public void testJaroWinklerNormalizedName3() {
+
+        final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+        double result = jaroWinklerNormalizedName.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna");
+
+        System.out.println("result = " + result);
+        assertEquals(result, 0.0);
+    }
+
+    @Test
+    public void testJaroWinklerNormalizedName4() {
+
+        final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+        double result = jaroWinklerNormalizedName.distance("Universita degli studi di Pisa", "Universita di Pisa");
+
+        System.out.println("result = " + result);
+        assertEquals(result, 1.0);
+    }
+
+    @Test
+    public void testJaroWinklerNormalizedName5() {
+
+        final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+        double result = jaroWinklerNormalizedName.distance("RESEARCH PROMOTION FOUNDATION", "IDRYMA PROOTHISIS EREVNAS");
+
+        System.out.println("result = " + result);
+        assertEquals(result, 1.0);
+    }
+
+    @Test
+    public void testJaroWinklerNormalizedName6() {
+
+        final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+        double result = jaroWinklerNormalizedName.distance("Fonds zur Förderung der wissenschaftlichen Forschung (Austrian Science Fund)", "Fonds zur Förderung der wissenschaftlichen Forschung");
+
+        System.out.println("result = " + result);
+        assertTrue(result> 0.9);
+
+    }
 
 }

@@ -27,7 +27,12 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractPaceFunctions {
 
-	protected static Set<String> stopwords = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
+	protected static Set<String> stopwords_en = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
+	protected static Set<String> stopwords_de = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_de.txt");
+	protected static Set<String> stopwords_es = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_es.txt");
+	protected static Set<String> stopwords_fr = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_fr.txt");
+	protected static Set<String> stopwords_it = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_it.txt");
+	protected static Set<String> stopwords_pt = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_pt.txt");
 
 	protected static Set<String> ngramBlacklist = loadFromClasspath("/eu/dnetlib/pace/config/ngram_blacklist.txt");
 
@@ -42,8 +47,9 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	protected String cleanup(final String s) {
-		final String s1 = nfd(s);
-		final String s2 = fixAliases(s1);
+		final String s0 = s.toLowerCase();
+		final String s1 = fixAliases(s0);
+		final String s2 = nfd(s1);
 		final String s3 = s2.replaceAll("&ndash;", " ");
 		final String s4 = s3.replaceAll("&amp;", " ");
 		final String s5 = s4.replaceAll("&quot;", " ");
@@ -140,6 +146,18 @@ public abstract class AbstractPaceFunctions {
 		return sb.toString().trim();
 	}
 
+	protected String filterAllStopWords(String s) {
+
+		s = filterStopWords(s, stopwords_en);
+		s = filterStopWords(s, stopwords_de);
+		s = filterStopWords(s, stopwords_it);
+		s = filterStopWords(s, stopwords_fr);
+		s = filterStopWords(s, stopwords_pt);
+		s = filterStopWords(s, stopwords_es);
+
+		return s;
+	}
+
 	protected Collection<String> filterBlacklisted(final Collection<String> set, final Set<String> ngramBlacklist) {
 		final Set<String> newset = Sets.newLinkedHashSet();
 		for (final String s : set) {
@@ -192,15 +210,7 @@ public abstract class AbstractPaceFunctions {
 		return sb.toString().trim();
 	}
 
-	public String normalizeCities(String s1, Map<String,String> cityMap){
-		//TODO change normalization mode
-
-		for (String city : cityMap.keySet())
-			s1 = s1.replaceAll(" " + city + " ", " " + cityMap.get(city) + " ");
-		return s1;
-	}
-
-	public String normalizeCities2 (String s1, Map<String, String> cityMap, int windowSize){
+	public String keywordsToCode(String s1, Map<String, String> translationMap, int windowSize){
 
 		List<String> tokens = Arrays.asList(s1.split(" "));
 
@@ -213,9 +223,8 @@ public abstract class AbstractPaceFunctions {
 
 			for (int i = 0; i<=tokens.size()-length; i++){
 				String candidate = Joiner.on(" ").join(tokens.subList(i, i + length));
-				if (cityMap.containsKey(candidate)) {
-					s1 = (" " + s1 + " ").replaceAll(" " + candidate + " ", " " + cityMap.get(candidate) + " ");
-					return s1;
+				if (translationMap.containsKey(candidate)) {
+					s1 = (" " + s1 + " ").replaceAll(" " + candidate + " ", " " + translationMap.get(candidate) + " ");
 				}
 			}
 			length-=1;
@@ -229,8 +238,19 @@ public abstract class AbstractPaceFunctions {
 		final String regexKey = "\\bkey::[0-9]*\\b";
 		final String regexCity = "\\bcity::[0-9]*\\b";
 		return s.replaceAll(regexKey, "").replaceAll(regexCity, "").trim();
-
 	}
+
+	public double keywordsCompare(String s1, String s2){
+
+        List<String> keywords1 = getKeywords(s1);
+        List<String> keywords2 = getKeywords(s2);
+        int longer = (keywords1.size()>keywords2.size())?keywords1.size():keywords2.size();
+
+        if (getKeywords(s1).isEmpty() || getKeywords(s2).isEmpty())
+            return 1.0;
+        else
+            return (double)CollectionUtils.intersection(getKeywords(s1),getKeywords(s2)).size()/(double)longer;
+    }
 
 	//check if 2 strings have same keywords
 	public boolean sameKeywords(String s1, String s2){

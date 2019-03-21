@@ -611,7 +611,6 @@ terzo
 th
 ti
 titolo
-torino
 tra
 tranne
 tre
