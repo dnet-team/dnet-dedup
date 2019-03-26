@@ -1,11 +1,6 @@
 package eu.dnetlib.pace.config;
 
-import java.io.IOException;
-
 import eu.dnetlib.pace.AbstractPaceTest;
-import eu.dnetlib.pace.model.MapDocument;
-import eu.dnetlib.pace.model.MapDocumentSerializer;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
