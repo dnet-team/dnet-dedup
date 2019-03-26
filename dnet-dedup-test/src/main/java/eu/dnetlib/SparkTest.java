@@ -10,8 +10,6 @@ import eu.dnetlib.pace.utils.PaceUtils;
 import eu.dnetlib.reporter.SparkCounter;
 import eu.dnetlib.reporter.SparkReporter;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -28,18 +26,17 @@ import java.util.stream.Collectors;
 
 public class SparkTest {
     public static SparkCounter counter ;
-    private static final Log log = LogFactory.getLog(SparkTest.class);
 
     public static void main(String[] args) {
-        final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
+        final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("yarn"));
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/organization.to.fix.json");
+        final URL dataset = SparkTest.class.getResource(args[1]);
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         counter = new SparkCounter(context);
 
         //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/org.curr.conf"));
+        final DedupConfig config = DedupConfig.load(readFromClasspath(args[0]));
 
         BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {
