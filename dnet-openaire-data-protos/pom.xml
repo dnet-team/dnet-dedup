@@ -10,7 +10,7 @@
 	<groupId>eu.dnetlib</groupId>
 	<artifactId>dnet-openaire-data-protos</artifactId>
 	<packaging>jar</packaging>
-	<version>3.9.4-CUSTOM</version>
+	<version>3.9.4-proto250</version>
 
 	<properties>
 		<!-- defined also in dnet-parent, here in case we need to override -->

@@ -6,8 +6,7 @@ import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowJob;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;

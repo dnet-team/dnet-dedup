@@ -32,7 +32,7 @@ public class ConfigTest extends AbstractPaceTest {
 	@Test
 	public void dedupConfigTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("result.pace.conf.json"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("org.curr.conf"));
 
 		System.out.println(load.toString());
 	}
