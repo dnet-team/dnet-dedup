@@ -1,0 +1,25 @@
+package eu.dnetlib.data.proto;
+
+import "FieldType.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "PersonProtos";
+
+message Person {
+
+    optional Metadata metadata = 2;
+
+    message Metadata {
+        required string fullname = 1;
+        optional string firstname = 2;
+        optional string lastname = 3;
+        required string pubID = 4;
+        optional string pubDOI = 5;
+        optional string orcid = 6;
+        required int32 rank = 7;
+
+        repeated string coauthors = 8;
+        repeated double topics = 9;
+        required string area = 10;
+    }
+}

@@ -1,0 +1,15 @@
+package eu.dnetlib.data.proto;
+
+import "FieldType.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "RelMetadataProtos";
+
+message RelMetadata {
+
+	optional Qualifier semantics = 1;
+
+	optional string startdate = 3;
+	optional string enddate = 4;
+
+}

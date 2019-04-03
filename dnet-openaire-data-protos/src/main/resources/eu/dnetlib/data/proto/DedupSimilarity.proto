@@ -1,0 +1,16 @@
+package eu.dnetlib.data.proto;
+
+import "RelMetadata.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "DedupSimilarityProtos";
+
+message DedupSimilarity {
+
+	enum RelName {
+		isSimilarTo = 1;
+	}
+
+	required RelMetadata relMetadata = 1;
+
+}

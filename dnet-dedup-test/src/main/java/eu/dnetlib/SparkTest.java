@@ -1,45 +1,41 @@
 package eu.dnetlib;
 
-import com.google.common.collect.Sets;
 import eu.dnetlib.graph.GraphProcessor;
-import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.BlockProcessor;
 import eu.dnetlib.pace.utils.PaceUtils;
 import eu.dnetlib.reporter.SparkCounter;
 import eu.dnetlib.reporter.SparkReporter;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.graphx.Edge;
 import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.SparkSession;
 import scala.Tuple2;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SparkTest {
     public static SparkCounter counter ;
-    private static final Log log = LogFactory.getLog(SparkTest.class);
 
-    public static void main(String[] args) {
-        final JavaSparkContext context = new JavaSparkContext(new SparkConf().setAppName("Deduplication").setMaster("local[*]"));
+    public static void main(String[] args) throws IOException {
 
-        final URL dataset = SparkTest.class.getResource("/eu/dnetlib/pace/result.title.stackoverflow.json");
-        final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
+        final SparkSession spark = SparkSession
+                .builder()
+                .appName("Deduplication")
+                .master("yarn")
+                .getOrCreate();
+
+        final JavaSparkContext context = new JavaSparkContext(spark.sparkContext());
+
+        final JavaRDD<String> dataRDD = Utility.loadDataFromHDFS(args[0], context);
 
         counter = new SparkCounter(context);
 
-        //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.full.pace.conf"));
+        final DedupConfig config = Utility.loadConfigFromHDFS(args[1]);
 
         BlockProcessor.constructAccumulator(config);
         BlockProcessor.accumulators.forEach(acc -> {
@@ -61,15 +57,22 @@ public class SparkTest {
                 //Clustering: from <id, doc> to List<groupkey,doc>
                 .flatMapToPair(a -> {
                     final MapDocument currentDocument = a._2();
-                    return getGroupingKeys(config, currentDocument).stream()
+
+                    return Utility.getGroupingKeys(config, currentDocument).stream()
                             .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
-                }).groupByKey(); //group documents basing on the key
+                }).groupByKey();//group documents basing on the key
 
-        log.info("blocks to process: " + blocks.count());
+        //print blocks
+        blocks.foreach(b -> {
+            String print = b._1() + ": ";
+            for (MapDocument doc : b._2()) {
+                print += doc.getIdentifier() + " ";
+            }
+            System.out.println(print);
+        });
 
-        final JavaPairRDD<String, String> relationRDD = blocks
-                //create relations by comparing only elements in the same group
-                .flatMapToPair(it -> {
+        //create relations by comparing only elements in the same group
+        final JavaPairRDD<String, String> relationRDD = blocks.flatMapToPair(it -> {
                     final SparkReporter reporter = new SparkReporter(counter);
                     new BlockProcessor(config).process(it._1(), it._2(), reporter);
                     return reporter.getReport().iterator();
@@ -88,29 +91,23 @@ public class SparkTest {
 
         counter.getAccumulators().values().forEach(it-> System.out.println(it.getGroup()+" "+it.getName()+" -->"+it.value()));
 
-        connectedComponents.foreach(cc -> System.out.println("cc = " + cc.toString() + " size =" + cc.getDocs().size()));
-        nonDeduplicated.foreach(cc -> System.out.println("nd = " + cc.toString()));
+        //print deduped
+        connectedComponents.foreach(cc -> {
+            System.out.println("cc = " + cc.getId());
+            for (MapDocument doc: cc.getDocs()) {
+                System.out.println(doc.getIdentifier() + "; ln: " + doc.getFieldMap().get("legalname").stringValue() + "; sn: " + doc.getFieldMap().get("legalshortname").stringValue());
+            }
+        });
+        //print nondeduped
+        nonDeduplicated.foreach(cc -> {
+            System.out.println("nd = " + cc.getId());
+            System.out.println(cc.getDocs().iterator().next().getFieldMap().get("legalname").stringValue() + "; sn: " + cc.getDocs().iterator().next().getFieldMap().get("legalshortname").stringValue());
+        });
 
-        //print ids
+//        print ids
 //        ccs.foreach(cc -> System.out.println(cc.getId()));
-//        ccs.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
+//        connectedComponents.saveAsTextFile("file:///Users/miconis/Downloads/dumps/organizations_dedup");
 
     }
-
-    static String readFromClasspath(final String filename) {
-        final StringWriter sw = new StringWriter();
-        try {
-            IOUtils.copy(SparkTest.class.getResourceAsStream(filename), sw);
-            return sw.toString();
-        } catch (final IOException e) {
-            throw new RuntimeException("cannot load resource from classpath: " + filename);
-        }
-    }
-
-
-    static Set<String> getGroupingKeys(DedupConfig conf, MapDocument doc) {
-        return Sets.newHashSet(BlacklistAwareClusteringCombiner.filterAndCombine(doc, conf));
-    }
-
 
 }

@@ -2,10 +2,11 @@ package eu.dnetlib;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.util.PaceException;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,6 +51,7 @@ public class ConnectedComponent implements Serializable {
         }
     }
 
+    @JsonIgnore
     public String getMin(List<String> ids){
 
         String min = ids.get(0);
@@ -67,7 +69,7 @@ public class ConnectedComponent implements Serializable {
         try {
             return mapper.writeValueAsString(this);
         } catch (IOException e) {
-            return null;
+            throw new PaceException("Failed to create Json: ", e);
         }
     }
 }

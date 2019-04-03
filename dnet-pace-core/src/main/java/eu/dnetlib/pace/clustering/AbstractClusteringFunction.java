@@ -1,15 +1,14 @@
 package eu.dnetlib.pace.clustering;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.Sets;
-
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.model.Field;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class AbstractClusteringFunction extends AbstractPaceFunctions implements ClusteringFunction {
 
@@ -26,7 +25,7 @@ public abstract class AbstractClusteringFunction extends AbstractPaceFunctions i
 		return fields.stream().filter(f -> !f.isEmpty())
 				.map(Field::stringValue)
 				.map(this::normalize)
-				.map(s -> filterStopWords(s, stopwords))
+				.map(s -> filterAllStopWords(s))
 				.map(this::doApply)
 				.map(c -> filterBlacklisted(c, ngramBlacklist))
 				.flatMap(c -> c.stream())

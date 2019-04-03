@@ -41,9 +41,10 @@ public class BlockProcessor {
         final Queue<MapDocument> q = prepare(documents);
 
         if (q.size() > 1) {
-            log.debug("reducing key: '" + key + "' records: " + q.size());
+//            log.info("reducing key: '" + key + "' records: " + q.size());
             //process(q, context);
             process(simplifyQueue(q, key, context), context);
+
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
         }
@@ -109,7 +110,7 @@ public class BlockProcessor {
             q.addAll(tempResults);
         } else {
             context.incrementCounter(wf.getEntityType(), String.format("Skipped records for count(%s) >= %s", wf.getOrderField(), wf.getGroupMaxSize()), tempResults.size());
-            log.debug("Skipped field: " + fieldRef + " - size: " + tempResults.size() + " - ngram: " + ngram);
+//            log.info("Skipped field: " + fieldRef + " - size: " + tempResults.size() + " - ngram: " + ngram);
         }
     }
 
@@ -149,8 +150,8 @@ public class BlockProcessor {
 
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                        final ScoreResult sr = algo.between(pivot, curr, dedupConf);
-                        log.debug(sr.toString()+"SCORE "+ sr.getScore());
+                        final ScoreResult sr = similarity(algo, pivot, curr);
+//                        log.info(sr.toString()+"SCORE "+ sr.getScore());
                         emitOutput(sr, idPivot, idCurr, context);
                         i++;
                     }
@@ -168,6 +169,15 @@ public class BlockProcessor {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1);
+        }
+    }
+
+    private ScoreResult similarity(final PaceDocumentDistance algo, final MapDocument a, final MapDocument b) {
+        try {
+            return algo.between(a, b, dedupConf);
+        } catch(Throwable e) {
+            log.error(String.format("\nA: %s\n----------------------\nB: %s", a, b), e);
+            throw new IllegalArgumentException(e);
         }
     }
 

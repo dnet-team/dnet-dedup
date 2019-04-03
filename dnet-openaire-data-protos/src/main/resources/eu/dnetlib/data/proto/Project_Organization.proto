@@ -1,0 +1,23 @@
+package eu.dnetlib.data.proto;
+
+import "RelMetadata.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "ProjectOrganizationProtos";
+
+message ProjectOrganization {
+
+	optional Participation participation = 1;
+
+	message Participation {
+
+		enum RelName {
+			isParticipant = 1;
+			hasParticipant = 2;
+		}
+
+		required RelMetadata relMetadata = 1;
+		optional string participantnumber = 2;
+	}
+
+}

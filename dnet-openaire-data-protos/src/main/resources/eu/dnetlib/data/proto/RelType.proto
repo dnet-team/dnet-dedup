@@ -1,0 +1,36 @@
+package eu.dnetlib.data.proto;
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "RelTypeProtos";
+
+enum RelType {
+
+	// Datamodel rels
+	datasourceOrganization = 1;
+	projectOrganization = 4;
+	resultOrganization = 5;
+	resultProject = 6;
+	resultResult = 9;
+	organizationOrganization = 11;
+
+}
+
+enum SubRelType {
+
+	provision = 1;			// datasourceOrganization
+	participation = 4;		// projectOrganization
+	outcome = 6;			// resultProject
+	similarity = 8;			// resultResult
+	publicationDataset = 9; // resultResult
+	affiliation = 12;		// resultOrganizaiton	
+	
+	dedup = 10;				// resultResult | organizationOrganization
+	dedupSimilarity = 11;	// resultResult | organizationOrganization
+
+	supplement = 13;        // resultResult
+	part = 15;              // resultResult
+
+	version = 16;			// resultResult
+
+	relationship = 17;		// catch all
+}

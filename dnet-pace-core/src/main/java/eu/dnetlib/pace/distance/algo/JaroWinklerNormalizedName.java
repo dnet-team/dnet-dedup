@@ -5,7 +5,6 @@ import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,8 +21,13 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
     //key=word, value=global identifier => example: "università"->"university", used to substitute the word with the global identifier
     private static Map<String,String> translationMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/translation_map.csv");
 
+    private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
+
+    private Map<String, Number> params;
+
     public JaroWinklerNormalizedName(Map<String, Number> params){
         super(params, new com.wcohen.ss.JaroWinkler());
+        this.params = params;
     }
 
     public JaroWinklerNormalizedName(double weight) {
@@ -43,13 +47,27 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         cb = removeStopwords(cb);
 
         //replace keywords with codes
-        ca = translate(ca, translationMap);
-        cb = translate(cb, translationMap);
+        String codesA = keywordsToCode(ca, translationMap, params.getOrDefault("windowSize", 4).intValue());
+        String codesB = keywordsToCode(cb, translationMap, params.getOrDefault("windowSize",4).intValue());
 
-        if (sameKeywords(ca,cb)) {
-            return normalize(ssalgo.score(removeCodes(ca), removeCodes(cb)));
+        //replace cities with codes
+        codesA = keywordsToCode(codesA, cityMap, params.getOrDefault("windowSize", 4).intValue());
+        codesB = keywordsToCode(codesB, cityMap, params.getOrDefault("windowSize", 4).intValue());
+
+        //if two names have same city
+        if (sameCity(codesA,codesB)){
+            if (keywordsCompare(codesA, codesB)>params.getOrDefault("threshold", 0.5).doubleValue()) {
+                ca = removeCodes(codesA);
+                cb = removeCodes(codesB);
+                if (ca.isEmpty() && cb.isEmpty())
+                    return 1.0;
+                else
+                    return normalize(ssalgo.score(ca,cb));
+            }
         }
+
         return 0.0;
+
     }
 
     @Override

@@ -1,0 +1,97 @@
+package eu.dnetlib.data.proto;
+
+import "Kind.proto";
+import "FieldType.proto";
+
+// for Oafentity
+import "Type.proto";
+import "Datasource.proto";
+import "Organization.proto";
+import "Project.proto";
+import "Result.proto";
+
+import "Person.proto";
+
+// for OafRel
+import "RelType.proto";
+import "Datasource_Organization.proto";
+import "Project_Organization.proto";
+import "Result_Organization.proto";
+import "Result_Project.proto";
+import "Result_Result.proto";
+import "Organization_Organization.proto";
+
+option java_package = "eu.dnetlib.data.proto";
+option java_outer_classname = "OafProtos";
+
+message Oaf {
+  required Kind kind = 1;
+
+  optional OafEntity entity = 2;
+  optional OafRel rel = 3;
+
+  optional DataInfo dataInfo = 4;
+
+	// used to mark the last update time of this object
+  optional sfixed64 lastupdatetimestamp = 5;
+}
+
+message OafEntity {
+  required Type type = 1;
+  required string id = 12;
+  
+  repeated string originalId = 8;
+  repeated KeyValue collectedfrom = 9;
+  
+  repeated StructuredProperty pid = 10;
+  optional string dateofcollection = 11;
+  optional string dateoftransformation = 13;
+
+  /* Any relation that we want to bundle together with this entity.
+   It's intended to be used only in temporary values in map/red jobs (sequence files, ...)
+   and never persisted values stored in  HBase. */
+  repeated OafRel cachedRel = 2;
+  repeated Oaf cachedOafRel = 18;
+
+  optional Datasource datasource = 3;
+  optional Organization organization = 4;
+  optional Project project = 6;
+  optional Result result = 7;
+
+  optional Person person = 5;
+  
+  repeated OafEntity children = 16;
+  
+  repeated ExtraInfo extraInfo = 15;
+  
+  optional OAIProvenance oaiprovenance = 17;
+}
+
+
+message OafRel {
+  required RelType relType = 1;
+  required SubRelType subRelType = 19;
+  required string relClass = 20;	// one among the SubRel names, e.g. Provision.RelName.isProvidedBy
+
+  required string source = 2;
+  required string target = 3;
+
+  /* if true then is a "child" */
+  required bool child = 4;
+
+  optional OafEntity cachedTarget = 5;
+
+  // needed to have more information that is not included in cachedTarget.
+  optional Oaf cachedOafTarget = 8;
+
+  // Datamodel rels
+  optional DatasourceOrganization datasourceOrganization = 6;
+  optional ProjectOrganization projectOrganization = 9;
+  optional ResultOrganization resultOrganization = 10;
+  optional ResultProject resultProject = 11;
+  optional ResultResult resultResult = 16;
+  optional OrganizationOrganization organizationOrganization = 17;
+
+  repeated KeyValue collectedfrom = 21;
+
+}

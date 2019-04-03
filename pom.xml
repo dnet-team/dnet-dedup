@@ -35,6 +35,8 @@
         <url>https://issue.openaire.research-infrastructures.eu/projects/openaire</url>
     </issueManagement>
 
+
+
     <distributionManagement>
         <repository>
             <id>dnet45-releases</id>
@@ -70,6 +72,18 @@
             </snapshots>
         </repository>
 
+        <repository>
+            <id>cloudera</id>
+            <name>Cloudera Repository</name>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
     </repositories>
 
     <build>
@@ -77,23 +91,146 @@
         <outputDirectory>target/classes</outputDirectory>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
+
+
+
+
+        <!--*************************************************-->
+
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <configuration>
+                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.4</version>
+                    <configuration>
+                        <detectLinks>true</detectLinks>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.13</version>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.0</version>
-            </plugin>
+
         </plugins>
+
+        <!--***********************************************************************-->
+
+
+
+
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>3.6.0</version>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                    <!--<encoding>${project.build.sourceEncoding}</encoding>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<version>3.0.0</version>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-failsafe-plugin</artifactId>-->
+                <!--<version>2.13</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>integration-test</id>-->
+                        <!--<goals>-->
+                            <!--<goal>integration-test</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>verify</id>-->
+                        <!--<goals>-->
+                            <!--<goal>verify</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+        <!--</plugins>-->
 
     </build>
 
@@ -128,14 +265,20 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.6.6</version>
+                <version>${jackson.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
                 <version>1.9.13</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>3.6.1</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -171,11 +314,19 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-core_2.11</artifactId>
                 <version>${spark.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-graphx_2.11</artifactId>
                 <version>${spark.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_2.11</artifactId>
+                <version>${spark.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -188,8 +339,22 @@
                 <artifactId>reflections</artifactId>
                 <version>0.9.10</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>${scala.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.oozie</groupId>
+                <artifactId>oozie-client</artifactId>
+                <version>5.1.0</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
+
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -199,6 +364,7 @@
         <google.guava.version>15.0</google.guava.version>
 
         <spark.version>2.2.0</spark.version>
+        <jackson.version>2.6.6</jackson.version>
 
         <commons.lang.version>2.6</commons.lang.version>
         <commons.io.version>2.4</commons.io.version>
@@ -206,6 +372,7 @@
         <commons.logging.version>1.1.3</commons.logging.version>
 
         <junit.version>4.9</junit.version>
+        <scala.version>2.11.8</scala.version>
 
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     </properties>

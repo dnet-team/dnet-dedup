@@ -13,10 +13,7 @@ import eu.dnetlib.data.proto.ResultProtos.Result;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.config.Type;
-import eu.dnetlib.pace.model.Field;
-import eu.dnetlib.pace.model.FieldValueImpl;
-import eu.dnetlib.pace.model.MapDocument;
-import eu.dnetlib.pace.model.ProtoDocumentBuilder;
+import eu.dnetlib.pace.model.*;
 import eu.dnetlib.pace.model.gt.GTAuthor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -25,9 +22,7 @@ import org.apache.commons.lang3.RandomUtils;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -49,11 +44,13 @@ public abstract class AbstractProtoPaceTest extends OafTest {
 		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
 	}
 
-
     protected DedupConfig getOrganizationTestConf() {
         return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.test.conf"));
     }
 
+    protected DedupConfig getAuthorsTestConf() {
+		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/authors.test.pace.conf"));
+	}
 
 	protected DedupConfig getResultAuthorsConf() {
 		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.authors.pace.conf"));
@@ -106,6 +103,29 @@ public abstract class AbstractProtoPaceTest extends OafTest {
 
 	protected MapDocument result(final Config config, final String id, final String title, final String date, final String pid, final List<String> authors) {
 		return result(config, id, title, date, Lists.newArrayList(pid), authors);
+	}
+
+	protected MapDocument author(final String identifier, final String area, final String firstname, final String lastname, final String fullname, final Double[] topics, final String pubID, final String pubDOI, final int rank, final String orcid, final List<String> coauthors) {
+		Map<String, Field> fieldMap = new HashMap<>();
+
+		fieldMap.put("area", new FieldValueImpl(Type.String, "area", area));
+		fieldMap.put("firstname", new FieldValueImpl(Type.String, "firstname", firstname));
+		fieldMap.put("lastname", new FieldValueImpl(Type.String, "lastname", lastname));
+		fieldMap.put("fullname", new FieldValueImpl(Type.String, "fullname", fullname));
+		fieldMap.put("pubID", new FieldValueImpl(Type.String, "pubID", pubID));
+		fieldMap.put("pubDOI", new FieldValueImpl(Type.String, "pubDOI", pubDOI));
+		fieldMap.put("rank", new FieldValueImpl(Type.Int, "rank", rank));
+		fieldMap.put("orcid", new FieldValueImpl(Type.String, "orcid", orcid));
+
+		FieldListImpl ca = new FieldListImpl("coauthors", Type.String);
+		ca.addAll(coauthors.stream().map(s -> new FieldValueImpl(Type.String, "coauthors", s)).collect(Collectors.toList()));
+		fieldMap.put("coauthors", ca);
+
+		FieldListImpl t = new FieldListImpl("topics", Type.String);
+		t.addAll(Arrays.asList(topics).stream().map(d -> new FieldValueImpl(Type.String, "topics", d.toString())).collect(Collectors.toList()));
+		fieldMap.put("topics", t);
+
+		return new MapDocument(identifier, fieldMap);
 	}
 
 	static List<String> pidTypes = Lists.newArrayList();

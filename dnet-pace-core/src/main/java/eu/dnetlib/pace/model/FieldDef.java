@@ -1,19 +1,16 @@
 package eu.dnetlib.pace.model;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.config.Type;
-import eu.dnetlib.pace.distance.*;
-import eu.dnetlib.pace.distance.algo.*;
-import eu.dnetlib.pace.util.PaceException;
+import eu.dnetlib.pace.distance.DistanceAlgo;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The schema is composed by field definitions (FieldDef). Each field has a type, a name, and an associated distance algorithm.

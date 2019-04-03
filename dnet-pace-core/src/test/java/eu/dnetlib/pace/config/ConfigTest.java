@@ -1,11 +1,7 @@
 package eu.dnetlib.pace.config;
 
-import com.google.common.collect.Maps;
 import eu.dnetlib.pace.AbstractPaceTest;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,56 +10,31 @@ public class ConfigTest extends AbstractPaceTest {
 
 	@Test
 	public void dedupConfigSerializationTest() {
-		String fromClasspath = readFromClasspath("result.pace.conf.json");
-		System.out.println("fromClasspath = " + fromClasspath);
+		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("result.pace.conf.json"));
 
-		final DedupConfig conf = DedupConfig.load(fromClasspath);
+		final String conf = cfgFromClasspath.toString();
 
-		assertNotNull(conf);
+//		System.out.println("*****SERIALIZED*****");
+//		System.out.println(conf);
+//		System.out.println("*****FROM CLASSPATH*****");
+//		System.out.println(readFromClasspath("result.pace.conf.json"));
+
+		final DedupConfig cfgFromSerialization = DedupConfig.load(conf);
+
+		assertEquals(cfgFromClasspath.toString(), cfgFromSerialization.toString());
+
+		assertNotNull(cfgFromClasspath);
+		assertNotNull(cfgFromSerialization);
 
 
-		String parsed = conf.toString();
-
-		System.out.println("parsed = " + parsed);
-
-		DedupConfig conf2 = DedupConfig.load(parsed);
-
-		assertNotNull(conf2);
-
-		System.out.println("conf2 = " + conf2);
-
-		assertEquals(parsed, conf2.toString());
 	}
 
 	@Test
 	public void dedupConfigTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("result.pace.conf.json"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("org.curr.conf"));
 
-		assertNotNull(load);
 		System.out.println(load.toString());
-
 	}
-
-	@Test
-	public void testLoadDefaults() throws IOException {
-
-		final String entityType = "organization";
-		final String configurationId = "dedup-organization-simple";
-
-		final Map<String, String> config = Maps.newHashMap();
-
-		config.put("entityType", entityType);
-		config.put("configurationId", configurationId);
-		final DedupConfig dedupConf = DedupConfig.loadDefault(config);
-
-		//System.out.println("dedupConf = " + dedupConf);
-		assertNotNull(dedupConf);
-		assertNotNull(dedupConf.getWf());
-		assertEquals(dedupConf.getWf().getEntityType(), entityType);
-		assertEquals(dedupConf.getWf().getConfigurationId(), configurationId);
-	}
-
-
 
 }

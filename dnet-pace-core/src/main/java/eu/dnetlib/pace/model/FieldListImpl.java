@@ -1,20 +1,17 @@
 package eu.dnetlib.pace.model;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import eu.dnetlib.pace.config.Type;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * The Class FieldListImpl.
@@ -315,6 +312,21 @@ public class FieldListImpl extends AbstractField implements FieldList {
 			@Override
 			public String apply(final Field f) {
 				return f.stringValue();
+			}
+		};
+	}
+
+	@Override
+	public double[] doubleArray() {
+		return Lists.newArrayList(Iterables.transform(fields, getDouble())).stream().mapToDouble(d-> d).toArray();
+	}
+
+	private Function<Field,Double> getDouble() {
+
+		return new Function<Field, Double>() {
+			@Override
+			public Double apply(final Field f) {
+				return Double.parseDouble(f.stringValue());
 			}
 		};
 	}
