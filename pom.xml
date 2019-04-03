@@ -5,7 +5,7 @@
 
     <groupId>eu.dnetlib</groupId>
     <artifactId>dnet-dedup</artifactId>
-    <version>3.0.9-SNAPSHOT</version>
+    <version>3.0.9</version>
 
     <packaging>pom</packaging>
 
@@ -22,7 +22,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/dnet-team/dnet-dedup.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>dnet-dedup-3.0.9</tag>
     </scm>
 
     <modules>
