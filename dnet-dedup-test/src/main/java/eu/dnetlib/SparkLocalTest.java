@@ -1,20 +1,12 @@
 package eu.dnetlib;
 
-import com.google.common.collect.Sets;
-import eu.dnetlib.data.proto.DedupProtos;
 import eu.dnetlib.graph.GraphProcessor;
-import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.BlockProcessor;
 import eu.dnetlib.pace.utils.PaceUtils;
 import eu.dnetlib.reporter.SparkCounter;
 import eu.dnetlib.reporter.SparkReporter;
-import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -23,12 +15,7 @@ import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.SparkSession;
 import scala.Tuple2;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SparkLocalTest {
