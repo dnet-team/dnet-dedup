@@ -6,7 +6,6 @@ import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.CondDef;
 import eu.dnetlib.pace.model.FieldDef;
-import eu.dnetlib.pace.model.TreeNodeDef;
 import eu.dnetlib.pace.util.PaceResolver;
 import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -24,11 +23,9 @@ public class PaceConfig implements Serializable {
 	private List<ClusteringDef> clustering;
 	private Map<String, List<String>> blacklists;
 
-	private Map<String, TreeNodeDef> decisionTree;
-
 	private Map<String, FieldDef> modelMap;
 
-	public static PaceResolver paceResolver;
+	//	public PaceResolver paceResolver;
 
 	public PaceConfig() {}
 
@@ -38,7 +35,7 @@ public class PaceConfig implements Serializable {
 			modelMap.put(fd.getName(), fd);
 		}
 
-		paceResolver = new PaceResolver();
+//		paceResolver = new PaceResolver();
 	}
 
 	public List<FieldDef> getModel() {
@@ -59,14 +56,6 @@ public class PaceConfig implements Serializable {
 
 	public List<CondDef> getConditions() {
 		return conditions;
-	}
-
-	public Map<String, TreeNodeDef> getDecisionTree() {
-		return decisionTree;
-	}
-
-	public void setDecisionTree(Map<String, TreeNodeDef> decisionTree) {
-		this.decisionTree = decisionTree;
 	}
 
 	@JsonIgnore
