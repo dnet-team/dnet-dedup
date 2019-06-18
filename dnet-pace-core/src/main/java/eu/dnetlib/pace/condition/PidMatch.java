@@ -43,6 +43,10 @@ public class PidMatch extends AbstractCondition {
 		int incommon = Sets.intersection(pidAset, pidBset).size();
 		int simDiff = Sets.symmetricDifference(pidAset, pidBset).size();
 
+		if (incommon + simDiff == 0) {
+			return new ConditionEval(cond, a, b, 0);
+		}
+
 		int result = incommon / (incommon + simDiff) > 0.5 ? 1 : -1;
 
 		return new ConditionEval(cond, a, b, result);
