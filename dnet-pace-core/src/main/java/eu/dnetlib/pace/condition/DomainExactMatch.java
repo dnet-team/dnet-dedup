@@ -21,6 +21,8 @@ public class DomainExactMatch extends ExactMatchIgnoreCase {
 
     private URL asUrl(final String value) {
         try {
+            if (value.isEmpty())
+                return new URL("http://");
             return new URL(value);
         } catch (MalformedURLException e) {
             // should not happen as checked by pace typing

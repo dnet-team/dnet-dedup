@@ -32,11 +32,11 @@ public class SparkLocalTest {
 
         final JavaSparkContext context = new JavaSparkContext(spark.sparkContext());
 
-        final URL dataset = SparkLocalTest.class.getResource("/eu/dnetlib/pace/softwares.json");
+        final URL dataset = SparkLocalTest.class.getResource("/eu/dnetlib/pace/organization.to.fix.json");
         final JavaRDD<String> dataRDD = context.textFile(dataset.getPath());
 
         //read the configuration from the classpath
-        final DedupConfig config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/software.test.pace.conf", SparkLocalTest.class));
+        final DedupConfig config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/org.curr.conf", SparkLocalTest.class));
 
         Map<String, LongAccumulator> accumulators = Utility.constructAccumulator(config, context.sc());
 
@@ -83,15 +83,12 @@ public class SparkLocalTest {
 
         //print deduped
         connectedComponents.foreach(cc -> {
-            System.out.println("cc = " + cc.getId());
-            for (MapDocument doc: cc.getDocs()) {
-                System.out.println(doc);
-            }
+            System.out.println(cc);
         });
-//        //print nondeduped
-//        nonDeduplicated.foreach(cc -> {
-//            System.out.println("nd = " + cc.getId());
-//        });
+        //print nondeduped
+        nonDeduplicated.foreach(cc -> {
+            System.out.println(cc);
+        });
 
         System.out.println("Non duplicates: " + nonDeduplicated.count());
         System.out.println("Duplicates: " + connectedComponents.flatMap(cc -> cc.getDocs().iterator()).count());
