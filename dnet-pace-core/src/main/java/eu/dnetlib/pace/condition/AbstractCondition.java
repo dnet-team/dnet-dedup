@@ -37,30 +37,13 @@ public abstract class AbstractCondition extends AbstractPaceFunctions implements
 
 			if (fd.isIgnoreMissing()) {
 				res.put(fd.getName(), verify(fd, va, vb));
-			}
-			else {
+			} else {
 				if (va.isEmpty() || vb.isEmpty()) {
 					res.put(fd.getName(), new ConditionEval(cond, va, vb, -1));
-				}
-				else {
+				} else {
 					res.put(fd.getName(), verify(fd, va, vb));
 				}
 			}
-
-
-
-//			// if ignoreMissing=true always return undefined (0) in case of missing
-//			if ((va.isEmpty() || vb.isEmpty()) && fd.isIgnoreMissing()) {
-//				res.put(fd.getName(), new ConditionEval(cond, va, vb, 0));
-//			} else {
-//				if (va.isEmpty()&&vb.isEmpty()) {
-//					res.put(fd.getName(), new ConditionEval(cond, va, vb, -1));
-//				}
-//				else {
-//					res.put(fd.getName(), verify(fd, va, vb));
-//				}
-//			}
-
 		}
 		return res;
 	}
