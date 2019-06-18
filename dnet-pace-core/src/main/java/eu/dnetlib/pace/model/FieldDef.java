@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.distance.DistanceAlgo;
+import eu.dnetlib.pace.util.PaceResolver;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ public class FieldDef implements Serializable {
 	private boolean overrideMatch;
 
 	private double weight;
+
+	PaceResolver paceResolver = new PaceResolver();
 
 	/**
 	 * Sets maximum size for the repeatable fields in the model. -1 for unbounded size.
@@ -85,7 +88,7 @@ public class FieldDef implements Serializable {
 		params.put("length", getLength());
 		*/
 		params.put("weight", getWeight());
-		return PaceConfig.paceResolver.getDistanceAlgo(getAlgo(), params);
+		return paceResolver.getDistanceAlgo(getAlgo(), params);
 	}
 
 	public boolean isIgnoreMissing() {

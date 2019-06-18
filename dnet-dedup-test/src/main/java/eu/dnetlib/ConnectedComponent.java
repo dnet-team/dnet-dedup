@@ -1,13 +1,16 @@
 package eu.dnetlib;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.PaceException;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,13 +18,15 @@ public class ConnectedComponent implements Serializable {
 
     private Set<MapDocument> docs;
     private String id;
+    private Map<String, Field> fieldMap;
 
     public ConnectedComponent() {
     }
 
-    public ConnectedComponent(String id, Set<MapDocument> docs) {
-        this.id = id;
+    public ConnectedComponent(Set<MapDocument> docs) {
         this.docs = docs;
+        this.id = createID(docs);
+        this.fieldMap = chooseFields(docs);
     }
 
     public Set<MapDocument> getDocs() {
@@ -40,14 +45,28 @@ public class ConnectedComponent implements Serializable {
         this.id = id;
     }
 
-    public void initializeID() {
+    public Map<String, Field> chooseFields(Set<MapDocument> docs) {
+
+        int maxLength = 0;
+        Map<String, Field> maxFieldMap = new HashMap<>();
+        for (MapDocument doc : docs) {
+            if (doc.toString().length()>maxLength){
+                maxFieldMap = doc.getFieldMap();
+                maxLength = doc.toString().length();
+            }
+        }
+
+        return maxFieldMap;
+    }
+
+    public String createID(Set<MapDocument> docs) {
         if (docs.size() > 1) {
             String ccID = getMin(docs.stream().map(doc -> doc.getIdentifier()).collect(Collectors.toList()));
             String prefix = ccID.split("\\|")[0];
             String id = ccID.split("::")[1];
-            this.id = prefix + "|dedup_______::" + id;
+            return prefix + "|dedup_______::" + id;
         } else {
-            this.id = docs.iterator().next().getIdentifier();
+            return docs.iterator().next().getIdentifier();
         }
     }
 
@@ -71,5 +90,13 @@ public class ConnectedComponent implements Serializable {
         } catch (IOException e) {
             throw new PaceException("Failed to create Json: ", e);
         }
+    }
+
+    public Map<String, Field> getFieldMap() {
+        return fieldMap;
+    }
+
+    public void setFieldMap(Map<String, Field> fieldMap) {
+        this.fieldMap = fieldMap;
     }
 }

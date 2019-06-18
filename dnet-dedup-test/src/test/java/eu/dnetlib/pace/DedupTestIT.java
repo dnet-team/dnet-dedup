@@ -1,12 +1,11 @@
 package eu.dnetlib.pace;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowJob;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;
@@ -28,14 +27,15 @@ public class DedupTestIT {
         conf.setProperty(OozieClient.APP_PATH, "hdfs://hadoop-rm1.garr-pa1.d4science.org:8020/user/michele.debonis/oozieJob/workflow.xml");
         conf.setProperty(OozieClient.USER_NAME, "michele.debonis");
         conf.setProperty("oozie.action.sharelib.for.spark", "spark2");
+        conf.setProperty("oozie.use.system.libpath", "true");
 
         // setting workflow parameters
         conf.setProperty("jobTracker", "hadoop-rm3.garr-pa1.d4science.org:8032");
         conf.setProperty("nameNode", "hdfs://hadoop-rm1.garr-pa1.d4science.org:8020");
         conf.setProperty("dedupConfiguration", prop.getProperty("dedup.configuration"));
         conf.setProperty("inputSpace", prop.getProperty("input.space"));
-//        conf.setProperty("inputDir", "/usr/tucu/inputdir");
-//        conf.setProperty("outputDir", "/usr/tucu/outputdir");
+        conf.setProperty("outputPath", prop.getProperty("output"));
+        conf.setProperty("statisticsPath", prop.getProperty("dedup.statistics"));
 
         // submit and start the workflow job
         String jobId = wc.run(conf);
@@ -49,9 +49,10 @@ public class DedupTestIT {
 
         // print the final status of the workflow job
         System.out.println(wc.getJobInfo(jobId));
-        System.out.println("JOB LOG = " + wc.getJobLog(jobId));
+//        System.out.println("JOB LOG = " + wc.getJobLog(jobId));
 
         assertEquals(WorkflowJob.Status.SUCCEEDED, wc.getJobInfo(jobId).getStatus());
+
     }
 
 
@@ -64,16 +65,6 @@ public class DedupTestIT {
             e.printStackTrace();
         }
         return prop;
-    }
-
-    static String readFromClasspath(final String filename) {
-        final StringWriter sw = new StringWriter();
-        try {
-            IOUtils.copy(DedupTestIT.class.getResourceAsStream(filename), sw);
-            return sw.toString();
-        } catch (final IOException e) {
-            throw new RuntimeException("cannot load resource from classpath: " + filename);
-        }
     }
 
 }

@@ -27,7 +27,14 @@ public class ExactMatch extends AbstractCondition {
 
 		int res;
 
-		if (StringUtils.isBlank(fa) && StringUtils.isBlank(fb)) {
+//		if (StringUtils.isBlank(fa) && StringUtils.isBlank(fb)) {
+//			res = 0;
+//		} else {
+//			res = fa.equals(fb) ? 1 : -1;
+//		}
+
+		//if there is a blank, undefined result
+		if (StringUtils.isBlank(fa) || StringUtils.isBlank(fb)) {
 			res = 0;
 		} else {
 			res = fa.equals(fb) ? 1 : -1;

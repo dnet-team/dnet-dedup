@@ -7,6 +7,7 @@ import java.util.List;
 import eu.dnetlib.pace.condition.*;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.util.PaceException;
+import eu.dnetlib.pace.util.PaceResolver;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class CondDef implements Serializable {
@@ -15,10 +16,12 @@ public class CondDef implements Serializable {
 
 	private List<String> fields;
 
+	PaceResolver paceResolver = new PaceResolver();
+
 	public CondDef() {}
 
 	public ConditionAlgo conditionAlgo(final List<FieldDef> fields){
-		return PaceConfig.paceResolver.getConditionAlgo(getName(), fields);
+		return paceResolver.getConditionAlgo(getName(), fields);
 	}
 
 	public String getName() {

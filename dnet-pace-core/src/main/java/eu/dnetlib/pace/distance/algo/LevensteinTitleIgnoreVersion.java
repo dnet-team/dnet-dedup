@@ -32,6 +32,9 @@ public class LevensteinTitleIgnoreVersion extends SecondStringDistanceAlgo {
 		ca = ca.replaceAll("\\d", "").replaceAll(getRomans(ca), "").trim();
 		cb = cb.replaceAll("\\d", "").replaceAll(getRomans(cb), "").trim();
 
+		ca = filterAllStopWords(ca);
+		cb = filterAllStopWords(cb);
+
 		final String cca = finalCleanup(ca);
 		final String ccb = finalCleanup(cb);
 

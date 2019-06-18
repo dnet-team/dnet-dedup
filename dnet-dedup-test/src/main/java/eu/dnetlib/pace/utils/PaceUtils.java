@@ -83,6 +83,7 @@ public class PaceUtils {
         try {
             JsonFormat.merge(json, b);
         } catch (JsonFormat.ParseException e) {
+            System.out.println("**************************** " + json);
             throw new IllegalArgumentException(e);
         }
         return ProtoDocumentBuilder.newInstance(b.getId(), b.build(), conf.getPace().getModel());

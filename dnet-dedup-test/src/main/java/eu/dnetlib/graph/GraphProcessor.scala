@@ -32,8 +32,7 @@ object GraphProcessor {
 
   def asConnectedComponent(group: (VertexId, Iterable[MapDocument])): ConnectedComponent = {
     val docs = group._2.toSet[MapDocument]
-    val connectedComponent = new ConnectedComponent("empty", JavaConversions.setAsJavaSet[MapDocument](docs));
-    connectedComponent.initializeID();
+    val connectedComponent = new ConnectedComponent(JavaConversions.setAsJavaSet[MapDocument](docs));
     connectedComponent
   }
 

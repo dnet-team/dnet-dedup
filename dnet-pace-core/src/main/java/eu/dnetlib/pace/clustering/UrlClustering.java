@@ -22,12 +22,17 @@ public class UrlClustering extends AbstractPaceFunctions implements ClusteringFu
 
     @Override
     public Collection<String> apply(List<Field> fields) {
-        return fields.stream()
-                .filter(f -> !f.isEmpty())
-                .map(Field::stringValue)
-                .map(this::asUrl)
-                .map(URL::getHost)
-                .collect(Collectors.toCollection(HashSet::new));
+        try {
+            return fields.stream()
+                    .filter(f -> !f.isEmpty())
+                    .map(Field::stringValue)
+                    .map(this::asUrl)
+                    .map(URL::getHost)
+                    .collect(Collectors.toCollection(HashSet::new));
+        }
+        catch (IllegalStateException e){
+            return new HashSet<>();
+        }
     }
 
     @Override
@@ -35,7 +40,7 @@ public class UrlClustering extends AbstractPaceFunctions implements ClusteringFu
         return null;
     }
 
-    private URL asUrl(final String value) {
+    private URL asUrl(String value) {
         try {
             return new URL(value);
         } catch (MalformedURLException e) {
@@ -43,5 +48,6 @@ public class UrlClustering extends AbstractPaceFunctions implements ClusteringFu
             throw new IllegalStateException("invalid URL: " + value);
         }
     }
+
 
 }
