@@ -16,12 +16,10 @@ public class CondDef implements Serializable {
 
 	private List<String> fields;
 
-	PaceResolver paceResolver = new PaceResolver();
-
 	public CondDef() {}
 
-	public ConditionAlgo conditionAlgo(final List<FieldDef> fields){
-		return paceResolver.getConditionAlgo(getName(), fields);
+	public ConditionAlgo conditionAlgo(final List<FieldDef> fields) {
+		return PaceConfig.resolver.getConditionAlgo(getName(), fields);
 	}
 
 	public String getName() {

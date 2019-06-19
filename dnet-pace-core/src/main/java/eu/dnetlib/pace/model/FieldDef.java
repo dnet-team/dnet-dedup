@@ -34,8 +34,6 @@ public class FieldDef implements Serializable {
 
 	private double weight;
 
-	PaceResolver paceResolver = new PaceResolver();
-
 	/**
 	 * Sets maximum size for the repeatable fields in the model. -1 for unbounded size.
 	 */
@@ -82,13 +80,8 @@ public class FieldDef implements Serializable {
 			params = new HashMap<>();
 		}
 
-		//TODO verify that the init signatures for the distance algos are all the same!
-		/*
-		params.put("size", getSize());
-		params.put("length", getLength());
-		*/
 		params.put("weight", getWeight());
-		return paceResolver.getDistanceAlgo(getAlgo(), params);
+		return PaceConfig.resolver.getDistanceAlgo(getAlgo(), params);
 	}
 
 	public boolean isIgnoreMissing() {

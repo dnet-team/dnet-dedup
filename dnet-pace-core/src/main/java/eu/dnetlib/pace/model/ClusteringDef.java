@@ -23,8 +23,6 @@ public class ClusteringDef implements Serializable {
 
 	private Map<String, Integer> params;
 
-	PaceResolver paceResolver = new PaceResolver();
-
 	public ClusteringDef() {}
 
 	public String getName() {
@@ -36,12 +34,7 @@ public class ClusteringDef implements Serializable {
 	}
 
 	public ClusteringFunction clusteringFunction() {
-		try {
-			return paceResolver.getClusteringFunction(getName(), params);
-		} catch (PaceException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return PaceConfig.resolver.getClusteringFunction(getName(), params);
 	}
 
 	public List<String> getFields() {

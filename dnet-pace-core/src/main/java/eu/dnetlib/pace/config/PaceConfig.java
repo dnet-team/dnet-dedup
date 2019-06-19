@@ -23,9 +23,11 @@ public class PaceConfig implements Serializable {
 	private List<ClusteringDef> clustering;
 	private Map<String, List<String>> blacklists;
 
+	@JsonIgnore
 	private Map<String, FieldDef> modelMap;
 
-	//	public PaceResolver paceResolver;
+	@JsonIgnore
+	public static PaceResolver resolver = new PaceResolver();
 
 	public PaceConfig() {}
 
@@ -34,8 +36,6 @@ public class PaceConfig implements Serializable {
 		for(FieldDef fd : getModel()) {
 			modelMap.put(fd.getName(), fd);
 		}
-
-//		paceResolver = new PaceResolver();
 	}
 
 	public List<FieldDef> getModel() {
