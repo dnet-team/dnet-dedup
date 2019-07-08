@@ -19,16 +19,17 @@ public class KeywordsClustering extends AbstractClusteringFunction {
     @Override
     protected Collection<String> doApply(String s) {
 
-        List<String> keywords = getCodes(s, translationMap, params.getOrDefault("windowSize", 4));
-        List<String> cities = getCodes(s, cityMap, params.getOrDefault("windowSize", 4));
+        //takes city codes and keywords codes without duplicates
+        Set<String> keywords = getCodes(s, translationMap, params.getOrDefault("windowSize", 4));
+        Set<String> cities = getCodes(s, cityMap, params.getOrDefault("windowSize", 4));
 
+        //list of combination to return as result
         final Collection<String> combinations = new LinkedHashSet<String>();
 
-        int size = 0;
         for (String keyword: keywords){
             for (String city: cities) {
                 combinations.add(keyword+"-"+city);
-                if (++size>params.getOrDefault("max", 2)) {
+                if (combinations.size()>=params.getOrDefault("max", 2)) {
                     return combinations;
                 }
             }

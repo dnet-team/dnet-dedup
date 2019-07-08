@@ -320,7 +320,7 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	//get the list of codes into the input string
-	public List<String> getCodes(String s1, Map<String, String> translationMap, int windowSize){
+	public Set<String> getCodes(String s1, Map<String, String> translationMap, int windowSize){
 
 		String s = cleanup(s1);
 
@@ -328,7 +328,7 @@ public abstract class AbstractPaceFunctions {
 
 		List<String> tokens = Arrays.asList(s.toLowerCase().split(" "));
 
-		List<String> codes = new ArrayList<>();
+		Set<String> codes = new HashSet<>();
 
 		if (tokens.size()<windowSize)
 			windowSize = tokens.size();
