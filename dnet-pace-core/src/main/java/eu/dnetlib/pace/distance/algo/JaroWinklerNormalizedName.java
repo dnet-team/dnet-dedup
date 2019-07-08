@@ -43,8 +43,11 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         String ca = cleanup(a);
         String cb = cleanup(b);
 
-        ca = removeStopwords(ca);
-        cb = removeStopwords(cb);
+        ca = normalize(ca);
+        cb = normalize(cb);
+
+        ca = filterAllStopWords(ca);
+        cb = filterAllStopWords(cb);
 
         //replace keywords with codes
         String codesA = keywordsToCode(ca, translationMap, params.getOrDefault("windowSize", 4).intValue());
@@ -80,16 +83,4 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         return d;
     }
 
-    public String removeStopwords(String s) {
-        String normString = normalize(s);
-
-        normString = filterStopWords(normString, stopwordsIt);
-        normString = filterStopWords(normString, stopwordsEn);
-        normString = filterStopWords(normString, stopwordsDe);
-        normString = filterStopWords(normString, stopwordsFr);
-        normString = filterStopWords(normString, stopwordsPt);
-        normString = filterStopWords(normString, stopwordsEs);
-
-        return normString;
-    }
 }

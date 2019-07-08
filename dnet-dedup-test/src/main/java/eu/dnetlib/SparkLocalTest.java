@@ -61,10 +61,9 @@ public class SparkLocalTest {
                             .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
                 }).groupByKey();//group documents basing on the key
 
-//        blocks = blocks.filter(b -> Iterables.size(b._2())>2);
-//        vertexes = blocks.flatMap(b -> b._2().iterator()).map(t -> new Tuple2<Object, MapDocument>((long) t.getIdentifier().hashCode(), t)).rdd();
-
         //print blocks
+//        blocks = blocks.filter(b -> Iterables.size(b._2())>1);
+////        vertexes = blocks.flatMap(b -> b._2().iterator()).map(t -> new Tuple2<Object, MapDocument>((long) t.getIdentifier().hashCode(), t)).rdd();
 //        blocks.map(group -> new DocumentsBlock(group._1(), group._2())).foreach(b -> System.out.println(b));
 
         //create relations by comparing only elements in the same group

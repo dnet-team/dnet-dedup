@@ -52,9 +52,11 @@ public class PidMatch extends AbstractCondition {
 		return new ConditionEval(cond, a, b, result);
 	}
 
+	//lowercase + normalization of the pid before adding it to the set
 	private Set<String> toHashSet(List<Pid> pbl) {
+
 		return pbl.stream()
-					.map(pid -> pid.getType() + pid.getValue())
+					.map(pid -> pid.getType() + normalizePid(pid.getValue()))
 					.collect(Collectors.toCollection(HashSet::new));
 	}
 

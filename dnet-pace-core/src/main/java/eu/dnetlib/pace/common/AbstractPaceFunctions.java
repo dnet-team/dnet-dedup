@@ -40,6 +40,8 @@ public abstract class AbstractPaceFunctions {
 	private static final String aliases_from = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎àáâäæãåāèéêëēėęîïíīįìôöòóœøōõûüùúūßśšłžźżçćčñń";
 	private static final String aliases_to = "0123456789+-=()n0123456789+-=()aaaaaaaaeeeeeeeiiiiiioooooooouuuuussslzzzcccnn";
 
+	public final String DOI_PREFIX = "(https?:\\/\\/dx\\.doi\\.org\\/)|(doi:)";
+
 	protected final static FieldList EMPTY_FIELD = new FieldListImpl();
 
 	protected String concat(final List<String> l) {
@@ -313,5 +315,41 @@ public abstract class AbstractPaceFunctions {
 		return Iterables.limit(Splitter.on(" ").omitEmptyStrings().trimResults().split(s), maxTokens);
 	}
 
+	public String normalizePid(String pid) {
+		return pid.toLowerCase().replaceAll(DOI_PREFIX, "");
+	}
+
+	//get the list of codes into the input string
+	public List<String> getCodes(String s1, Map<String, String> translationMap, int windowSize){
+
+		String s = cleanup(s1);
+
+		s = filterAllStopWords(s);
+
+		List<String> tokens = Arrays.asList(s.toLowerCase().split(" "));
+
+		List<String> codes = new ArrayList<>();
+
+		if (tokens.size()<windowSize)
+			windowSize = tokens.size();
+
+		int length = windowSize;
+
+		while (length != 0) {
+
+			for (int i = 0; i<=tokens.size()-length; i++){
+				String candidate = Joiner.on(" ").join(tokens.subList(i, i + length));
+				if (translationMap.containsKey(candidate)) {
+					codes.add(translationMap.get(candidate));
+					s = s.replace(candidate, "");
+				}
+			}
+
+			tokens = Arrays.asList(s.split(" "));
+			length-=1;
+		}
+
+		return codes;
+	}
 
 }

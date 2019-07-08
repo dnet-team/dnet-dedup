@@ -117,4 +117,19 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		System.out.println(cf.apply(Lists.newArrayList(person(s))));
 	}
 
+	@Test
+	public void testKeywordsClustering() {
+
+		final ClusteringFunction cf = new KeywordsClustering(params);
+		final String s = "Polytechnic University of Turin";
+		System.out.println(s);
+		System.out.println(cf.apply(Lists.newArrayList(title(s))));
+
+		final String s1 = "POLITECNICO DI TORINO";
+		System.out.println(s1);
+		System.out.println(cf.apply(Lists.newArrayList(title(s1))));
+
+
+	}
+
 }
