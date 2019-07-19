@@ -11,18 +11,6 @@ import java.util.Set;
 @DistanceClass("JaroWinklerNormalizedName")
 public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
 
-    private static Set<String> stopwordsEn = AbstractPaceFunctions.loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
-    private static Set<String> stopwordsIt = AbstractPaceFunctions.loadFromClasspath("/eu/dnetlib/pace/config/stopwords_it.txt");
-    private static Set<String> stopwordsDe = AbstractPaceFunctions.loadFromClasspath("/eu/dnetlib/pace/config/stopwords_de.txt");
-    private static Set<String> stopwordsFr = AbstractPaceFunctions.loadFromClasspath("/eu/dnetlib/pace/config/stopwords_fr.txt");
-    private static Set<String> stopwordsPt = AbstractPaceFunctions.loadFromClasspath("/eu/dnetlib/pace/config/stopwords_pt.txt");
-    private static Set<String> stopwordsEs = AbstractPaceFunctions.loadFromClasspath("/eu/dnetlib/pace/config/stopwords_es.txt");
-
-    //key=word, value=global identifier => example: "università"->"university", used to substitute the word with the global identifier
-    private static Map<String,String> translationMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/translation_map.csv");
-
-    private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
-
     private Map<String, Number> params;
 
     public JaroWinklerNormalizedName(Map<String, Number> params){
@@ -49,28 +37,30 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
-        //replace keywords with codes
-        String codesA = keywordsToCode(ca, translationMap, params.getOrDefault("windowSize", 4).intValue());
-        String codesB = keywordsToCode(cb, translationMap, params.getOrDefault("windowSize",4).intValue());
+        Set<String> keywords1 = getKeywords(ca, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords2 = getKeywords(cb, params.getOrDefault("windowSize", 4).intValue());
 
-        //replace cities with codes
-        codesA = keywordsToCode(codesA, cityMap, params.getOrDefault("windowSize", 4).intValue());
-        codesB = keywordsToCode(codesB, cityMap, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> cities1 = getCities(ca, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> cities2 = getCities(cb, params.getOrDefault("windowSize", 4).intValue());
 
-        //if two names have same city
-        if (sameCity(codesA,codesB)){
-            if (keywordsCompare(codesA, codesB)>params.getOrDefault("threshold", 0.5).doubleValue()) {
-                ca = removeCodes(codesA);
-                cb = removeCodes(codesB);
+        if (sameCity(cities1,cities2)) {
+
+            if (keywordsCompare(keywords1, keywords2)>params.getOrDefault("threshold", 0.5).doubleValue()) {
+
+                ca = removeKeywords(ca, keywords1);
+                ca = removeKeywords(ca, cities1);
+                cb = removeKeywords(cb, keywords2);
+                cb = removeKeywords(cb, cities2);
+
                 if (ca.isEmpty() && cb.isEmpty())
                     return 1.0;
                 else
                     return normalize(ssalgo.score(ca,cb));
+
             }
         }
 
         return 0.0;
-
     }
 
     @Override

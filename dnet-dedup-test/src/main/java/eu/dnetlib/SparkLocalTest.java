@@ -46,6 +46,8 @@ public class SparkLocalTest {
             return new Tuple2<>(mapDocument.getIdentifier(), mapDocument);
         });
 
+//        mapDocs.foreach(doc -> System.out.println("doc = " + doc._2().getFieldMap().get("legalname")));
+
 //        mapDocs.filter(d -> d._2().getFieldMap().get("doi").stringValue().length() > 0).foreach(d -> System.out.println(d));
 //        mapDocs.filter(d -> d._2().getFieldMap().get("documentationUrl").stringValue().length() > 0).foreach(d -> System.out.println(d));
 

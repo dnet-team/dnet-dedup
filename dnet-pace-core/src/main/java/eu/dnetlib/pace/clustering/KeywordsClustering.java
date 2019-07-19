@@ -1,6 +1,5 @@
 package eu.dnetlib.pace.clustering;
 
-import com.google.common.base.Joiner;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 
 import java.util.*;
@@ -20,14 +19,14 @@ public class KeywordsClustering extends AbstractClusteringFunction {
     protected Collection<String> doApply(String s) {
 
         //takes city codes and keywords codes without duplicates
-        Set<String> keywords = getCodes(s, translationMap, params.getOrDefault("windowSize", 4));
-        Set<String> cities = getCodes(s, cityMap, params.getOrDefault("windowSize", 4));
+        Set<String> keywords = getKeywords(s, params.getOrDefault("windowSize", 4));
+        Set<String> cities = getCities(s, params.getOrDefault("windowSize", 4));
 
         //list of combination to return as result
         final Collection<String> combinations = new LinkedHashSet<String>();
 
-        for (String keyword: keywords){
-            for (String city: cities) {
+        for (String keyword: keywordsToCodes(keywords)){
+            for (String city: citiesToCodes(cities)) {
                 combinations.add(keyword+"-"+city);
                 if (combinations.size()>=params.getOrDefault("max", 2)) {
                     return combinations;

@@ -18,6 +18,8 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Set of common functions
@@ -26,6 +28,10 @@ import java.util.regex.Pattern;
  *
  */
 public abstract class AbstractPaceFunctions {
+
+
+	private static Map<String,String> translationMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/translation_map.csv");
+	private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
 	protected static Set<String> stopwords_en = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
 	protected static Set<String> stopwords_de = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_de.txt");
@@ -212,99 +218,58 @@ public abstract class AbstractPaceFunctions {
 		return sb.toString().trim();
 	}
 
-	public String keywordsToCode(String s1, Map<String, String> translationMap, int windowSize){
+	public String removeKeywords(String s, Set<String> keywords) {
 
-		List<String> tokens = Arrays.asList(s1.split(" "));
-
-		if (tokens.size()<windowSize)
-			windowSize = tokens.size();
-
-		int length = windowSize;
-
-		while (length != 0) {
-
-			for (int i = 0; i<=tokens.size()-length; i++){
-				String candidate = Joiner.on(" ").join(tokens.subList(i, i + length));
-				if (translationMap.containsKey(candidate)) {
-					s1 = (" " + s1 + " ").replaceAll(" " + candidate + " ", " " + translationMap.get(candidate) + " ");
-				}
-			}
-			length-=1;
+		s = " " + s + " ";
+		for (String k: keywords ) {
+			s = s.replaceAll(k.toLowerCase(), "");
 		}
 
-		return s1;
+		return s.trim();
 	}
 
 
-	public String removeCodes(String s) {
-		final String regexKey = "\\bkey::[0-9]*\\b";
-		final String regexCity = "\\bcity::[0-9]*\\b";
-		return s.replaceAll(regexKey, "").replaceAll(regexCity, "").trim();
-	}
+	public double keywordsCompare(Set<String> s1, Set<String> s2){
 
-	public double keywordsCompare(String s1, String s2){
+		Set<String> k1 = keywordsToCodes(s1);
+		Set<String> k2 = keywordsToCodes(s2);
 
-        List<String> keywords1 = getKeywords(s1);
-        List<String> keywords2 = getKeywords(s2);
-        int longer = (keywords1.size()>keywords2.size())?keywords1.size():keywords2.size();
+        int longer = (k1.size()>k2.size())?k1.size():k2.size();
 
-        if (getKeywords(s1).isEmpty() || getKeywords(s2).isEmpty())
+        if (k1.isEmpty() || k2.isEmpty())
             return 1.0;
         else
-            return (double)CollectionUtils.intersection(getKeywords(s1),getKeywords(s2)).size()/(double)longer;
+            return (double)CollectionUtils.intersection(k1,k2).size()/(double)longer;
     }
 
-	//check if 2 strings have same keywords
-	public boolean sameKeywords(String s1, String s2){
-		//at least 1 keyword in common
-		if (getKeywords(s1).isEmpty() || getKeywords(s2).isEmpty())
-			return true;
-		else
-			return CollectionUtils.intersection(getKeywords(s1),getKeywords(s2)).size()>0;
-	}
-
 	//returns true if at least 1 city is in common
-	//returns true if a name has no cities
-	public boolean sameCity(String s1, String s2){
+    //returns true if no cities are contained in names
+    //returns false if one of the two names have no city
+	public boolean sameCity(Set<String> s1, Set<String> s2){
 
-		if (getCities(s1).isEmpty() || getCities(s2).isEmpty())
+		Set<String> c1 = citiesToCodes(s1);
+		Set<String> c2 = citiesToCodes(s2);
+
+        if (c1.isEmpty() && c2.isEmpty())
 			return true;
-		else
-			return CollectionUtils.intersection(getCities(s1), getCities(s2)).size()>0;
+		else {
+            if (c1.isEmpty() ^ c2.isEmpty())
+                return false;
+            return CollectionUtils.intersection(c1, c2).size() > 0;
+		}
 	}
 
-	//get the list of keywords in a string
-	public List<String> getCities(String s) {
-
-		final String regex = "\\bcity::[0-9]*\\b";
-
-		Pattern p = Pattern.compile(regex, Pattern.MULTILINE);
-		Matcher m = p.matcher(s);
-		List<String> codes = new ArrayList<>();
-		while (m.find()) {
-			codes.add(m.group(0));
-			for (int i = 1; i <= m.groupCount(); i++) {
-				codes.add(m.group(0));
-			}
-		}
-		return codes;
+	//convert the set of keywords to codes
+	public Set<String> toCodes(Set<String> keywords, Map<String, String> translationMap) {
+		return keywords.stream().map(s -> translationMap.get(s)).collect(Collectors.toSet());
 	}
 
-	//get the list of keywords in a string
-	public List<String> getKeywords(String s) {
+	public Set<String> keywordsToCodes(Set<String> keywords) {
+		return toCodes(keywords, translationMap);
+	}
 
-		final String regex = "\\bkey::[0-9]*\\b";
-
-		Pattern p = Pattern.compile(regex, Pattern.MULTILINE);
-		Matcher m = p.matcher(s);
-		List<String> codes = new ArrayList<>();
-		while (m.find()) {
-			codes.add(m.group(0));
-			for (int i = 1; i <= m.groupCount(); i++) {
-				codes.add(m.group(0));
-			}
-		}
-		return codes;
+	public Set<String> citiesToCodes(Set<String> keywords) {
+		return toCodes(keywords, cityMap);
 	}
 
 	protected String firstLC(final String s) {
@@ -320,7 +285,7 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	//get the list of codes into the input string
-	public Set<String> getCodes(String s1, Map<String, String> translationMap, int windowSize){
+	public Set<String> getKeywords(String s1, Map<String, String> translationMap, int windowSize){
 
 		String s = cleanup(s1);
 
@@ -340,7 +305,7 @@ public abstract class AbstractPaceFunctions {
 			for (int i = 0; i<=tokens.size()-length; i++){
 				String candidate = Joiner.on(" ").join(tokens.subList(i, i + length));
 				if (translationMap.containsKey(candidate)) {
-					codes.add(translationMap.get(candidate));
+					codes.add(candidate);
 					s = s.replace(candidate, "");
 				}
 			}
@@ -350,6 +315,14 @@ public abstract class AbstractPaceFunctions {
 		}
 
 		return codes;
+	}
+
+	public Set<String> getKeywords(String s1, int windowSize) {
+		return getKeywords(s1, translationMap, windowSize);
+	}
+
+	public Set<String> getCities(String s1, int windowSize) {
+		return getKeywords(s1, cityMap, windowSize);
 	}
 
 }

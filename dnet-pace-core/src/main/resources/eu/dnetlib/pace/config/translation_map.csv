@@ -1,6 +1,6 @@
 key::1;university;università;università studi;universitario;universitaria;université;universitaire;universitaires;universidad;universitade;Universität;universitaet;Uniwersytet;университет;universiteit;πανεπιστήμιο
 key::2;studies;studi;études;estudios;estudos;Studien;studia;исследования;studies;σπουδές
-key::3;advanced;superiore;supérieur;supérieure;supérieurs;supérieures;avancado;avancados;fortgeschrittene;fortgeschritten;zaawansowany;передовой;gevorderd;gevorderde;προχωρημένος;προχωρημένη;προχωρημένο;προχωρημένες;προχωρημένα
+key::3;advanced;superiore;supérieur;supérieure;supérieurs;supérieures;avancado;avancados;fortgeschrittene;fortgeschritten;zaawansowany;передовой;gevorderd;gevorderde;προχωρημένος;προχωρημένη;προχωρημένο;προχωρημένες;προχωρημένα;wyzsza;
 key::4;institute;istituto;institut;instituto;instituto;Institut;instytut;институт;instituut;ινστιτούτο
 key::5;hospital;ospedale;hôpital;hospital;hospital;Krankenhaus;szpital;больница;ziekenhuis;νοσοκομείο
 key::6;research;ricerca;recherche;investigacion;pesquisa;Forschung;badania;исследования;onderzoek;έρευνα;erevna;erevnas
@@ -38,7 +38,7 @@ key::37;federation;federazione;fédération;федерация;federatie;ομο�
 key::38;observatory;osservatorio;observatoire;обсерватория;observatorium;αστεροσκοπείο
 key::39;bureau;ufficio;bureau;офис;bureau;γραφείο
 key::40;company;impresa;compagnie;société;компания;bedrijf;εταιρία
-key::41;polytechnic;politecnico;polytechnique;политехника;polytechnisch;πολυτεχνείο;universita politecnica;polytechnic university
+key::41;polytechnic;politecnico;polytechnique;политехника;polytechnisch;πολυτεχνείο;universita politecnica;polytechnic university;politechnika;politechniki;university technology;university science technology;
 key::42;coalition;coalizione;coalition;коалиция;coalitie;συνασπισμός
 key::43;initiative;iniziativa;initiative;инициатива;initiatief;πρωτοβουλία
 key::44;academic;accademico;académique;universitaire;акадеческий academisch;ακαδημαϊκός;ακαδημαϊκή;ακαδημαϊκό;ακαδημαϊκές;ακαδημαϊκοί
@@ -47,13 +47,13 @@ key::46;division;divisione;division;отделение;divisie;τμήμα
 key::47;committee;comitato;comité;комитет;commissie;επιτροπή
 key::48;promotion;promozione;продвижение;proothisis;forderung
 key::49;medical;medicine;clinical;medicina;clinici;médico;medicina;clínica;médico;medicina;clínica;medizinisch;Medizin;klinisch;medisch;geneeskunde;klinisch;ιατρικός;ιατρική;ιατρικό;ιατρικά;κλινικός;κλινική;κλινικό;κλινικά;tıbbi;tıp;klinik;orvosi;orvostudomány;klinikai;zdravniški;medicinski;klinični;meditsiini;kliinik;kliiniline;
-key::50;technology;technological;tecnologia;tecnologie;tecnología;tecnológico;tecnologia;tecnológico;Technologie;technologisch;technologie;technologisch;τεχνολογία;τεχνολογικός;τεχνολογική;τεχνολογικό;teknoloji;teknolojik;technológia;technológiai;tehnologija;tehnološki;tehnoloogia;tehnoloogiline;
+key::50;technology;technological;tecnologia;tecnologie;tecnología;tecnológico;tecnologia;tecnológico;Technologie;technologisch;technologie;technologisch;τεχνολογία;τεχνολογικός;τεχνολογική;τεχνολογικό;teknoloji;teknolojik;technológia;technológiai;tehnologija;tehnološki;tehnoloogia;tehnoloogiline;technologii;
 key::51;science;scientific;scienza;scientifiche;scienze;ciencia;científico;ciência;científico;Wissenschaft;wissenschaftlich;wetenschap;wetenschappelijk;επιστήμη;επιστημονικός;επιστημονική;επιστημονικό;επιστημονικά;bilim;bilimsel;tudomány;tudományos;znanost;znanstveni;teadus;teaduslik;
 key::52;engineering;ingegneria;ingeniería;engenharia;Ingenieurwissenschaft;ingenieurswetenschappen;bouwkunde;μηχανικός;μηχανική;μηχανικό;mühendislik;mérnöki;Inženirstvo;inseneeria;inseneri;
 key::53;management;gestione;gestionale;gestionali;gestión;administración;gestão;administração;Verwaltung;management;διαχείριση;yönetim;menedzsment;vodstvo;upravljanje;management;juhtkond;juhtimine;haldus;
 key::54;energy;energia;energía;energia;Energie;energie;ενέργεια;enerji;energia;energija;energia;
 key::55;agricultural;agriculture;agricoltura;agricole;agrícola;agricultura;agrícola;agricultura;landwirtschaftlich;Landwirtschaft;landbouwkundig;landbouw;αγροτικός;αγροτική;αγροτικό;γεωργικός;γεωργική;γεωργικό;γεωργία;tarımsal;tarım;mezőgazdasági;mezőgazdaság;poljedelski;poljedelstvo;põllumajandus;põllumajanduslik;
-key::56;information;informazione;información;informação;Information;informatie;πληροφορία;bilgi;információ;informacija;informatsioon;
+key::56;information;informazione;información;informação;Information;informatie;πληροφορία;bilgi;információ;informacija;informatsioon;informatycznych;
 key::57;social;sociali;social;social;Sozial;sociaal;maatschappelijk;κοινωνικός;κοινωνική;κοινωνικό;κοινωνικά;sosyal;szociális;družbeni;sotsiaal;sotsiaalne;
 key::58;environmental;ambiente;medioambiental;ambiente;medioambiente;meioambiente;Umwelt;milieu;milieuwetenschap;milieukunde;περιβαλλοντικός;περιβαλλοντική;περιβαλλοντικό;περιβαλλοντικά;çevre;környezeti;okoliški;keskonna;;
 key::59;business;economia;economiche;economica;negocio;empresa;negócio;Unternehmen;bedrijf;bedrijfskunde;επιχείρηση;iş;üzleti;posel;ettevõte/äri;
@@ -71,7 +71,7 @@ key::70;veterinary;veterinaria;veterinarie;veterinaria;veterinária;tierärtzlic
 key::71;chemistry;chimica;química;química;Chemie;chemie;scheikunde;χημεία;kimya;kémia;kemija;keemia;
 key::72;security;sicurezza;seguridad;segurança;Sicherheit;veiligheid;ασφάλεια;güvenlik;biztonsági;varnost;turvalisus;julgeolek;
 key::73;biotechnology;biotecnologia;biotecnologie;biotecnología;biotecnologia;Biotechnologie;biotechnologie;βιοτεχνολογία;biyoteknoloji;biotechnológia;biotehnologija;biotehnoloogia;
-key::74;military;militare;militari;militar;militar;Militär;militair;leger;στρατιωτικός;στρατιωτική;στρατιωτικό;στρατιωτικά;askeri;katonai;vojaški;vojni;militaar;
+key::74;military;militare;militari;militar;militar;Militär;militair;leger;στρατιωτικός;στρατιωτική;στρατιωτικό;στρατιωτικά;askeri;katonai;vojaški;vojni;militaar;wojskowa;
 key::75;theological;teologia;teologico;teológico;tecnológica;theologisch;theologisch;θεολογικός;θεολογική;θεολογικό;θεολογικά;teolojik;technológiai;teološki;teoloogia;usuteadus;teoloogiline;
 key::76;electronics;elettronica;electrónica;eletrônicos;Elektronik;elektronica;ηλεκτρονική;elektronik;elektronika;elektronika;elektroonika;
 key::77;forestry;forestale;forestali;silvicultura;forestal;floresta;Forstwirtschaft;bosbouw;δασοκομία;δασολογία;ormancılık;erdészet;gozdarstvo;metsandus;

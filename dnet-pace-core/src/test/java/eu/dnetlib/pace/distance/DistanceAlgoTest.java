@@ -51,7 +51,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 		double result = jaroWinklerNormalizedName.distance("Free University of Bozen-Bolzano", "University of the Free State");
 
 		System.out.println("result = " + result);
-		assertEquals(1.0, result);
+		assertEquals(0.0, result);
 	}
 
 	@Test
@@ -112,6 +112,15 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 
 		System.out.println("result = " + result);
 		assertTrue(result> 0.9);
+	}
+
+	@Test
+	public void testJaroWinklerNormalizedName8() {
+		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+
+		double result = jaroWinklerNormalizedName.distance("Politechniki Warszawskiej (Warsaw University of Technology)", "Warsaw University of Technology");
+
+		System.out.println("result = " + result);
 	}
 
 }
