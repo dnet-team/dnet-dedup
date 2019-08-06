@@ -1,15 +1,14 @@
 package eu.dnetlib.pace.clustering;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.model.Field;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ClusteringClass("keywordsclustering")
 public class KeywordsClustering extends AbstractClusteringFunction {
-
-    private static Map<String,String> translationMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/translation_map.csv");
-
-    private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
     public KeywordsClustering(Map<String, Integer> params) {
         super(params);
@@ -35,5 +34,19 @@ public class KeywordsClustering extends AbstractClusteringFunction {
         }
 
         return combinations;
+    }
+
+    @Override
+    public Collection<String> apply(List<Field> fields) {
+        return fields.stream().filter(f -> !f.isEmpty())
+                .map(Field::stringValue)
+                .map(this::cleanup) //TODO can I add this to the AbstractClusteringFunction without overriding the method here?
+                .map(this::normalize)
+                .map(s -> filterAllStopWords(s))
+                .map(this::doApply)
+                .map(c -> filterBlacklisted(c, ngramBlacklist))
+                .flatMap(c -> c.stream())
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toCollection(HashSet::new));
     }
 }

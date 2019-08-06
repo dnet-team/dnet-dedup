@@ -1,7 +1,10 @@
 package eu.dnetlib;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.util.PaceException;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -46,5 +49,15 @@ public class Block implements Serializable {
 
     public int elements(){
         return elements.size();
+    }
+
+    @Override
+    public String toString(){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (IOException e) {
+            throw new PaceException("Failed to create Json: ", e);
+        }
     }
 }

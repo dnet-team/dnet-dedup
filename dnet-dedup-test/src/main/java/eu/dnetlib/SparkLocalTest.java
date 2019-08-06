@@ -89,7 +89,9 @@ public class SparkLocalTest {
             System.out.println(cc);
         });
         connectedComponents.foreach(cc -> {
-            cc.getDocs().stream().forEach(d -> System.out.println(d.getFieldMap().get("legalname") + " | " + d.getFieldMap().get("legalshortname")));
+            cc.getDocs().stream().forEach(d -> {
+                System.out.println(d.getFieldMap().get("legalname") + " | " + d.getFieldMap().get("legalshortname"));
+            });
         });
         //print nondeduped
         nonDeduplicated.foreach(cc -> {

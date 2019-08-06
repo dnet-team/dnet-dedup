@@ -6,7 +6,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import eu.dnetlib.pace.clustering.NGramUtils;
-import eu.dnetlib.pace.distance.algo.JaroWinklerNormalizedName;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.FieldListImpl;
@@ -29,7 +28,6 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractPaceFunctions {
 
-
 	private static Map<String,String> translationMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/translation_map.csv");
 	private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
@@ -44,7 +42,10 @@ public abstract class AbstractPaceFunctions {
 
 	private static final String alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
 	private static final String aliases_from = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎àáâäæãåāèéêëēėęîïíīįìôöòóœøōõûüùúūßśšłžźżçćčñń";
-	private static final String aliases_to = "0123456789+-=()n0123456789+-=()aaaaaaaaeeeeeeeiiiiiioooooooouuuuussslzzzcccnn";
+	private static final String aliases_to =   "0123456789+-=()n0123456789+-=()aaaaaaaaeeeeeeeiiiiiioooooooouuuuussslzzzcccnn";
+
+	private static final String special_from = "İə";
+	private static final String special_to =   "Ie";
 
 	public final String DOI_PREFIX = "(https?:\\/\\/dx\\.doi\\.org\\/)|(doi:)";
 
@@ -55,7 +56,8 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	protected String cleanup(final String s) {
-		final String s0 = s.toLowerCase();
+		final String ss = fixSpecial(s);  //TODO is there something implemented to replace strange symbols with latin letters?
+		final String s0 = ss.toLowerCase();
 		final String s1 = fixAliases(s0);
 		final String s2 = nfd(s1);
 		final String s3 = s2.replaceAll("&ndash;", " ");
@@ -96,6 +98,16 @@ public abstract class AbstractPaceFunctions {
 
 	protected String getNumbers(final String s) {
 		return s.replaceAll("\\D", "");
+	}
+
+	//sometimes the toLowerCase() produces error, this is meant to prevent them by replacing special character before the lowercase function
+	protected static String fixSpecial(final String s) {
+		final StringBuilder sb = new StringBuilder();
+		for (final char ch : Lists.charactersOf(s)) {
+			final int i = StringUtils.indexOf(special_from, ch);
+			sb.append(i >= 0 ? special_to.charAt(i) : ch);
+		}
+		return sb.toString();
 	}
 
 	protected static String fixAliases(final String s) {
@@ -154,7 +166,7 @@ public abstract class AbstractPaceFunctions {
 		return sb.toString().trim();
 	}
 
-	protected String filterAllStopWords(String s) {
+	public String filterAllStopWords(String s) {
 
 		s = filterStopWords(s, stopwords_en);
 		s = filterStopWords(s, stopwords_de);
@@ -193,12 +205,12 @@ public abstract class AbstractPaceFunctions {
 	public static Map<String, String> loadMapFromClasspath(final String classpath) {
 		final Map<String, String> m = new HashMap<>();
 		try {
-			for (final String s: IOUtils.readLines(JaroWinklerNormalizedName.class.getResourceAsStream(classpath))) {
+			for (final String s: IOUtils.readLines(AbstractPaceFunctions.class.getResourceAsStream(classpath))) {
 				//string is like this: code;word1;word2;word3
 				String[] line = s.split(";");
 				String value = line[0];
-				for (String key: line){
-					m.put(fixAliases(key).toLowerCase(),value);
+				for (int i=1; i<line.length;i++){
+					m.put(line[i].toLowerCase(),value);
 				}
 			}
 		} catch (final Throwable e){
@@ -287,9 +299,7 @@ public abstract class AbstractPaceFunctions {
 	//get the list of codes into the input string
 	public Set<String> getKeywords(String s1, Map<String, String> translationMap, int windowSize){
 
-		String s = cleanup(s1);
-
-		s = filterAllStopWords(s);
+		String s = s1;
 
 		List<String> tokens = Arrays.asList(s.toLowerCase().split(" "));
 

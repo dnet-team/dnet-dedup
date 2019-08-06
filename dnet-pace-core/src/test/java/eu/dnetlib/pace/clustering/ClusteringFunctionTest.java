@@ -141,6 +141,10 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		System.out.println("s4 = " + s4);
 		System.out.println(cf.apply(Lists.newArrayList(title(s4))));
 
+		final String s5 = "İstanbul Ticarət Universiteti";
+		System.out.println("s5 = " + s5);
+		System.out.println(cf.apply(Lists.newArrayList(title(s5))));
+
 	}
 
 }
