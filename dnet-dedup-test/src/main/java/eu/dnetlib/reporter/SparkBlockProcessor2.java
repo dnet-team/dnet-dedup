@@ -12,30 +12,47 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.util.LongAccumulator;
+import scala.Tuple2;
 
 import java.util.*;
 
-public class SparkBlockProcessor {
+public class SparkBlockProcessor2 {
 
-    public static final List<String> accumulators= new ArrayList<>();
-
-    private static final Log log = LogFactory.getLog(SparkBlockProcessor.class);
+    private static final Log log = LogFactory.getLog(SparkBlockProcessor2.class);
 
     private DedupConfig dedupConf;
 
-    public SparkBlockProcessor(DedupConfig dedupConf) {
+    public SparkBlockProcessor2(DedupConfig dedupConf) {
         this.dedupConf = dedupConf;
     }
 
-    public void process(final String key, final Iterable<MapDocument> documents, final SparkReporter context, Map<String, LongAccumulator> accumulators)  {
+    public boolean isSimilar(Tuple2<MapDocument, MapDocument> t, SparkReporter context, Map<String, LongAccumulator> accumulators) {
+
+        final PaceDocumentDistance algo = new PaceDocumentDistance();
+
+        final ScoreResult sr = similarity(algo, t._1(), t._2());
+
+        final double d = sr.getScore();
+
+        if (d >= dedupConf.getWf().getThreshold()) {
+            context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1, accumulators);
+            return true;
+        } else {
+            context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1, accumulators);
+            return false;
+        }
+    }
+
+    public Iterator<Tuple2<MapDocument, MapDocument>> process(final String key, final Iterable<MapDocument> documents, final SparkReporter context, Map<String, LongAccumulator> accumulators)  {
 
         final Queue<MapDocument> q = prepare(documents);
 
         if (q.size() > 1) {
-            process(simplifyQueue(q, key, context, accumulators), context, accumulators);
+            return process(simplifyQueue(q, key, context, accumulators), context, accumulators);
 
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1, accumulators);
+            return new ArrayList<Tuple2<MapDocument,MapDocument>>().iterator();
         }
     }
 
@@ -104,9 +121,11 @@ public class SparkBlockProcessor {
         }
     }
 
-    private void process(final Queue<MapDocument> queue, final SparkReporter context, Map<String, LongAccumulator> accumulators)  {
+    private Iterator<Tuple2<MapDocument, MapDocument>> process(final Queue<MapDocument> queue, final SparkReporter context, Map<String, LongAccumulator> accumulators)  {
 
         final PaceDocumentDistance algo = new PaceDocumentDistance();
+
+        List<Tuple2<MapDocument, MapDocument>> ret = new ArrayList<>();
 
         while (!queue.isEmpty()) {
 
@@ -140,26 +159,18 @@ public class SparkBlockProcessor {
 
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                        final ScoreResult sr = similarity(algo, pivot, curr);
-//                        log.info(sr.toString()+"SCORE "+ sr.getScore());
-                        emitOutput(sr, idPivot, idCurr, context, accumulators);
+                        if (pivot.getIdentifier().compareTo(curr.getIdentifier())<0){
+                            ret.add(new Tuple2<>(pivot, curr));
+                        } else {
+                            ret.add(new Tuple2<>(curr, pivot));
+                        }
                         i++;
                     }
                 }
             }
         }
-    }
 
-    private void emitOutput(final ScoreResult sr, final String idPivot, final String idCurr, final SparkReporter context, Map<String, LongAccumulator> accumulators)  {
-        final double d = sr.getScore();
-
-        if (d >= dedupConf.getWf().getThreshold()) {
-
-            writeSimilarity(context, idPivot, idCurr);
-            context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1, accumulators);
-        } else {
-            context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1, accumulators);
-        }
+        return ret.iterator();
     }
 
     private ScoreResult similarity(final PaceDocumentDistance algo, final MapDocument a, final MapDocument b) {
@@ -177,13 +188,6 @@ public class SparkBlockProcessor {
 
     private String getNsPrefix(final String id) {
         return StringUtils.substringBetween(id, "|", "::");
-    }
-
-    private void writeSimilarity(final SparkReporter context, final String from, final String to)  {
-        final String type = dedupConf.getWf().getEntityType();
-
-        context.emit(type, from, to);
-//        context.emit(type, to, from);
     }
 
 }

@@ -10,7 +10,7 @@ import scala.collection.JavaConversions;
 object GraphProcessor {
 
   def findCCs(vertexes: RDD[(VertexId, MapDocument)], edges: RDD[Edge[String]], maxIterations: Int): RDD[ConnectedComponent] = {
-    val graph: Graph[MapDocument, String] = Graph(vertexes, edges)
+    val graph: Graph[MapDocument, String] = Graph(vertexes, edges).partitionBy(PartitionStrategy.RandomVertexCut) //TODO remember to remove partitionby
     val cc = graph.connectedComponents(maxIterations).vertices
 
     val joinResult = vertexes.leftOuterJoin(cc).map {

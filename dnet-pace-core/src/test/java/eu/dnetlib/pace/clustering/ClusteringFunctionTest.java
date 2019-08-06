@@ -46,7 +46,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	@Test
 	public void testNgramPairs() {
 		params.put("ngramLen", 3);
-		params.put("max", 3);
+		params.put("max", 1);
 
 		final ClusteringFunction np = new NgramPairs(params);
 

@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.distance;
 
+import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.distance.algo.JaroWinklerNormalizedName;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,12 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 		System.out.println("Test String    : " + TEST_STRING);
 		params = new HashMap<>();
 		params.put("weight", 1.0);
+	}
+
+	@Test
+	public void testCleanForSorting() {
+		NGramUtils utils = new NGramUtils();
+		System.out.println("utils = " + utils.cleanupForOrdering("University of Pisa"));
 	}
 
 	@Test

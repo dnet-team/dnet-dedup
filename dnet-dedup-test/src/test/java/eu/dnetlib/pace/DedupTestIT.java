@@ -55,7 +55,6 @@ public class DedupTestIT {
 
     }
 
-
     static Properties readProperties(final String propFile) {
 
         Properties prop = new Properties();
