@@ -1,9 +1,0 @@
-package eu.dnetlib.data.proto;
-
-option java_package = "eu.dnetlib.data.proto";
-option java_outer_classname = "KindProtos";
-
-enum Kind {
-	entity = 1;
-	relation = 2;
-}
