@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.config.WfConfig;
-import eu.dnetlib.pace.distance.PaceDocumentDistance;
-import eu.dnetlib.pace.distance.eval.ScoreResult;
+//import eu.dnetlib.pace.distance.PaceDocumentDistance;
+import eu.dnetlib.pace.distance.PairwiseComparison;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.model.MapDocumentComparator;
@@ -116,7 +116,7 @@ public class BlockProcessor {
 
     private void process(final Queue<MapDocument> queue, final Reporter context)  {
 
-        final PaceDocumentDistance algo = new PaceDocumentDistance();
+//        final PaceDocumentDistance algo = new PaceDocumentDistance();
 
         while (!queue.isEmpty()) {
 
@@ -150,34 +150,27 @@ public class BlockProcessor {
 
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                        final ScoreResult sr = similarity(algo, pivot, curr);
-//                        log.info(sr.toString()+"SCORE "+ sr.getScore());
-                        emitOutput(sr, idPivot, idCurr, context);
-                        i++;
+                        final PairwiseComparison pairwiseComparison = new PairwiseComparison(dedupConf);
+
+                        emitOutput(pairwiseComparison.compare(pivot, curr), idPivot, idCurr, context);
+
+//                        final ScoreResult sr = similarity(algo, pivot, curr);
+////                        log.info(sr.toString()+"SCORE "+ sr.getScore());
+//                        emitOutput(sr, idPivot, idCurr, context);
+//                        i++;
                     }
                 }
             }
         }
     }
 
-    private void emitOutput(final ScoreResult sr, final String idPivot, final String idCurr, final Reporter context)  {
-        final double d = sr.getScore();
+    private void emitOutput(final boolean result, final String idPivot, final String idCurr, final Reporter context)  {
 
-        if (d >= dedupConf.getWf().getThreshold()) {
-
+        if (result) {
             writeSimilarity(context, idPivot, idCurr);
             context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1);
-        }
-    }
-
-    private ScoreResult similarity(final PaceDocumentDistance algo, final MapDocument a, final MapDocument b) {
-        try {
-            return algo.between(a, b, dedupConf);
-        } catch(Throwable e) {
-            log.error(String.format("\nA: %s\n----------------------\nB: %s", a, b), e);
-            throw new IllegalArgumentException(e);
         }
     }
 

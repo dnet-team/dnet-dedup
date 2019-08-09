@@ -7,7 +7,7 @@ import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 import java.util.Map;
 
 /**
- * Compared distance between two titles, ignoring version numbers. Suitable for Software entities.
+ * Compared compare between two titles, ignoring version numbers. Suitable for Software entities.
  */
 @DistanceClass("LevensteinTitleIgnoreVersion")
 public class LevensteinTitleIgnoreVersion extends SecondStringDistanceAlgo {

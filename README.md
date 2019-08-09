@@ -31,7 +31,7 @@ if score<\th  --- negative result
 
 In order to make the decision tree work, the BlockProcessor has been modified with the following changes:
  - if the decision tree is defined into the JSON configuration the deduplication process relies on it
- - if the decision tree is not defined the deduplication process is exactly like before (strict conditions, conditions, dinstance algos etc.)
+ - if the decision tree is not defined the deduplication process is exactly like before (strict necessaryConditions, necessaryConditions, dinstance algos etc.)
 
 
 # Cities and Keyword identification for organization deduplication

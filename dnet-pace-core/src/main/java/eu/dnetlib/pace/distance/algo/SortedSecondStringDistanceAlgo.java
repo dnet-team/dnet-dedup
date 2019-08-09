@@ -12,12 +12,12 @@ import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 
 /**
- * For the rest of the fields delegate the distance measure to the second string library.
+ * For the rest of the fields delegate the compare measure to the second string library.
  */
 public abstract class SortedSecondStringDistanceAlgo extends SecondStringDistanceAlgo {
 
 	/**
-	 * Instantiates a new sorted second string distance algo.
+	 * Instantiates a new sorted second string compare algo.
 	 * 
 	 * @param weight
 	 *            the weight
@@ -35,7 +35,7 @@ public abstract class SortedSecondStringDistanceAlgo extends SecondStringDistanc
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.SecondStringDistanceAlgo#toList(eu.dnetlib.pace.model.Field)
+	 * @see eu.dnetlib.pace.compare.SecondStringDistanceAlgo#toList(eu.dnetlib.pace.model.Field)
 	 */
 	@Override
 	protected List<String> toList(final Field list) {

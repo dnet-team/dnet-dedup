@@ -6,6 +6,7 @@ import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.CondDef;
 import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.tree.support.TreeNodeDef;
 import eu.dnetlib.pace.util.PaceResolver;
 import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -18,9 +19,12 @@ import java.util.stream.Collectors;
 public class PaceConfig implements Serializable {
 
 	private List<FieldDef> model;
-	private List<CondDef> strictConditions;
-	private List<CondDef> conditions;
+
+	private List<CondDef> sufficientConditions;
+	private List<CondDef> necessaryConditions;
 	private List<ClusteringDef> clustering;
+	private Map<String, TreeNodeDef> decisionTree;
+
 	private Map<String, List<String>> blacklists;
 
 	@JsonIgnore
@@ -46,30 +50,30 @@ public class PaceConfig implements Serializable {
 		this.model = model;
 	}
 
-	public List<CondDef> getStrictConditions() {
-		return strictConditions;
+	public List<CondDef> getSufficientConditions() {
+		return sufficientConditions;
 	}
 
-	public void setStrictConditions(final List<CondDef> strictConditions) {
-		this.strictConditions = strictConditions;
+	public void setSufficientConditions(final List<CondDef> sufficientConditions) {
+		this.sufficientConditions = sufficientConditions;
 	}
 
-	public List<CondDef> getConditions() {
-		return conditions;
+	public List<CondDef> getNecessaryConditions() {
+		return necessaryConditions;
 	}
 
 	@JsonIgnore
 	public List<ConditionAlgo> getConditionAlgos() {
-		return asConditionAlgos(getConditions());
+		return asConditionAlgos(getNecessaryConditions());
 	}
 
 	@JsonIgnore
 	public List<ConditionAlgo> getStrictConditionAlgos() {
-		return asConditionAlgos(getStrictConditions());
+		return asConditionAlgos(getSufficientConditions());
 	}
 
-	public void setConditions(final List<CondDef> conditions) {
-		this.conditions = conditions;
+	public void setNecessaryConditions(final List<CondDef> necessaryConditions) {
+		this.necessaryConditions = necessaryConditions;
 	}
 
 	public List<ClusteringDef> getClustering() {
@@ -78,6 +82,14 @@ public class PaceConfig implements Serializable {
 
 	public void setClustering(final List<ClusteringDef> clustering) {
 		this.clustering = clustering;
+	}
+
+	public Map<String, TreeNodeDef> getDecisionTree() {
+		return decisionTree;
+	}
+
+	public void setDecisionTree(Map<String, TreeNodeDef> decisionTree) {
+		this.decisionTree = decisionTree;
 	}
 
 	public Map<String, List<String>> getBlacklists() {

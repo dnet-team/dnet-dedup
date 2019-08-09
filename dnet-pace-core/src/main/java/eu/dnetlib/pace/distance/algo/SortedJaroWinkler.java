@@ -40,7 +40,7 @@ public class SortedJaroWinkler extends SortedSecondStringDistanceAlgo {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.DistanceAlgo#getWeight()
+	 * @see eu.dnetlib.pace.compare.DistanceAlgo#getWeight()
 	 */
 	@Override
 	public double getWeight() {
@@ -50,7 +50,7 @@ public class SortedJaroWinkler extends SortedSecondStringDistanceAlgo {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.SecondStringDistanceAlgo#normalize(double)
+	 * @see eu.dnetlib.pace.compare.SecondStringDistanceAlgo#normalize(double)
 	 */
 	@Override
 	protected double normalize(final double d) {

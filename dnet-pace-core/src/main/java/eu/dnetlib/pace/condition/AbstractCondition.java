@@ -9,7 +9,7 @@ import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldDef;
 
 /**
- * Abstract conditions needs a list of field names.
+ * Abstract necessaryConditions needs a list of field names.
  *
  * @author claudio
  *

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 
+import eu.dnetlib.pace.tree.support.TreeNodeDef;
 import eu.dnetlib.pace.util.PaceException;
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.commons.io.IOUtils;
@@ -115,6 +116,11 @@ public class DedupConfig implements Config, Serializable {
 	}
 
 	@Override
+	public Map<String, TreeNodeDef> decisionTree(){
+		return getPace().getDecisionTree();
+	}
+
+	@Override
 	public List<FieldDef> model() {
 		return getPace().getModel();
 	}
@@ -125,12 +131,12 @@ public class DedupConfig implements Config, Serializable {
 	}
 
 	@Override
-	public List<ConditionAlgo> strictConditions() {
+	public List<ConditionAlgo> sufficientConditions() {
 		return getPace().getStrictConditionAlgos();
 	}
 
 	@Override
-	public List<ConditionAlgo> conditions() {
+	public List<ConditionAlgo> necessaryConditions() {
 		return getPace().getConditionAlgos();
 	}
 

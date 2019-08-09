@@ -6,7 +6,7 @@ import eu.dnetlib.pace.model.Document;
 import eu.dnetlib.pace.model.FieldDef;
 
 /**
- * Allows to express general conditions to be satisfied or not between two Documents.
+ * Allows to express general necessaryConditions to be satisfied or not between two Documents.
  * 
  * @author claudio
  */

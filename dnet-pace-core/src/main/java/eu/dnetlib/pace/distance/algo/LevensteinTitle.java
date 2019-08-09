@@ -2,7 +2,6 @@ package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.distance.DistanceClass;
-import eu.dnetlib.pace.distance.DistanceScorer;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

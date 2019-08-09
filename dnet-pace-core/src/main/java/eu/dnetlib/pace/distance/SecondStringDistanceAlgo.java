@@ -12,7 +12,7 @@ import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 
 /**
- * For the rest of the fields delegate the distance measure to the second string library.
+ * For the rest of the fields delegate the compare measure to the second string library.
  */
 public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions implements DistanceAlgo {
 
@@ -35,7 +35,7 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	}
 
 	/**
-	 * Instantiates a new second string distance algo.
+	 * Instantiates a new second string compare algo.
 	 * 
 	 * @param weight
 	 *            the weight
@@ -90,7 +90,7 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.dnetlib.pace.distance.DistanceAlgo#distance(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
+	 * @see eu.dnetlib.pace.compare.DistanceAlgo#compare(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
 	 */
 	@Override
 	public double distance(final Field a, final Field b) {

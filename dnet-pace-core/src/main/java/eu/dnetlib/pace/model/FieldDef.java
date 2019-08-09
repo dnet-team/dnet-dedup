@@ -14,25 +14,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The schema is composed by field definitions (FieldDef). Each field has a type, a name, and an associated distance algorithm.
+ * The schema is composed by field definitions (FieldDef). Each field has a type, a name, and an associated compare algorithm.
  */
 public class FieldDef implements Serializable {
 
 	public final static String PATH_SEPARATOR = "/";
 
-	private String algo;
-
 	private String name;
 
 	private String path;
 
-	private boolean ignoreMissing;
-
 	private Type type;
 
-	private boolean overrideMatch;
+	private boolean ignoreMissing;
 
-	private double weight;
+	public boolean isIgnoreMissing() {
+		return ignoreMissing;
+	}
+
+	public void setIgnoreMissing(boolean ignoreMissing) {
+		this.ignoreMissing = ignoreMissing;
+	}
+
+	private boolean overrideMatch;
 
 	/**
 	 * Sets maximum size for the repeatable fields in the model. -1 for unbounded size.
@@ -74,20 +78,6 @@ public class FieldDef implements Serializable {
 		return Lists.newArrayList(Splitter.on(PATH_SEPARATOR).split(getPath()));
 	}
 
-	public DistanceAlgo distanceAlgo() {
-
-		if (params == null) {
-			params = new HashMap<>();
-		}
-
-		params.put("weight", getWeight());
-		return PaceConfig.resolver.getDistanceAlgo(getAlgo(), params);
-	}
-
-	public boolean isIgnoreMissing() {
-		return ignoreMissing;
-	}
-
 	public Type getType() {
 		return type;
 	}
@@ -103,23 +93,6 @@ public class FieldDef implements Serializable {
 	public void setOverrideMatch(final boolean overrideMatch) {
 		this.overrideMatch = overrideMatch;
 	}
-
-	public double getWeight() {
-		return weight;
-	}
-
-	public void setWeight(final double weight) {
-		this.weight = weight;
-	}
-
-	public String getAlgo() {
-		return algo;
-	}
-
-	public void setAlgo(final String algo) {
-		this.algo = algo;
-	}
-
 
 	public int getSize() {
 		return size;
@@ -151,10 +124,6 @@ public class FieldDef implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
-	}
-
-	public void setIgnoreMissing(boolean ignoreMissing) {
-		this.ignoreMissing = ignoreMissing;
 	}
 
 	@Override

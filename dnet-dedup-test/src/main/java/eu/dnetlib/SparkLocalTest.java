@@ -3,10 +3,10 @@ package eu.dnetlib;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.util.BlockProcessor;
 import eu.dnetlib.pace.utils.PaceUtils;
-import eu.dnetlib.reporter.SparkBlockProcessor;
-import eu.dnetlib.reporter.SparkReporter;
 
+import eu.dnetlib.reporter.SparkReporter;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -64,9 +64,9 @@ public class SparkLocalTest {
 
         //create relations by comparing only elements in the same group
         final JavaPairRDD<String, String> relationRDD = blocks.flatMapToPair(it -> {
-            final SparkReporter reporter = new SparkReporter();
-            new SparkBlockProcessor(config).process(it.getKey(), it.getElements(), reporter, accumulators);
-            return reporter.getReport().iterator();
+            final SparkReporter reporter = new SparkReporter(accumulators);
+            new BlockProcessor(config).process(it.getKey(), it.getElements(), reporter);
+            return reporter.getRelations().iterator();
         });
 
         final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(it._1().hashCode(),it._2().hashCode(), "similarTo")).rdd();

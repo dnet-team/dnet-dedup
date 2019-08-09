@@ -1,4 +1,4 @@
-package eu.dnetlib.pace.model;
+package eu.dnetlib.pace.tree.support;
 
 import eu.dnetlib.pace.util.PaceException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -14,14 +14,25 @@ public class FieldConf implements Serializable {
     private double weight = 1.0;    //weight for the field (to be used in the aggregation)
     private Map<String,Number> params;  //parameters
 
+    private boolean ignoreMissing;
+
+    public boolean isIgnoreMissing() {
+        return ignoreMissing;
+    }
+
+    public void setIgnoreMissing(boolean ignoreMissing) {
+        this.ignoreMissing = ignoreMissing;
+    }
+
     public FieldConf() {
     }
 
-    public FieldConf(String field, String comparator, double weight, Map<String, Number> params) {
+    public FieldConf(String field, String comparator, double weight, Map<String, Number> params, boolean ignoreMissing) {
         this.field = field;
         this.comparator = comparator;
         this.weight = weight;
         this.params = params;
+        this.ignoreMissing = ignoreMissing;
     }
 
     public String getField() {

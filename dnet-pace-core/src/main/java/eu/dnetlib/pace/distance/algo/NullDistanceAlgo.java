@@ -7,7 +7,7 @@ import eu.dnetlib.pace.model.Field;
 import java.util.Map;
 
 /**
- * Not all fields of a document need to partecipate in the distance measure. We model those fields as having a
+ * Not all fields of a document need to partecipate in the compare measure. We model those fields as having a
  * NullDistanceAlgo.
  */
 @DistanceClass("Null")
