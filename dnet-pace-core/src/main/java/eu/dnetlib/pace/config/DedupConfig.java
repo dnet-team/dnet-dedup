@@ -15,7 +15,6 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Maps;
 
-import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
 import org.apache.commons.logging.Log;
