@@ -1,8 +1,7 @@
 package eu.dnetlib.pace.tree;
 
 import com.wcohen.ss.AbstractStringDistance;
-import eu.dnetlib.pace.distance.DistanceClass;
-import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
+import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
@@ -24,7 +23,7 @@ public class AlwaysMatch extends AbstractComparator {
     }
 
     @Override
-    public double distance(final String a, final String b) {
+    public double compare(final Field a, final Field b) {
         return 1.0;
     }
 

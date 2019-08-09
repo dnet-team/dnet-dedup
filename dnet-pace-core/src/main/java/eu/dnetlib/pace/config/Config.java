@@ -22,7 +22,11 @@ public interface Config {
 	 */
 	public List<FieldDef> model();
 
-
+	/**
+	 * Decision Tree definition
+	 *
+	 * @return the map representing the decision tree
+	 */
 	public Map<String, TreeNodeDef> decisionTree();
 
 	/**
@@ -31,20 +35,6 @@ public interface Config {
 	 * @return the list of definitions
 	 */
 	public Map<String, FieldDef> modelMap();
-
-	/**
-	 * Strict Pre-Condition definitions.
-	 *
-	 * @return the list of necessaryConditions
-	 */
-	public List<ConditionAlgo> sufficientConditions();
-
-	/**
-	 * Pre-Condition definitions.
-	 *
-	 * @return the list of necessaryConditions
-	 */
-	public List<ConditionAlgo> necessaryConditions();
 
 	/**
 	 * Clusterings.

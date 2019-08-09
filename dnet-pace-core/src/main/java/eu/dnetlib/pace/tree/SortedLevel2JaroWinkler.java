@@ -1,8 +1,6 @@
 package eu.dnetlib.pace.tree;
 
 import com.wcohen.ss.AbstractStringDistance;
-import eu.dnetlib.pace.distance.DistanceClass;
-import eu.dnetlib.pace.distance.algo.SortedSecondStringDistanceAlgo;
 import eu.dnetlib.pace.tree.support.AbstractSortedComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 

@@ -19,6 +19,10 @@ public abstract class AbstractComparator extends AbstractPaceFunctions implement
 
     private Map<String, Number> params;
 
+    protected AbstractComparator(Map<String, Number> params) {
+        this.params = params;
+    }
+
     protected AbstractComparator(Map<String, Number> params, final AbstractStringDistance ssalgo){
         this.params = params;
         this.weight = 1.0;
@@ -49,7 +53,9 @@ public abstract class AbstractComparator extends AbstractPaceFunctions implement
      *            the d
      * @return the double
      */
-    protected abstract double normalize(double d);
+    protected double normalize(double d) {
+        return d;
+    }
 
     /**
      * Distance.

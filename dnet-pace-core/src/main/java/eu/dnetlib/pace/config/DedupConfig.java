@@ -131,16 +131,6 @@ public class DedupConfig implements Config, Serializable {
 	}
 
 	@Override
-	public List<ConditionAlgo> sufficientConditions() {
-		return getPace().getStrictConditionAlgos();
-	}
-
-	@Override
-	public List<ConditionAlgo> necessaryConditions() {
-		return getPace().getConditionAlgos();
-	}
-
-	@Override
 	public List<ClusteringDef> clusterings() {
 		return getPace().getClustering();
 	}

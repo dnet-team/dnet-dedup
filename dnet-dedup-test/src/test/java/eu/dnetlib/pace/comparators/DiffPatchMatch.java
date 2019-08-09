@@ -1,4 +1,4 @@
-package eu.dnetlib.pace.distance;
+package eu.dnetlib.pace.comparators;
 
 /*
  * Diff Match and Patch

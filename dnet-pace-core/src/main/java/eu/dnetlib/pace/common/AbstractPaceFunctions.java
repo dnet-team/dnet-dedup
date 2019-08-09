@@ -15,10 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.text.Normalizer;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Set of common functions

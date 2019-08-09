@@ -1,12 +1,9 @@
 package eu.dnetlib.pace.tree;
 
 import com.wcohen.ss.AbstractStringDistance;
-import eu.dnetlib.pace.distance.DistanceClass;
-import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
-import java.io.Serializable;
 import java.util.Map;
 
 //case class JaroWinkler(w: Double) extends SecondStringDistanceAlgo(w, new com.wcohen.ss.JaroWinkler())

@@ -5,7 +5,7 @@ import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.config.WfConfig;
 //import eu.dnetlib.pace.distance.PaceDocumentDistance;
-import eu.dnetlib.pace.distance.PairwiseComparison;
+import eu.dnetlib.pace.tree.support.TreeProcessor;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.model.MapDocumentComparator;
@@ -150,14 +150,10 @@ public class BlockProcessor {
 
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                        final PairwiseComparison pairwiseComparison = new PairwiseComparison(dedupConf);
+                        final TreeProcessor treeProcessor = new TreeProcessor(dedupConf);
 
-                        emitOutput(pairwiseComparison.compare(pivot, curr), idPivot, idCurr, context);
+                        emitOutput(treeProcessor.compare(pivot, curr), idPivot, idCurr, context);
 
-//                        final ScoreResult sr = similarity(algo, pivot, curr);
-////                        log.info(sr.toString()+"SCORE "+ sr.getScore());
-//                        emitOutput(sr, idPivot, idCurr, context);
-//                        i++;
                     }
                 }
             }

@@ -1,7 +1,7 @@
-package eu.dnetlib.pace.distance;
+package eu.dnetlib.pace.comparators;
 
 import eu.dnetlib.pace.clustering.NGramUtils;
-import eu.dnetlib.pace.distance.algo.JaroWinklerNormalizedName;
+import eu.dnetlib.pace.tree.JaroWinklerNormalizedName;
 import org.junit.Before;
 import org.junit.Test;
 

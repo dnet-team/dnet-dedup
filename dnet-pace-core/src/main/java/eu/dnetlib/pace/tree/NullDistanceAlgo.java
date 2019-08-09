@@ -1,7 +1,5 @@
 package eu.dnetlib.pace.tree;
 
-import eu.dnetlib.pace.distance.DistanceAlgo;
-import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.Comparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
