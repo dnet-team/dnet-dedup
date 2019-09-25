@@ -67,7 +67,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
 		double result = jaroWinklerNormalizedName.distance("University of New York", "Università di New York");
 
-		assertEquals(result, 1.0);
+		assertEquals(1.0, result);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
         double result = jaroWinklerNormalizedName.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna");
 
         System.out.println("result = " + result);
-        assertEquals(result, 0.0);
+        assertEquals(0.0, result);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
         double result = jaroWinklerNormalizedName.distance("Universita degli studi di Pisa", "Universita di Pisa");
 
         System.out.println("result = " + result);
-        assertEquals(result, 1.0);
+        assertEquals(1.0, result);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
         double result = jaroWinklerNormalizedName.distance("RESEARCH PROMOTION FOUNDATION", "IDRYMA PROOTHISIS EREVNAS");
 
         System.out.println("result = " + result);
-        assertEquals(result, 1.0);
+        assertEquals(1.0, result);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
         double result = jaroWinklerNormalizedName.distance("Fonds zur Förderung der wissenschaftlichen Forschung (Austrian Science Fund)", "Fonds zur Förderung der wissenschaftlichen Forschung");
 
         System.out.println("result = " + result);
-        assertTrue(result> 0.9);
+        assertTrue(result > 0.9);
 
     }
 
@@ -118,7 +118,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 		double result = jaroWinklerNormalizedName.distance("Polytechnic University of Turin", "POLITECNICO DI TORINO");
 
 		System.out.println("result = " + result);
-		assertTrue(result> 0.9);
+		assertTrue(result > 0.9);
 	}
 
 	@Test
