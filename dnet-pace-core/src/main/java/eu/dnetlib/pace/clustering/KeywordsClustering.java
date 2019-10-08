@@ -25,7 +25,7 @@ public class KeywordsClustering extends AbstractClusteringFunction {
         //list of combination to return as result
         final Collection<String> combinations = new LinkedHashSet<String>();
 
-        for (String keyword: keywordsToCodes(keywords)){
+        for (String keyword: keywordsToCodes(keywords, conf.translationMap())){
             for (String city: citiesToCodes(cities)) {
                 combinations.add(keyword+"-"+city);
                 if (combinations.size()>=params.getOrDefault("max", 2)) {

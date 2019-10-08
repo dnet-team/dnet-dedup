@@ -46,7 +46,7 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
 
         if (sameCity(cities1,cities2)) {
 
-            if (keywordsCompare(keywords1, keywords2)>params.getOrDefault("threshold", 0.5).doubleValue()) {
+            if (keywordsCompare(keywords1, keywords2, conf.translationMap())>params.getOrDefault("threshold", 0.5).doubleValue()) {
 
                 ca = removeKeywords(ca, keywords1);
                 ca = removeKeywords(ca, cities1);

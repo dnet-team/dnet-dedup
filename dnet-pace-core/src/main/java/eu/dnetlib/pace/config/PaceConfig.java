@@ -2,6 +2,7 @@ package eu.dnetlib.pace.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.CondDef;
