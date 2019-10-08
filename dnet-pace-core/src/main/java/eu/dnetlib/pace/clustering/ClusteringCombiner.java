@@ -13,15 +13,15 @@ import eu.dnetlib.pace.model.Field;
 public class ClusteringCombiner {
 
 	public static Collection<String> combine(final Document a, final Config conf) {
-		return new ClusteringCombiner().doCombine(a, conf.clusterings());
+		return new ClusteringCombiner().doCombine(a, conf);
 	}
 
-	private Collection<String> doCombine(final Document a, final List<ClusteringDef> defs) {
+	private Collection<String> doCombine(final Document a, final Config conf) {
 		final Collection<String> res = Sets.newLinkedHashSet();
-		for (final ClusteringDef cd : defs) {
+		for (final ClusteringDef cd : conf.clusterings()) {
 			for (final String fieldName : cd.getFields()) {
 				final Field values = a.values(fieldName);
-				res.addAll(cd.clusteringFunction().apply((List<Field>) values));
+				res.addAll(cd.clusteringFunction().apply(conf, (List<Field>) values));
 			}
 		}
 		return res;

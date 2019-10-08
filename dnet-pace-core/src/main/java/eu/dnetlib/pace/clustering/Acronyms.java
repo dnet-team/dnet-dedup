@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import com.google.common.collect.Sets;
+import eu.dnetlib.pace.config.Config;
 
 @ClusteringClass("acronyms")
 public class Acronyms extends AbstractClusteringFunction {
@@ -15,7 +16,7 @@ public class Acronyms extends AbstractClusteringFunction {
 	}
 
 	@Override
-	protected Collection<String> doApply(String s) {
+	protected Collection<String> doApply(Config conf, String s) {
 		return extractAcronyms(s, param("max"), param("minLen"), param("maxLen"));
 	}
 	

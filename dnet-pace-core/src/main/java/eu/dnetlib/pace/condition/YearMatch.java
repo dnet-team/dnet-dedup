@@ -3,6 +3,7 @@ package eu.dnetlib.pace.condition;
 import java.time.Year;
 import java.util.List;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import org.apache.commons.lang.StringUtils;
 
@@ -34,7 +35,7 @@ public class YearMatch extends AbstractCondition {
 	// }
 
 	@Override
-	protected ConditionEval verify(final FieldDef fd, final Field a, final Field b) {
+	protected ConditionEval verify(final FieldDef fd, final Field a, final Field b, final Config conf) {
 		final String valueA = getNumbers(getFirstValue(a));
 		final String valueB = getNumbers(getFirstValue(b));
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import com.wcohen.ss.AbstractStringDistance;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
@@ -69,7 +70,7 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	 *            the b
 	 * @return the double
 	 */
-	public double distance(final String a, final String b) {
+	public double distance(final String a, final String b, final Config conf) {
 		double score = ssalgo.score(a, b);
 		return normalize(score);
 	}
@@ -83,8 +84,8 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	 *            the b
 	 * @return the double
 	 */
-	protected double distance(final List<String> a, final List<String> b) {
-		return distance(concat(a), concat(b));
+	protected double distance(final List<String> a, final List<String> b, final Config conf) {
+		return distance(concat(a), concat(b), conf);
 	}
 
 	/*
@@ -93,9 +94,9 @@ public abstract class SecondStringDistanceAlgo extends AbstractPaceFunctions imp
 	 * @see eu.dnetlib.pace.distance.DistanceAlgo#distance(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
 	 */
 	@Override
-	public double distance(final Field a, final Field b) {
-		if (a.getType().equals(Type.String) && b.getType().equals(Type.String)) return distance(a.stringValue(), b.stringValue());
-		if (a.getType().equals(Type.List) && b.getType().equals(Type.List)) return distance(toList(a), toList(b));
+	public double distance(final Field a, final Field b,  final Config conf) {
+		if (a.getType().equals(Type.String) && b.getType().equals(Type.String)) return distance(a.stringValue(), b.stringValue(), conf);
+		if (a.getType().equals(Type.List) && b.getType().equals(Type.List)) return distance(toList(a), toList(b), conf);
 
 		throw new IllegalArgumentException("invalid types\n- A: " + a.toString() + "\n- B: " + b.toString());
 	}

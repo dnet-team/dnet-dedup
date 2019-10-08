@@ -1,6 +1,8 @@
 package eu.dnetlib.pace.condition;
 
 import java.util.List;
+
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.eval.ConditionEvalMap;
 import eu.dnetlib.pace.model.Document;
 import eu.dnetlib.pace.model.FieldDef;
@@ -22,6 +24,6 @@ public interface ConditionAlgo {
 	 * @return 0 when condition cannot be verified (ignoremissing = true). Positive int when the condition is verified. Negative int when
 	 *         the condition is not verified.
 	 */
-	public abstract ConditionEvalMap verify(Document a, Document b);
+	public abstract ConditionEvalMap verify(Document a, Document b, Config conf);
 
 }

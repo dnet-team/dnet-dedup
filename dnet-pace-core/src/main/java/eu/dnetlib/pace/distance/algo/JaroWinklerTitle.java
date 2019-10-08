@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
@@ -23,7 +24,7 @@ public class JaroWinklerTitle extends SecondStringDistanceAlgo {
 	}
 	
 	@Override
-	public double distance(String a, String b) {
+	public double distance(String a, String b, final Config conf) {
 		String ca = cleanup(a);
 		String cb = cleanup(b);
 

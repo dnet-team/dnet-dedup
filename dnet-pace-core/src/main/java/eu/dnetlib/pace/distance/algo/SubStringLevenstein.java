@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.distance.algo;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 import org.apache.commons.lang.StringUtils;
@@ -69,9 +70,9 @@ public class SubStringLevenstein extends SecondStringDistanceAlgo {
 	 * @see eu.dnetlib.pace.distance.SecondStringDistanceAlgo#distance(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
 	 */
 	@Override
-	public double distance(final Field a, final Field b) {
+	public double distance(final Field a, final Field b, final Config conf) {
 		if (a.getType().equals(Type.String) && b.getType().equals(Type.String))
-			return distance(StringUtils.left(a.stringValue(), limit), StringUtils.left(b.stringValue(), limit));
+			return distance(StringUtils.left(a.stringValue(), limit), StringUtils.left(b.stringValue(), limit), conf);
 
 		throw new IllegalArgumentException("invalid types\n- A: " + a.toString() + "\n- B: " + b.toString());
 	}

@@ -5,6 +5,7 @@ import java.util.*;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import eu.dnetlib.pace.config.Config;
 
 @ClusteringClass("sortedngrampairs")
 public class SortedNgramPairs extends NgramPairs {
@@ -14,7 +15,7 @@ public class SortedNgramPairs extends NgramPairs {
 	}
 
 	@Override
-	protected Collection<String> doApply(String s) {
+	protected Collection<String> doApply(Config conf, String s) {
 
 		final List<String> tokens = Lists.newArrayList(Splitter.on(" ").omitEmptyStrings().trimResults().split(s));
 

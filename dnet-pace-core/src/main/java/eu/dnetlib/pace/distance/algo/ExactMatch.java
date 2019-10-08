@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
@@ -22,7 +23,7 @@ public class ExactMatch extends SecondStringDistanceAlgo {
 	}
 
 	@Override
-	public double distance(final String a, final String b) {
+	public double distance(final String a, final String b, final Config conf) {
 		return a.equals(b) ? 1.0 : 0;
 	}
 

@@ -2,6 +2,7 @@ package eu.dnetlib.pace.distance.algo;
 
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.distance.SecondStringDistanceAlgo;
 
@@ -27,7 +28,7 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
     }
 
     @Override
-    public double distance(String a, String b) {
+    public double distance(String a, String b, final Config conf) {
         String ca = cleanup(a);
         String cb = cleanup(b);
 
@@ -37,8 +38,8 @@ public class JaroWinklerNormalizedName extends SecondStringDistanceAlgo {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
-        Set<String> keywords1 = getKeywords(ca, params.getOrDefault("windowSize", 4).intValue());
-        Set<String> keywords2 = getKeywords(cb, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords1 = getKeywords(ca, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords2 = getKeywords(cb, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
 
         Set<String> cities1 = getCities(ca, params.getOrDefault("windowSize", 4).intValue());
         Set<String> cities2 = getCities(cb, params.getOrDefault("windowSize", 4).intValue());

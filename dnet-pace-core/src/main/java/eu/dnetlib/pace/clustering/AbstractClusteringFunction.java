@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.clustering;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import org.apache.commons.lang.StringUtils;
 
@@ -18,15 +19,15 @@ public abstract class AbstractClusteringFunction extends AbstractPaceFunctions i
 		this.params = params;
 	}
 
-	protected abstract Collection<String> doApply(String s);
+	protected abstract Collection<String> doApply(Config conf, String s);
 	
 	@Override
-	public Collection<String> apply(List<Field> fields) {
+	public Collection<String> apply(Config conf, List<Field> fields) {
 		return fields.stream().filter(f -> !f.isEmpty())
 				.map(Field::stringValue)
 				.map(this::normalize)
 				.map(s -> filterAllStopWords(s))
-				.map(this::doApply)
+				.map(s -> doApply(conf, s))
 				.map(c -> filterBlacklisted(c, ngramBlacklist))
 				.flatMap(c -> c.stream())
 				.filter(StringUtils::isNotBlank)

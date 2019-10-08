@@ -13,6 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -327,12 +329,17 @@ public abstract class AbstractPaceFunctions {
 		return codes;
 	}
 
-	public Set<String> getKeywords(String s1, int windowSize) {
-		return getKeywords(s1, translationMap, windowSize);
-	}
-
 	public Set<String> getCities(String s1, int windowSize) {
 		return getKeywords(s1, cityMap, windowSize);
 	}
 
+	public static <T> String readFromClasspath(final String filename, final Class<T> clazz) {
+		final StringWriter sw = new StringWriter();
+		try {
+			IOUtils.copy(clazz.getResourceAsStream(filename), sw);
+			return sw.toString();
+		} catch (final IOException e) {
+			throw new RuntimeException("cannot load resource from classpath: " + filename);
+		}
+	}
 }

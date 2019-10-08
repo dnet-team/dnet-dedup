@@ -1,5 +1,7 @@
 package eu.dnetlib.pace.clustering;
 
+import eu.dnetlib.pace.config.Config;
+
 import java.util.*;
 
 @ClusteringClass("ngrams")
@@ -10,7 +12,7 @@ public class Ngrams extends AbstractClusteringFunction {
 	}
 
 	@Override
-	protected Collection<String> doApply(String s) {
+	protected Collection<String> doApply(Config conf, String s) {
 		return getNgrams(s, param("ngramLen"), param("max"), param("maxPerToken"), param("minNgramLen"));
 	}
 

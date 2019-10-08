@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Person;
 
 @ClusteringClass("personhash")
@@ -18,7 +19,7 @@ public class PersonHash extends AbstractClusteringFunction {
 	}
 
 	@Override
-	protected Collection<String> doApply(final String s) {
+	protected Collection<String> doApply(final Config conf, final String s) {
 		final List<String> res = Lists.newArrayList();
 
 		final boolean aggressive = (Boolean) (getParams().containsKey("aggressive") ? getParams().get("aggressive") : DEFAULT_AGGRESSIVE);

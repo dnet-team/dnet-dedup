@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.clustering;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 
 import java.net.MalformedURLException;
@@ -21,7 +22,7 @@ public class UrlClustering extends AbstractPaceFunctions implements ClusteringFu
     }
 
     @Override
-    public Collection<String> apply(List<Field> fields) {
+    public Collection<String> apply(final Config conf, List<Field> fields) {
         try {
             return fields.stream()
                     .filter(f -> !f.isEmpty())

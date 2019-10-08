@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import eu.dnetlib.pace.config.Config;
 
 @ClusteringClass("immutablefieldvalue")
 public class ImmutableFieldValue extends AbstractClusteringFunction {
@@ -14,7 +15,7 @@ public class ImmutableFieldValue extends AbstractClusteringFunction {
 	}
 
 	@Override
-	protected Collection<String> doApply(final String s) {
+	protected Collection<String> doApply(final Config conf, final String s) {
 		final List<String> res = Lists.newArrayList();
 
 		res.add(s);

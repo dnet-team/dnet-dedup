@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.distance.algo;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.DistanceAlgo;
 import eu.dnetlib.pace.distance.DistanceClass;
 import eu.dnetlib.pace.model.Field;
@@ -17,7 +18,7 @@ public class NullDistanceAlgo implements DistanceAlgo {
 	}
 
 	@Override
-	public double distance(Field a, Field b) {
+	public double distance(Field a, Field b, final Config conf) {
 		return 0.0;
 	}
 

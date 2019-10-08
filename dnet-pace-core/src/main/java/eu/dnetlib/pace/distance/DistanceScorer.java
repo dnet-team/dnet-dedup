@@ -49,7 +49,7 @@ public class DistanceScorer {
 		final ConditionEvalMap res = new ConditionEvalMap();
 
 		for (final ConditionAlgo cd : conditions) {
-			final ConditionEvalMap map = cd.verify(a, b);
+			final ConditionEvalMap map = cd.verify(a, b, config);
 			res.mergeFrom(map);
 
 			// commented out shortcuts
@@ -82,7 +82,7 @@ public class DistanceScorer {
 				}
 			} else {
 				if (va.getType().equals(vb.getType())) {
-					de.setDistance(w * fd.distanceAlgo().distance(va, vb));
+					de.setDistance(w * fd.distanceAlgo().distance(va, vb, config));
 				} else {
 					throw new PaceException(String.format("Types are different: %s:%s - %s:%s", va, va.getType(), vb, vb.getType()));
 				}

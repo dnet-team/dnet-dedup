@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.distance;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public interface DistanceAlgo {
 
-	public abstract double distance(Field a, Field b);
+	public abstract double distance(Field a, Field b, Config conf);
 
 	public double getWeight();
 

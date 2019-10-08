@@ -22,6 +22,10 @@ public class PaceConfig implements Serializable {
 	private List<CondDef> conditions;
 	private List<ClusteringDef> clustering;
 	private Map<String, List<String>> blacklists;
+	private Map<String, List<String>> synonyms;
+
+	@JsonIgnore
+	private Map<String, String> translationMap;
 
 	@JsonIgnore
 	private Map<String, FieldDef> modelMap;
@@ -33,9 +37,22 @@ public class PaceConfig implements Serializable {
 
 	public void initModel() {
 		modelMap = Maps.newHashMap();
-		for(FieldDef fd : getModel()) {
+		for (FieldDef fd : getModel()) {
 			modelMap.put(fd.getName(), fd);
 		}
+	}
+
+	public void initTranslationMap(){
+		translationMap = Maps.newHashMap();
+		for (String key : synonyms.keySet()) {
+			for (String term : synonyms.get(key)){
+				translationMap.put(term.toLowerCase(), key);
+			}
+		}
+	}
+
+	public Map<String, String> translationMap(){
+		return translationMap;
 	}
 
 	public List<FieldDef> getModel() {
@@ -86,6 +103,14 @@ public class PaceConfig implements Serializable {
 
 	public void setBlacklists(final Map<String, List<String>> blacklists) {
 		this.blacklists = blacklists;
+	}
+
+	public Map<String, List<String>> getSynonyms() {
+		return synonyms;
+	}
+
+	public void setSynonyms(Map<String, List<String>> synonyms) {
+		this.synonyms = synonyms;
 	}
 
 	public Map<String, FieldDef> getModelMap() {

@@ -2,6 +2,7 @@ package eu.dnetlib.pace.condition;
 
 import java.util.List;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.distance.eval.ConditionEval;
 import eu.dnetlib.pace.distance.eval.ConditionEvalMap;
 import eu.dnetlib.pace.model.Document;
@@ -25,10 +26,10 @@ public abstract class AbstractCondition extends AbstractPaceFunctions implements
 		this.fields = fields;
 	}
 
-	protected abstract ConditionEval verify(FieldDef fd, Field a, Field b);
+	protected abstract ConditionEval verify(FieldDef fd, Field a, Field b, Config conf);
 
 	@Override
-	public ConditionEvalMap verify(final Document a, final Document b) {
+	public ConditionEvalMap verify(final Document a, final Document b, final Config conf) {
 		final ConditionEvalMap res = new ConditionEvalMap();
 		for (final FieldDef fd : getFields()) {
 
@@ -36,12 +37,12 @@ public abstract class AbstractCondition extends AbstractPaceFunctions implements
 			final Field vb = b.values(fd.getName());
 
 			if (fd.isIgnoreMissing()) {
-				res.put(fd.getName(), verify(fd, va, vb));
+				res.put(fd.getName(), verify(fd, va, vb, conf));
 			} else {
 				if (va.isEmpty() || vb.isEmpty()) {
 					res.put(fd.getName(), new ConditionEval(cond, va, vb, -1));
 				} else {
-					res.put(fd.getName(), verify(fd, va, vb));
+					res.put(fd.getName(), verify(fd, va, vb, conf));
 				}
 			}
 		}
