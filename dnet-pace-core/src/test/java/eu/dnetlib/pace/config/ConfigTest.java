@@ -10,7 +10,7 @@ public class ConfigTest extends AbstractPaceTest {
 
 	@Test
 	public void dedupConfigSerializationTest() {
-		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("result.pace.conf.json"));
+		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("org.curr.conf"));
 
 		final String conf = cfgFromClasspath.toString();
 
@@ -35,6 +35,14 @@ public class ConfigTest extends AbstractPaceTest {
 		DedupConfig load = DedupConfig.load(readFromClasspath("org.curr.conf"));
 
 		System.out.println(load.toString());
+	}
+
+	@Test
+	public void translationMapTest() {
+
+		DedupConfig load = DedupConfig.load(readFromClasspath("org.curr.conf"));
+
+		System.out.println("translationMap = " + load.getPace().translationMap().toString());
 	}
 
 }

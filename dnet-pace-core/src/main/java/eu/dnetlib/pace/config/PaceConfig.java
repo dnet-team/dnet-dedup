@@ -11,6 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +47,9 @@ public class PaceConfig implements Serializable {
 		translationMap = Maps.newHashMap();
 		for (String key : synonyms.keySet()) {
 			for (String term : synonyms.get(key)){
-				translationMap.put(term.toLowerCase(), key);
+				translationMap.put(
+						Normalizer.normalize(term.toLowerCase(), Normalizer.Form.NFD),
+				key);
 			}
 		}
 	}
