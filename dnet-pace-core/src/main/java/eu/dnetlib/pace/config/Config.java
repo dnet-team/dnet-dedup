@@ -3,7 +3,6 @@ package eu.dnetlib.pace.config;
 import java.util.List;
 import java.util.Map;
 
-import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
 import eu.dnetlib.pace.tree.support.TreeNodeDef;
