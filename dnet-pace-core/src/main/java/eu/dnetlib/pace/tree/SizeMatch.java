@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.common.collect.Iterables;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
@@ -28,7 +29,7 @@ public class SizeMatch extends AbstractComparator {
     }
 
     @Override
-    public double compare(final Field a, final Field b) {
+    public double compare(final Field a, final Field b, final Config conf) {
 
         if (a.isEmpty() || b.isEmpty())
             return -1;

@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.tree;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 import org.apache.commons.lang.StringUtils;
@@ -28,8 +29,7 @@ public class UrlMatcher extends Levenstein {
     }
 
     @Override
-    public double compare(Field a, Field b) {
-
+    public double distance(Field a, Field b, final Config conf) {
         final URL urlA = asUrl(getFirstValue(a));
         final URL urlB = asUrl(getFirstValue(b));
 
@@ -44,7 +44,7 @@ public class UrlMatcher extends Levenstein {
             return hostW * 0.5;
         }
 
-        return hostW + pathW * super.distance(urlA.getPath(), urlB.getPath());
+        return hostW + pathW * super.distance(urlA.getPath(), urlB.getPath(), conf);
     }
 
     private URL asUrl(final String value) {

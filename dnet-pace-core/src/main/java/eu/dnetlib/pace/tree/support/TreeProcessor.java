@@ -38,7 +38,7 @@ public class TreeProcessor {
 			if (currentNode == null)
 				throw new PaceException("The Tree Node doesn't exist: " + current);
 
-			TreeNodeStats stats = currentNode.evaluate(doc1, doc2);
+			TreeNodeStats stats = currentNode.evaluate(doc1, doc2, config);
 
 			if (!currentNode.isIgnoreMissing() && stats.getMissCount()>0) {
 				current = currentNode.getUndefined();

@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.tree;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
@@ -22,7 +23,7 @@ public class YearMatch extends AbstractComparator {
     }
 
     @Override
-    public double compare(final Field a, final Field b) {
+    public double compare(final Field a, final Field b, final Config conf) {
         final String valueA = getNumbers(getFirstValue(a));
         final String valueB = getNumbers(getFirstValue(b));
 

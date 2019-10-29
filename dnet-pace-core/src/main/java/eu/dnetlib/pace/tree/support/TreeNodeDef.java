@@ -1,8 +1,10 @@
 package eu.dnetlib.pace.tree.support;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.PaceException;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class TreeNodeDef implements Serializable {
     public TreeNodeDef() {
     }
 
-    public TreeNodeStats evaluate(MapDocument doc1, MapDocument doc2) {
+    public TreeNodeStats evaluate(MapDocument doc1, MapDocument doc2, Config conf) {
 
         TreeNodeStats stats = new TreeNodeStats();
         stats.setFieldsCount(fields.size());
@@ -44,7 +46,7 @@ public class TreeNodeDef implements Serializable {
 
             double weight = fieldConf.getWeight();
 
-            double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()));
+            double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
 
             if (result == -1) { //if the field is missing
                 stats.incrementMissCount();

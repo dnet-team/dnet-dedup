@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import eu.dnetlib.pace.config.Config;
 
 @ClusteringClass("ngrampairs")
 public class NgramPairs extends Ngrams {
@@ -15,7 +16,7 @@ public class NgramPairs extends Ngrams {
 	}
 	
 	@Override
-	protected Collection<String> doApply(String s) {
+	protected Collection<String> doApply(Config conf, String s) {
 		return ngramPairs(Lists.newArrayList(getNgrams(s, param("ngramLen"), param("max") * 2, 1, 2)), param("max"));
 	}
 

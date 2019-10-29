@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.tree;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
@@ -22,7 +23,7 @@ public class ExactMatch extends AbstractComparator {
     }
 
     @Override
-    public double distance(final String a, final String b) {
+    public double distance(final String a, final String b, final Config conf) {
         return a.equals(b) ? 1.0 : 0;
     }
 

@@ -1,22 +1,24 @@
 package eu.dnetlib.pace.clustering;
 
-import java.util.Map;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import eu.dnetlib.pace.AbstractPaceTest;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
-import eu.dnetlib.pace.model.Field;
+import eu.dnetlib.pace.config.DedupConfig;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 public class ClusteringFunctionTest extends AbstractPaceTest {
 
 	private Map<String, Integer> params;
+	DedupConfig conf;
 
 	@Before
 	public void setUp() throws Exception {
 		params = Maps.newHashMap();
+        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/org.curr.conf", ClusteringFunctionTest.class));
 	}
 
 	@Test
@@ -26,7 +28,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = "http://www.test.it/path/to/resource";
 		System.out.println(s);
-		System.out.println(urlClustering.apply(Lists.newArrayList(url(s))));
+		System.out.println(urlClustering.apply(conf, Lists.newArrayList(url(s))));
 	}
 
 	@Test
@@ -40,7 +42,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
-		System.out.println(ngram.apply(Lists.newArrayList(title(s))));
+		System.out.println(ngram.apply(conf, Lists.newArrayList(title(s))));
 	}
 
 	@Test
@@ -52,7 +54,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
-		System.out.println(np.apply(Lists.newArrayList(title(s))));
+		System.out.println(np.apply(conf, Lists.newArrayList(title(s))));
 	}
 
 	@Test
@@ -64,11 +66,11 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s1 = "University of Pisa";
 		System.out.println(s1);
-		System.out.println(np.apply(Lists.newArrayList(title(s1))));
+		System.out.println(np.apply(conf, Lists.newArrayList(title(s1))));
 
 		final String s2 = "Pisa University";
 		System.out.println(s2);
-		System.out.println(np.apply(Lists.newArrayList(title(s2))));
+		System.out.println(np.apply(conf, Lists.newArrayList(title(s2))));
 	}
 
 	@Test
@@ -81,7 +83,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
-		System.out.println(acro.apply(Lists.newArrayList(title(s))));
+		System.out.println(acro.apply(conf, Lists.newArrayList(title(s))));
 	}
 
 	@Test
@@ -93,7 +95,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
-		System.out.println(sp.apply(Lists.newArrayList(title(s))));
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
 	}
 
 	@Test
@@ -105,7 +107,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
-		System.out.println(sp.apply(Lists.newArrayList(title(s))));
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
 	}
 
 	@Test
@@ -114,7 +116,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 		final String s = readFromClasspath("gt.author.json");
 		System.out.println(s);
-		System.out.println(cf.apply(Lists.newArrayList(person(s))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(person(s))));
 	}
 
 	@Test
@@ -123,27 +125,27 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		final ClusteringFunction cf = new KeywordsClustering(params);
 		final String s = "Polytechnic University of Turin";
 		System.out.println(s);
-		System.out.println(cf.apply(Lists.newArrayList(title(s))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s))));
 
 		final String s1 = "POLITECNICO DI TORINO";
 		System.out.println(s1);
-		System.out.println(cf.apply(Lists.newArrayList(title(s1))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s1))));
 
 		final String s2 = "Universita farmaceutica culturale di milano bergamo";
 		System.out.println("s2 = " + s2);
-		System.out.println(cf.apply(Lists.newArrayList(title(s2))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s2))));
 
 		final String s3 = "universita universita milano milano";
 		System.out.println("s3 = " + s3);
-		System.out.println(cf.apply(Lists.newArrayList(title(s3))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s3))));
 
 		final String s4 = "Politechniki Warszawskiej (Warsaw University of Technology)";
 		System.out.println("s4 = " + s4);
-		System.out.println(cf.apply(Lists.newArrayList(title(s4))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s4))));
 
 		final String s5 = "İstanbul Ticarət Universiteti";
 		System.out.println("s5 = " + s5);
-		System.out.println(cf.apply(Lists.newArrayList(title(s5))));
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s5))));
 
 	}
 

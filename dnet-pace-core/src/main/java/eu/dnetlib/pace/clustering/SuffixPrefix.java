@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
+import eu.dnetlib.pace.config.Config;
 
 @ClusteringClass("suffixprefix")
 public class SuffixPrefix extends AbstractClusteringFunction {
@@ -14,7 +15,7 @@ public class SuffixPrefix extends AbstractClusteringFunction {
 	}
 
 	@Override
-	protected Collection<String> doApply(String s) {
+	protected Collection<String> doApply(Config conf, String s) {
 		return suffixPrefix(s, param("len"), param("max"));
 	}
 	

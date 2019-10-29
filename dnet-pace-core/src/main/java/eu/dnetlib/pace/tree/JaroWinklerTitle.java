@@ -4,6 +4,8 @@ import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
+import eu.dnetlib.pace.config.Config;
+
 import java.util.Map;
 
 //case class JaroWinkler(w: Double) extends SecondStringDistanceAlgo(w, new com.wcohen.ss.JaroWinkler())
@@ -23,7 +25,7 @@ public class JaroWinklerTitle extends AbstractComparator {
 	}
 	
 	@Override
-	public double distance(String a, String b) {
+	public double distance(String a, String b, final Config conf) {
 		String ca = cleanup(a);
 		String cb = cleanup(b);
 

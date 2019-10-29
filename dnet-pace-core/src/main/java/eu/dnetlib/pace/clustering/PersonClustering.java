@@ -2,6 +2,7 @@ package eu.dnetlib.pace.clustering;
 
 import com.google.common.collect.Sets;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.Person;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +24,7 @@ public class PersonClustering extends AbstractPaceFunctions implements Clusterin
 	}
 
 	@Override
-	public Collection<String> apply(final List<Field> fields) {
+	public Collection<String> apply(final Config conf, final List<Field> fields) {
 		final Set<String> hashes = Sets.newHashSet();
 
 		for (final Field f : fields) {

@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.tree;
 
 import com.wcohen.ss.AbstractStringDistance;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
@@ -23,7 +24,7 @@ public class JaroWinkler extends AbstractComparator {
     }
 
     @Override
-    public double distance(String a, String b) {
+    public double distance(String a, String b, final Config conf) {
         String ca = cleanup(a);
         String cb = cleanup(b);
 

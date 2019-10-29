@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import eu.dnetlib.pace.config.Config;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -17,7 +18,7 @@ public class SpaceTrimmingFieldValue extends AbstractClusteringFunction {
 	}
 
 	@Override
-	protected Collection<String> doApply(final String s) {
+	protected Collection<String> doApply(final Config conf, final String s) {
 		final List<String> res = Lists.newArrayList();
 
 		res.add(StringUtils.isBlank(s) ? RandomStringUtils.random(getParams().get("randomLength")) : s.toLowerCase().replaceAll("\\s+", ""));

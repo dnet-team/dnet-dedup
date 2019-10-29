@@ -4,6 +4,8 @@ import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
+import eu.dnetlib.pace.config.Config;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +28,7 @@ public class JaroWinklerNormalizedName extends AbstractComparator {
     }
 
     @Override
-    public double distance(String a, String b) {
+    public double distance(String a, String b, final Config conf) {
         String ca = cleanup(a);
         String cb = cleanup(b);
 
@@ -36,15 +38,15 @@ public class JaroWinklerNormalizedName extends AbstractComparator {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
-        Set<String> keywords1 = getKeywords(ca, params.getOrDefault("windowSize", 4).intValue());
-        Set<String> keywords2 = getKeywords(cb, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords1 = getKeywords(ca, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords2 = getKeywords(cb, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
 
         Set<String> cities1 = getCities(ca, params.getOrDefault("windowSize", 4).intValue());
         Set<String> cities2 = getCities(cb, params.getOrDefault("windowSize", 4).intValue());
 
         if (sameCity(cities1,cities2)) {
 
-            if (keywordsCompare(keywords1, keywords2)>params.getOrDefault("threshold", 0.5).doubleValue()) {
+            if (keywordsCompare(keywords1, keywords2, conf.translationMap())>params.getOrDefault("threshold", 0.5).doubleValue()) {
 
                 ca = removeKeywords(ca, keywords1);
                 ca = removeKeywords(ca, cities1);

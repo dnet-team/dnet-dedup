@@ -3,6 +3,8 @@ package eu.dnetlib.pace.tree;
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
+import eu.dnetlib.pace.config.Config;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,7 +28,7 @@ public class LevensteinTitle extends AbstractComparator {
 	}
 
 	@Override
-	public double distance(final String a, final String b) {
+	public double distance(final String a, final String b, final Config conf) {
 		final String ca = cleanup(a);
 		final String cb = cleanup(b);
 

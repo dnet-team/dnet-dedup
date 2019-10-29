@@ -1,5 +1,8 @@
 package eu.dnetlib.pace.tree;
 
+import eu.dnetlib.pace.config.Config;
+import org.apache.commons.lang.StringUtils;
+
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
@@ -67,9 +70,9 @@ public class SubStringLevenstein extends AbstractComparator {
 	 * @see eu.dnetlib.pace.compare.SecondStringDistanceAlgo#compare(eu.dnetlib.pace.model.Field, eu.dnetlib.pace.model.Field)
 	 */
 	@Override
-	public double compare(final Field a, final Field b) {
+	public double distance(final Field a, final Field b, final Config conf) {
 		if (a.getType().equals(Type.String) && b.getType().equals(Type.String))
-			return distance(StringUtils.left(a.stringValue(), limit), StringUtils.left(b.stringValue(), limit));
+			return distance(StringUtils.left(a.stringValue(), limit), StringUtils.left(b.stringValue(), limit), conf);
 
 		throw new IllegalArgumentException("invalid types\n- A: " + a.toString() + "\n- B: " + b.toString());
 	}

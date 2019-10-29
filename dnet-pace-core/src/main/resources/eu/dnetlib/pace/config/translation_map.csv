@@ -1,4 +1,4 @@
-key::1;university;università;università studi;universitario;universitaria;université;universitaire;universitaires;universidad;universitade;Universität;universitaet;Uniwersytet;университет;universiteit;πανεπιστήμιο;universitesi;universiteti
+key::1;university;universita;universita studi;universitario;universitaria;université;universitaire;universitaires;universidad;universitade;Universität;universitaet;Uniwersytet;университет;universiteit;πανεπιστήμιο;universitesi;universiteti
 key::2;studies;studi;études;estudios;estudos;Studien;studia;исследования;studies;σπουδές
 key::3;advanced;superiore;supérieur;supérieure;supérieurs;supérieures;avancado;avancados;fortgeschrittene;fortgeschritten;zaawansowany;передовой;gevorderd;gevorderde;προχωρημένος;προχωρημένη;προχωρημένο;προχωρημένες;προχωρημένα;wyzsza
 key::4;institute;istituto;institut;instituto;instituto;Institut;instytut;институт;instituut;ινστιτούτο
@@ -38,7 +38,7 @@ key::37;federation;federazione;fédération;федерация;federatie;ομο�
 key::38;observatory;osservatorio;observatoire;обсерватория;observatorium;αστεροσκοπείο
 key::39;bureau;ufficio;bureau;офис;bureau;γραφείο
 key::40;company;impresa;compagnie;société;компания;bedrijf;εταιρία
-key::41;polytechnic;politecnico;polytechnique;политехника;polytechnisch;πολυτεχνείο;universita politecnica;polytechnic university;politechnika;politechniki;university technology;university science technology
+key::41;polytechnic;politecnico;polytechnique;политехника;polytechnisch;πολυτεχνείο;universita politecnica;polytechnic university;universidad politecnica;universitat politecnica;politechnika;politechniki;university technology;university science technology
 key::42;coalition;coalizione;coalition;коалиция;coalitie;συνασπισμός
 key::43;initiative;iniziativa;initiative;инициатива;initiatief;πρωτοβουλία
 key::44;academic;accademico;académique;universitaire;акадеческий academisch;ακαδημαϊκός;ακαδημαϊκή;ακαδημαϊκό;ακαδημαϊκές;ακαδημαϊκοί

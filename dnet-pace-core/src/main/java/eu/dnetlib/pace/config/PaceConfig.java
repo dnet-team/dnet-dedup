@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.config;
 
 import com.google.common.collect.Maps;
+
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
 import eu.dnetlib.pace.tree.support.TreeNodeDef;
@@ -8,6 +9,7 @@ import eu.dnetlib.pace.util.PaceResolver;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,10 @@ public class PaceConfig implements Serializable {
 	private Map<String, TreeNodeDef> decisionTree;
 
 	private Map<String, List<String>> blacklists;
+	private Map<String, List<String>> synonyms;
+
+	@JsonIgnore
+	private Map<String, String> translationMap;
 
 	@JsonIgnore
 	private Map<String, FieldDef> modelMap;
@@ -30,9 +36,24 @@ public class PaceConfig implements Serializable {
 
 	public void initModel() {
 		modelMap = Maps.newHashMap();
-		for(FieldDef fd : getModel()) {
+		for (FieldDef fd : getModel()) {
 			modelMap.put(fd.getName(), fd);
 		}
+	}
+
+	public void initTranslationMap(){
+		translationMap = Maps.newHashMap();
+		for (String key : synonyms.keySet()) {
+			for (String term : synonyms.get(key)){
+				translationMap.put(
+						Normalizer.normalize(term.toLowerCase(), Normalizer.Form.NFD),
+				key);
+			}
+		}
+	}
+
+	public Map<String, String> translationMap(){
+		return translationMap;
 	}
 
 	public List<FieldDef> getModel() {
@@ -65,6 +86,14 @@ public class PaceConfig implements Serializable {
 
 	public void setBlacklists(final Map<String, List<String>> blacklists) {
 		this.blacklists = blacklists;
+	}
+
+	public Map<String, List<String>> getSynonyms() {
+		return synonyms;
+	}
+
+	public void setSynonyms(Map<String, List<String>> synonyms) {
+		this.synonyms = synonyms;
 	}
 
 	public Map<String, FieldDef> getModelMap() {

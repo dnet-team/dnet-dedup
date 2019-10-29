@@ -2,6 +2,7 @@ package eu.dnetlib.pace.tree.support;
 
 import com.wcohen.ss.AbstractStringDistance;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
@@ -66,7 +67,7 @@ public abstract class AbstractComparator extends AbstractPaceFunctions implement
      *            the b
      * @return the double
      */
-    public double distance(final String a, final String b) {
+    public double distance(final String a, final String b, final Config conf) {
 
         if (a.isEmpty() || b.isEmpty()) {
             return -1;  //return -1 if a field is missing
@@ -84,16 +85,23 @@ public abstract class AbstractComparator extends AbstractPaceFunctions implement
      *            the b
      * @return the double
      */
-    protected double distance(final List<String> a, final List<String> b) {
-        return distance(concat(a), concat(b));
+    protected double distance(final List<String> a, final List<String> b, final Config conf) {
+        return distance(concat(a), concat(b), conf);
+    }
+
+    public double distance(final Field a, final Field b,  final Config conf) {
+        if (a.getType().equals(Type.String) && b.getType().equals(Type.String)) return distance(a.stringValue(), b.stringValue(), conf);
+        if (a.getType().equals(Type.List) && b.getType().equals(Type.List)) return distance(toList(a), toList(b), conf);
+
+        throw new IllegalArgumentException("invalid types\n- A: " + a.toString() + "\n- B: " + b.toString());
     }
 
     @Override
-    public double compare(final Field a, final Field b) {
+    public double compare(final Field a, final Field b, final Config conf) {
         if (a.isEmpty() || b.isEmpty())
             return -1;
-        if (a.getType().equals(Type.String) && b.getType().equals(Type.String)) return distance(a.stringValue(), b.stringValue());
-        if (a.getType().equals(Type.List) && b.getType().equals(Type.List)) return distance(toList(a), toList(b));
+        if (a.getType().equals(Type.String) && b.getType().equals(Type.String)) return distance(a.stringValue(), b.stringValue(), conf);
+        if (a.getType().equals(Type.List) && b.getType().equals(Type.List)) return distance(toList(a), toList(b), conf);
 
         throw new IllegalArgumentException("invalid types\n- A: " + a.toString() + "\n- B: " + b.toString());
     }

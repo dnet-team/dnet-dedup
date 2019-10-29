@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.tree;
 
 import com.google.common.collect.Sets;
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.adaptor.Pid;
@@ -27,7 +28,7 @@ public class PidMatch extends AbstractComparator {
     }
 
     @Override
-    public double compare(final Field a, final Field b) {
+    public double compare(final Field a, final Field b, final Config conf) {
 
         final List<String> sa = ((FieldList) a).stringList();
         final List<String> sb = ((FieldList) b).stringList();

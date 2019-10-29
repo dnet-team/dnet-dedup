@@ -13,6 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +27,6 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractPaceFunctions {
 
-	private static Map<String,String> translationMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/translation_map.csv");
 	private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
 	protected static Set<String> stopwords_en = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
@@ -238,10 +239,10 @@ public abstract class AbstractPaceFunctions {
 	}
 
 
-	public double keywordsCompare(Set<String> s1, Set<String> s2){
+	public double keywordsCompare(Set<String> s1, Set<String> s2, Map<String, String> translationMap){
 
-		Set<String> k1 = keywordsToCodes(s1);
-		Set<String> k2 = keywordsToCodes(s2);
+		Set<String> k1 = keywordsToCodes(s1, translationMap);
+		Set<String> k2 = keywordsToCodes(s2, translationMap);
 
         int longer = (k1.size()>k2.size())?k1.size():k2.size();
 
@@ -273,7 +274,7 @@ public abstract class AbstractPaceFunctions {
 		return keywords.stream().map(s -> translationMap.get(s)).collect(Collectors.toSet());
 	}
 
-	public Set<String> keywordsToCodes(Set<String> keywords) {
+	public Set<String> keywordsToCodes(Set<String> keywords, Map<String, String> translationMap) {
 		return toCodes(keywords, translationMap);
 	}
 
@@ -324,12 +325,17 @@ public abstract class AbstractPaceFunctions {
 		return codes;
 	}
 
-	public Set<String> getKeywords(String s1, int windowSize) {
-		return getKeywords(s1, translationMap, windowSize);
-	}
-
 	public Set<String> getCities(String s1, int windowSize) {
 		return getKeywords(s1, cityMap, windowSize);
 	}
 
+	public static <T> String readFromClasspath(final String filename, final Class<T> clazz) {
+		final StringWriter sw = new StringWriter();
+		try {
+			IOUtils.copy(clazz.getResourceAsStream(filename), sw);
+			return sw.toString();
+		} catch (final IOException e) {
+			throw new RuntimeException("cannot load resource from classpath: " + filename);
+		}
+	}
 }

@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.tree;
 
+import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.Comparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
@@ -17,7 +18,7 @@ public class NullDistanceAlgo implements Comparator {
 	}
 
 	@Override
-	public double compare(Field a, Field b) {
+	public double compare(Field a, Field b, Config config) {
 		return 0;
 	}
 }

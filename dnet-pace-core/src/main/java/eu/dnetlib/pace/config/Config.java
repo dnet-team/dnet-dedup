@@ -49,4 +49,6 @@ public interface Config {
 	 */
 	public Map<String, List<String>> blacklists();
 
+
+	public Map<String, String> translationMap();
 }

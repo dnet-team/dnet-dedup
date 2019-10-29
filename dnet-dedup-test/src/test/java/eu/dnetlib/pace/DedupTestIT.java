@@ -3,6 +3,7 @@ package eu.dnetlib.pace;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowJob;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class DedupTestIT {
 
+    @Ignore
     @Test
     public void deduplicationTest() throws OozieClientException, InterruptedException {
 

@@ -55,6 +55,7 @@ public class DedupConfig implements Config, Serializable {
 		try {
 			config = new ObjectMapper().readValue(json, DedupConfig.class);
 			config.getPace().initModel();
+			config.getPace().initTranslationMap();
 			return config;
 		} catch (IOException e) {
 			throw new PaceException("Error in parsing configuration json", e);
@@ -137,6 +138,11 @@ public class DedupConfig implements Config, Serializable {
 	@Override
 	public Map<String, List<String>> blacklists() {
 		return getPace().getBlacklists();
+	}
+
+	@Override
+	public Map<String, String> translationMap() {
+		return getPace().translationMap();
 	}
 
 }

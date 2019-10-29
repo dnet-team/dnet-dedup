@@ -2,6 +2,7 @@ package eu.dnetlib.pace.comparators;
 
 import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.tree.JaroWinklerNormalizedName;
+import eu.dnetlib.pace.config.DedupConfig;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,13 +18,13 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 
 	private final static String TEST_STRING = "Toshiba NB550D: è un netbook su piattaforma AMD Fusion⁽¹²⁾.";
 	private Map<String, Number> params;
+	private DedupConfig conf;
 
 	@Before
 	public void setup() {
-		System.out.println("****************************************************************");
-		System.out.println("Test String    : " + TEST_STRING);
 		params = new HashMap<>();
 		params.put("weight", 1.0);
+		conf = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/config/org.curr.conf", DistanceAlgoTest.class));
 	}
 
 	@Test
@@ -55,7 +56,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 	@Test
 	public void testJaroWinklerNormalizedName() {
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-		double result = jaroWinklerNormalizedName.distance("Free University of Bozen-Bolzano", "University of the Free State");
+		double result = jaroWinklerNormalizedName.distance("Free University of Bozen-Bolzano", "University of the Free State", conf);
 
 		System.out.println("result = " + result);
 		assertEquals(0.0, result);
@@ -65,49 +66,49 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 	public void testJaroWinklerNormalizedName2() {
 
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-		double result = jaroWinklerNormalizedName.distance("University of New York", "Università di New York");
+		double result = jaroWinklerNormalizedName.distance("University of New York", "Università di New York", conf);
 
-		assertEquals(result, 1.0);
+		assertEquals(1.0, result);
 	}
 
 	@Test
     public void testJaroWinklerNormalizedName3() {
 
         final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-        double result = jaroWinklerNormalizedName.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna");
+        double result = jaroWinklerNormalizedName.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna", conf);
 
         System.out.println("result = " + result);
-        assertEquals(result, 0.0);
+        assertEquals(0.0, result);
     }
 
     @Test
     public void testJaroWinklerNormalizedName4() {
 
         final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-        double result = jaroWinklerNormalizedName.distance("Universita degli studi di Pisa", "Universita di Pisa");
+        double result = jaroWinklerNormalizedName.distance("Universita degli studi di Pisa", "Universita di Pisa", conf);
 
         System.out.println("result = " + result);
-        assertEquals(result, 1.0);
+        assertEquals(1.0, result);
     }
 
     @Test
     public void testJaroWinklerNormalizedName5() {
 
         final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-        double result = jaroWinklerNormalizedName.distance("RESEARCH PROMOTION FOUNDATION", "IDRYMA PROOTHISIS EREVNAS");
+        double result = jaroWinklerNormalizedName.distance("RESEARCH PROMOTION FOUNDATION", "IDRYMA PROOTHISIS EREVNAS", conf);
 
         System.out.println("result = " + result);
-        assertEquals(result, 1.0);
+        assertEquals(1.0, result);
     }
 
     @Test
     public void testJaroWinklerNormalizedName6() {
 
         final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-        double result = jaroWinklerNormalizedName.distance("Fonds zur Förderung der wissenschaftlichen Forschung (Austrian Science Fund)", "Fonds zur Förderung der wissenschaftlichen Forschung");
+        double result = jaroWinklerNormalizedName.distance("Fonds zur Förderung der wissenschaftlichen Forschung (Austrian Science Fund)", "Fonds zur Förderung der wissenschaftlichen Forschung", conf);
 
         System.out.println("result = " + result);
-        assertTrue(result> 0.9);
+        assertTrue(result > 0.9);
 
     }
 
@@ -115,17 +116,17 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 	public void testJaroWinklerNormalizedName7() {
 
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-		double result = jaroWinklerNormalizedName.distance("Polytechnic University of Turin", "POLITECNICO DI TORINO");
+		double result = jaroWinklerNormalizedName.distance("Polytechnic University of Turin", "POLITECNICO DI TORINO", conf);
 
 		System.out.println("result = " + result);
-		assertTrue(result> 0.9);
+		assertTrue(result > 0.9);
 	}
 
 	@Test
 	public void testJaroWinklerNormalizedName8() {
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
 
-		double result = jaroWinklerNormalizedName.distance("Politechniki Warszawskiej (Warsaw University of Technology)", "Warsaw University of Technology");
+		double result = jaroWinklerNormalizedName.distance("Politechniki Warszawskiej (Warsaw University of Technology)", "Warsaw University of Technology", conf);
 
 		System.out.println("result = " + result);
 	}
@@ -134,7 +135,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 	public void testJaroWinklerNormalizedName9() {
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
 
-		double result = jaroWinklerNormalizedName.distance("Istanbul Commerce University", "İstanbul Ticarət Universiteti");
+		double result = jaroWinklerNormalizedName.distance("Istanbul Commerce University", "İstanbul Ticarət Universiteti", conf);
 
 		System.out.println("result = " + result);
 	}
@@ -144,7 +145,7 @@ public class DistanceAlgoTest extends AbstractPaceFunctions {
 
 		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
 
-		double result = jaroWinklerNormalizedName.distance("Firenze University Press", "University of Florence");
+		double result = jaroWinklerNormalizedName.distance("Firenze University Press", "University of Florence", conf);
 
 		System.out.println("result = " + result);
 	}
