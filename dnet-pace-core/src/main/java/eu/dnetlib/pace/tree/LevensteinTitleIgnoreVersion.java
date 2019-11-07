@@ -37,10 +37,7 @@ public class LevensteinTitleIgnoreVersion extends AbstractComparator {
 		ca = filterAllStopWords(ca);
 		cb = filterAllStopWords(cb);
 
-		final String cca = finalCleanup(ca);
-		final String ccb = finalCleanup(cb);
-
-		return normalize(ssalgo.score(cca, ccb), cca.length(), ccb.length());
+		return normalize(ssalgo.score(ca, cb), ca.length(), cb.length());
 	}
 
 	private double normalize(final double score, final int la, final int lb) {

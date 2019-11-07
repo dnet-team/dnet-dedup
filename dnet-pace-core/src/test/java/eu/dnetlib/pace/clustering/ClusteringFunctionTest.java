@@ -18,7 +18,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	@Before
 	public void setUp() throws Exception {
 		params = Maps.newHashMap();
-        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/org.curr.conf", ClusteringFunctionTest.class));
+        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf", ClusteringFunctionTest.class));
 	}
 
 	@Test

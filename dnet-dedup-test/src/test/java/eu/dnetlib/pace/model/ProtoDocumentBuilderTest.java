@@ -21,9 +21,9 @@ public class ProtoDocumentBuilderTest extends AbstractProtoPaceTest {
 
 		final String id = "12345";
 
-		final Config config = getResultFullConf();
+		final Config config = getOrganizationTestConf();
 
-		final MapDocument document = ProtoDocumentBuilder.newInstance(id, getResult(id), config.model());
+		final MapDocument document = ProtoDocumentBuilder.newInstance(id, getOrganization(id), config.model());
 
 		assertFalse(document.fieldNames().isEmpty());
 		assertFalse(Iterables.isEmpty(document.fields()));

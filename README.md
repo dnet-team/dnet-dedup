@@ -26,8 +26,8 @@ if score<\th  --- negative result
 	 - positive: specifies the key of the next node in case of positive result
 	 - negative: specifies the key of the next node in case of negative result
 	 - undefined: specifies the key of the next node in case of undefined result
- - ignoreMissing: defines the behavior of the treeNode in case of a missing field
-	> e.g. if a comparator on a particular field produces an undefined result (-1), if ignoreMissing=true that field is simply ignored, otherwise the entire treeNode score is considered to be -1
+ - countIfUndefined: defines the behavior of the treeNode in case of a missing field
+	> e.g. if a comparator on a particular field produces an undefined result (-1), if countIfUndefined=true that field is simply ignored, otherwise the entire treeNode score is considered to be -1
 
 In order to make the decision tree work, the BlockProcessor has been modified with the following changes:
  - if the decision tree is defined into the JSON configuration the deduplication process relies on it

@@ -45,6 +45,7 @@ public class DedupConfig implements Config, Serializable {
 		defaults.put("slidingWindowSize", "200");
 		defaults.put("rootBuilder", "result");
 		defaults.put("includeChildren", "true");
+		defaults.put("maxIterations", "20");
 	}
 
 	public DedupConfig() {}

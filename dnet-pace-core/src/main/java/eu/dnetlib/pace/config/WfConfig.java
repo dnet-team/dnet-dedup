@@ -76,6 +76,12 @@ public class WfConfig implements Serializable {
 	/** Maximum number of allowed children. */
 	private int maxChildren = MAX_CHILDREN;
 
+	/** Default maximum number of iterations. */
+	private final static int MAX_ITERATIONS = 20;
+
+	/** Maximum number of iterations */
+	private int maxIterations = MAX_ITERATIONS;
+
 	public WfConfig() {}
 
 	/**
@@ -104,7 +110,7 @@ public class WfConfig implements Serializable {
 	 */
 	public WfConfig(final String entityType, final String orderField, final List<String> rootBuilder, final String dedupRun,
 			final double threshold,
-			final Set<String> skipList, final int queueMaxSize, final int groupMaxSize, final int slidingWindowSize, final boolean includeChildren) {
+			final Set<String> skipList, final int queueMaxSize, final int groupMaxSize, final int slidingWindowSize, final boolean includeChildren, final int maxIterations) {
 		super();
 		this.entityType = entityType;
 		this.orderField = orderField;
@@ -116,6 +122,7 @@ public class WfConfig implements Serializable {
 		this.groupMaxSize = groupMaxSize;
 		this.slidingWindowSize = slidingWindowSize;
 		this.includeChildren = includeChildren;
+		this.maxIterations = maxIterations;
 	}
 
 	/**
@@ -243,6 +250,15 @@ public class WfConfig implements Serializable {
 
 	public void setMaxChildren(final int maxChildren) {
 		this.maxChildren = maxChildren;
+	}
+
+	public int getMaxIterations() {
+		return maxIterations;
+	}
+
+	public WfConfig setMaxIterations(int maxIterations) {
+		this.maxIterations = maxIterations;
+		return this;
 	}
 
 	/*

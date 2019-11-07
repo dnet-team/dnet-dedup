@@ -4,7 +4,6 @@ import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.PaceException;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -22,16 +21,16 @@ public class TreeNodeDef implements Serializable {
     private String negative;
     private String undefined;
 
-    boolean ignoreMissing;
+    boolean ignoreUndefined;
 
-    public TreeNodeDef(List<FieldConf> fields, AggType aggregation, double threshold, String positive, String negative, String undefined, boolean ignoreMissing) {
+    public TreeNodeDef(List<FieldConf> fields, AggType aggregation, double threshold, String positive, String negative, String undefined, boolean ignoreUndefined) {
         this.fields = fields;
         this.aggregation = aggregation;
         this.threshold = threshold;
         this.positive = positive;
         this.negative = negative;
         this.undefined = undefined;
-        this.ignoreMissing = ignoreMissing;
+        this.ignoreUndefined = ignoreUndefined;
     }
 
     public TreeNodeDef() {
@@ -48,9 +47,9 @@ public class TreeNodeDef implements Serializable {
 
             double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
 
-            if (result == -1) { //if the field is missing
-                stats.incrementMissCount();
-                if (!fieldConf.isIgnoreMissing()) {
+            if (result == -1) { //if the comparison is undefined
+                stats.incrementUndefinedCount();
+                if (fieldConf.isCountIfUndefined()) { //if it must be taken into account, increment weights (i.e. the average would be lower)
                     stats.incrementWeightsSum(weight);
                 }
             }
@@ -117,12 +116,12 @@ public class TreeNodeDef implements Serializable {
         this.undefined = undefined;
     }
 
-    public boolean isIgnoreMissing() {
-        return ignoreMissing;
+    public boolean isIgnoreUndefined() {
+        return ignoreUndefined;
     }
 
-    public void setIgnoreMissing(boolean ignoreMissing) {
-        this.ignoreMissing = ignoreMissing;
+    public void setIgnoreUndefined(boolean ignoreUndefined) {
+        this.ignoreUndefined = ignoreUndefined;
     }
 
     @Override

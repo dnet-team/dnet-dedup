@@ -28,37 +28,13 @@ import java.util.stream.IntStream;
 
 public abstract class AbstractProtoPaceTest extends OafTest {
 
-	protected DedupConfig getResultFullConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.full.pace.conf"));
-	}
-
-	protected DedupConfig getResultSimpleConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.simple.pace.conf"));
-	}
-
-	protected DedupConfig getResultConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.pace.conf"));
-	}
-
-	protected DedupConfig getOrganizationSimpleConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.pace.conf"));
+	protected DedupConfig getOrganizationCurrentConf() {
+		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf"));
 	}
 
     protected DedupConfig getOrganizationTestConf() {
-        return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/organization.test.conf"));
+        return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/config/organization.test.conf"));
     }
-
-    protected DedupConfig getAuthorsTestConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/authors.test.pace.conf"));
-	}
-
-	protected DedupConfig getResultAuthorsConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.authors.pace.conf"));
-	}
-
-	protected DedupConfig getResultProdConf() {
-		return DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/result.prod.pace.conf"));
-	}
 
 	protected MapDocument author(final Config conf, final String id, final Oaf oaf) {
 		return ProtoDocumentBuilder.newInstance(id, oaf.getEntity(), conf.model());

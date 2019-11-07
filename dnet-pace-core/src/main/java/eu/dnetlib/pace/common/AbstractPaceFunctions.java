@@ -20,15 +20,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Set of common functions
+ * Set of common functions for the framework
  *
  * @author claudio
  *
  */
 public abstract class AbstractPaceFunctions {
 
+	//city map to be used when translating the city names into codes
 	private static Map<String,String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
+	//list of stopwords in different languages
 	protected static Set<String> stopwords_en = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
 	protected static Set<String> stopwords_de = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_de.txt");
 	protected static Set<String> stopwords_es = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_es.txt");
@@ -36,15 +38,14 @@ public abstract class AbstractPaceFunctions {
 	protected static Set<String> stopwords_it = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_it.txt");
 	protected static Set<String> stopwords_pt = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_pt.txt");
 
+	//blacklist of ngrams: to avoid generic keys
 	protected static Set<String> ngramBlacklist = loadFromClasspath("/eu/dnetlib/pace/config/ngram_blacklist.txt");
 
 	private static final String alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
-	private static final String aliases_from = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎àáâäæãåāèéêëēėęîïíīįìôöòóœøōõûüùúūßśšłžźżçćčñń";
-	private static final String aliases_to =   "0123456789+-=()n0123456789+-=()aaaaaaaaeeeeeeeiiiiiioooooooouuuuussslzzzcccnn";
+	private static final String aliases_from = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎àáâäæãåāèéêëēėęəîïíīįìôöòóœøōõûüùúūßśšłžźżçćčñń";
+	private static final String aliases_to =   "0123456789+-=()n0123456789+-=()aaaaaaaaeeeeeeeeiiiiiioooooooouuuuussslzzzcccnn";
 
-	private static final String special_from = "İə";
-	private static final String special_to =   "Ie";
-
+	//doi prefix for normalization
 	public final String DOI_PREFIX = "(https?:\\/\\/dx\\.doi\\.org\\/)|(doi:)";
 
 	protected final static FieldList EMPTY_FIELD = new FieldListImpl();
@@ -54,8 +55,7 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	protected String cleanup(final String s) {
-		final String ss = fixSpecial(s);  //TODO is there something implemented to replace strange symbols with latin letters?
-		final String s0 = ss.toLowerCase();
+		final String s0 = s.toLowerCase();
 		final String s1 = fixAliases(s0);
 		final String s2 = nfd(s1);
 		final String s3 = s2.replaceAll("&ndash;", " ");
@@ -63,15 +63,12 @@ public abstract class AbstractPaceFunctions {
 		final String s5 = s4.replaceAll("&quot;", " ");
 		final String s6 = s5.replaceAll("&minus;", " ");
 		final String s7 = s6.replaceAll("([0-9]+)", " $1 ");
-		final String s8 = s7.replaceAll("[^\\p{ASCII}]|\\p{Punct}", " ");
-		final String s9 = s8.replaceAll("\\n", " ");
-		final String s10 = s9.replaceAll("(?m)\\s+", " ");
-		final String s11 = s10.trim();
-		return s11;
-	}
-
-	protected String finalCleanup(final String s) {
-		return s.toLowerCase();
+		final String s8 = s7.replaceAll("[^\\p{ASCII}]", "");
+		final String s9 = s8.replaceAll("[\\p{Punct}]", " ");
+		final String s10 = s9.replaceAll("\\n", " ");
+		final String s11 = s10.replaceAll("(?m)\\s+", " ");
+		final String s12 = s11.trim();
+		return s12;
 	}
 
 	protected boolean checkNumbers(final String a, final String b) {
@@ -96,16 +93,6 @@ public abstract class AbstractPaceFunctions {
 
 	protected String getNumbers(final String s) {
 		return s.replaceAll("\\D", "");
-	}
-
-	//sometimes the toLowerCase() produces error, this is meant to prevent them by replacing special character before the lowercase function
-	protected static String fixSpecial(final String s) {
-		final StringBuilder sb = new StringBuilder();
-		for (final char ch : Lists.charactersOf(s)) {
-			final int i = StringUtils.indexOf(special_from, ch);
-			sb.append(i >= 0 ? special_to.charAt(i) : ch);
-		}
-		return sb.toString();
 	}
 
 	protected static String fixAliases(final String s) {
@@ -134,20 +121,19 @@ public abstract class AbstractPaceFunctions {
 		return s != null;
 	}
 
-	// ///////////////////////
-
 	protected String normalize(final String s) {
-		return nfd(s).toLowerCase()
+		return nfd(s)
+				.toLowerCase()
 				// do not compact the regexes in a single expression, would cause StackOverflowError in case of large input strings
-				.replaceAll("(\\W)+", " ")
-				.replaceAll("(\\p{InCombiningDiacriticalMarks})+", " ")
+				.replaceAll("[^ \\w]+", "")
+				.replaceAll("(\\p{InCombiningDiacriticalMarks})+", "")
 				.replaceAll("(\\p{Punct})+", " ")
 				.replaceAll("(\\d)+", " ")
 				.replaceAll("(\\n)+", " ")
 				.trim();
 	}
 
-	private String nfd(final String s) {
+	public String nfd(final String s) {
 		return Normalizer.normalize(s, Normalizer.Form.NFD);
 	}
 
@@ -186,8 +172,6 @@ public abstract class AbstractPaceFunctions {
 		return newset;
 	}
 
-	// ////////////////////
-
 	public static Set<String> loadFromClasspath(final String classpath) {
 		final Set<String> h = Sets.newHashSet();
 		try {
@@ -217,17 +201,6 @@ public abstract class AbstractPaceFunctions {
 		return m;
 	}
 
-	//translate the string: replace the keywords with the code
-	public String translate(String s1, Map<String, String> translationMap){
-		final StringTokenizer st = new StringTokenizer(s1);
-		final StringBuilder sb = new StringBuilder();
-		while (st.hasMoreTokens()){
-			final String token = st.nextToken();
-			sb.append(translationMap.getOrDefault(token,token) + " ");
-		}
-		return sb.toString().trim();
-	}
-
 	public String removeKeywords(String s, Set<String> keywords) {
 
 		s = " " + s + " ";
@@ -237,7 +210,6 @@ public abstract class AbstractPaceFunctions {
 
 		return s.trim();
 	}
-
 
 	public double keywordsCompare(Set<String> s1, Set<String> s2, Map<String, String> translationMap){
 
@@ -251,23 +223,6 @@ public abstract class AbstractPaceFunctions {
         else
             return (double)CollectionUtils.intersection(k1,k2).size()/(double)longer;
     }
-
-	//returns true if at least 1 city is in common
-    //returns true if no cities are contained in names
-    //returns false if one of the two names have no city
-	public boolean sameCity(Set<String> s1, Set<String> s2){
-
-		Set<String> c1 = citiesToCodes(s1);
-		Set<String> c2 = citiesToCodes(s2);
-
-        if (c1.isEmpty() && c2.isEmpty())
-			return true;
-		else {
-            if (c1.isEmpty() ^ c2.isEmpty())
-                return false;
-            return CollectionUtils.intersection(c1, c2).size() > 0;
-		}
-	}
 
 	//convert the set of keywords to codes
 	public Set<String> toCodes(Set<String> keywords, Map<String, String> translationMap) {
@@ -294,7 +249,7 @@ public abstract class AbstractPaceFunctions {
 		return pid.toLowerCase().replaceAll(DOI_PREFIX, "");
 	}
 
-	//get the list of codes into the input string
+	//get the list of keywords into the input string
 	public Set<String> getKeywords(String s1, Map<String, String> translationMap, int windowSize){
 
 		String s = s1;
@@ -311,10 +266,10 @@ public abstract class AbstractPaceFunctions {
 		while (length != 0) {
 
 			for (int i = 0; i<=tokens.size()-length; i++){
-				String candidate = Joiner.on(" ").join(tokens.subList(i, i + length));
+				String candidate = concat(tokens.subList(i, i + length));
 				if (translationMap.containsKey(candidate)) {
 					codes.add(candidate);
-					s = s.replace(candidate, "");
+					s = s.replace(candidate, "").trim();
 				}
 			}
 

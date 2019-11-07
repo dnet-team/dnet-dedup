@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class TreeNodeStats implements Serializable {
 
     private DescriptiveStatistics stats;
-    private int    missCount  = 0;
+    private int undefinedCount = 0; //counter for the number of undefined comparisons between the fields in the tree node
     private int fieldsCount = 0;
     private double weightsSum = 0.0;
 
@@ -15,8 +15,8 @@ public class TreeNodeStats implements Serializable {
         this.stats = new DescriptiveStatistics();
     }
 
-    public TreeNodeStats(int missCount, int fieldsCount, double weightsSum) {
-        this.missCount = missCount;
+    public TreeNodeStats(int undefinedCount, int fieldsCount, double weightsSum) {
+        this.undefinedCount = undefinedCount;
         this.fieldsCount = fieldsCount;
         this.weightsSum = weightsSum;
     }
@@ -29,12 +29,12 @@ public class TreeNodeStats implements Serializable {
         this.stats = stats;
     }
 
-    public int getMissCount() {
-        return missCount;
+    public int getUndefinedCount() {
+        return undefinedCount;
     }
 
-    public void setMissCount(int missCount) {
-        this.missCount = missCount;
+    public void setUndefinedCount(int undefinedCount) {
+        this.undefinedCount = undefinedCount;
     }
 
     public int getFieldsCount() {
@@ -57,8 +57,8 @@ public class TreeNodeStats implements Serializable {
         this.weightsSum += delta;
     }
 
-    public void incrementMissCount(){
-        this.missCount += 1;
+    public void incrementUndefinedCount(){
+        this.undefinedCount += 1;
     }
 
     public void incrementScoresSum(double delta){
@@ -72,11 +72,15 @@ public class TreeNodeStats implements Serializable {
                 return stats.getMean();
             case SUM:
                 return stats.getSum();
+            case SC:
+            case OR:
             case MAX:
                 return stats.getMax();
+            case NC:
+            case AND:
             case MIN:
                 return stats.getMin();
-            case WEIGHTED_MEAN:
+            case W_MEAN:
                 return stats.getSum()/weightsSum;
             default:
                 return 0.0;

@@ -1,11 +1,8 @@
 package eu.dnetlib.reporter;
 
-import eu.dnetlib.Utility;
-import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.util.Reporter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.spark.SparkContext;
 import org.apache.spark.util.LongAccumulator;
 import scala.Serializable;
 import scala.Tuple2;

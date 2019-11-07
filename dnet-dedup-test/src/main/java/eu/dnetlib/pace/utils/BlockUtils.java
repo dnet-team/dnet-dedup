@@ -1,7 +1,7 @@
 package eu.dnetlib.pace.utils;
 
 import com.google.common.collect.Lists;
-import eu.dnetlib.Block;
+import eu.dnetlib.support.Block;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import scala.Tuple2;

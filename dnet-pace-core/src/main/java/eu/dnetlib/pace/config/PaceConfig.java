@@ -1,7 +1,7 @@
 package eu.dnetlib.pace.config;
 
 import com.google.common.collect.Maps;
-
+import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
 import eu.dnetlib.pace.tree.support.TreeNodeDef;
@@ -9,11 +9,10 @@ import eu.dnetlib.pace.util.PaceResolver;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.Serializable;
-import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 
-public class PaceConfig implements Serializable {
+public class PaceConfig extends AbstractPaceFunctions implements Serializable {
 
 	private List<FieldDef> model;
 
@@ -46,7 +45,7 @@ public class PaceConfig implements Serializable {
 		for (String key : synonyms.keySet()) {
 			for (String term : synonyms.get(key)){
 				translationMap.put(
-						Normalizer.normalize(term.toLowerCase(), Normalizer.Form.NFD),
+						normalize(term.toLowerCase()),
 				key);
 			}
 		}

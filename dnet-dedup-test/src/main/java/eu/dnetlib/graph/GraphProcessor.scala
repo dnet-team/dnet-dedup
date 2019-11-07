@@ -1,7 +1,7 @@
 package eu.dnetlib.graph
 
-import eu.dnetlib.ConnectedComponent
 import eu.dnetlib.pace.model.MapDocument
+import eu.dnetlib.support.ConnectedComponent
 import org.apache.spark.graphx._
 import org.apache.spark.rdd.RDD
 

@@ -40,9 +40,11 @@ public class TreeProcessor {
 
 			TreeNodeStats stats = currentNode.evaluate(doc1, doc2, config);
 
-			if (!currentNode.isIgnoreMissing() && stats.getMissCount()>0) {
+			//if ignoreUndefined=false the miss is considered as undefined
+			if (!currentNode.isIgnoreUndefined() && stats.getUndefinedCount()>0) {
 				current = currentNode.getUndefined();
 			}
+			//if ignoreUndefined=true the miss is ignored and the score computed anyway
 			else if (stats.getFinalScore(currentNode.getAggregation()) >= currentNode.getThreshold()) {
 				current = currentNode.getPositive();
 			}

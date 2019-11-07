@@ -31,10 +31,7 @@ public class Level2JaroWinklerTitle extends AbstractComparator {
 
 		if (check) return 0.5;
 
-		final String cca = finalCleanup(ca);
-		final String ccb = finalCleanup(cb);
-
-		return ssalgo.score(cca, ccb);
+		return ssalgo.score(ca, cb);
 	}
 
 	@Override

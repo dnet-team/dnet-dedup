@@ -14,25 +14,25 @@ public class FieldConf implements Serializable {
     private double weight = 1.0;    //weight for the field (to be used in the aggregation)
     private Map<String,Number> params;  //parameters
 
-    private boolean ignoreMissing;
+    private boolean countIfUndefined;
 
-    public boolean isIgnoreMissing() {
-        return ignoreMissing;
+    public boolean isCountIfUndefined() {
+        return countIfUndefined;
     }
 
-    public void setIgnoreMissing(boolean ignoreMissing) {
-        this.ignoreMissing = ignoreMissing;
+    public void setCountIfUndefined(boolean countIfUndefined) {
+        this.countIfUndefined = countIfUndefined;
     }
 
     public FieldConf() {
     }
 
-    public FieldConf(String field, String comparator, double weight, Map<String, Number> params, boolean ignoreMissing) {
+    public FieldConf(String field, String comparator, double weight, Map<String, Number> params, boolean countIfUndefined) {
         this.field = field;
         this.comparator = comparator;
         this.weight = weight;
         this.params = params;
-        this.ignoreMissing = ignoreMissing;
+        this.countIfUndefined = countIfUndefined;
     }
 
     public String getField() {

@@ -4,11 +4,15 @@ import eu.dnetlib.pace.util.PaceException;
 
 public enum AggType {
 
-    WEIGHTED_MEAN,
-    AVG,
+    W_MEAN, //weighted mean
+    AVG, //average
     SUM,
     MAX,
-    MIN;
+    MIN,
+    NC, //necessary condition
+    SC, //sufficient condition
+    AND,
+    OR;
 
     public static AggType getEnum(String value) {
 

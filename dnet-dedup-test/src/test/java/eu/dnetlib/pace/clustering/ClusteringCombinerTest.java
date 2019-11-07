@@ -1,7 +1,6 @@
 package eu.dnetlib.pace.clustering;
 
 import eu.dnetlib.pace.AbstractProtoPaceTest;
-import eu.dnetlib.pace.clustering.ClusteringCombiner;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.FieldListImpl;
@@ -20,20 +19,23 @@ public class ClusteringCombinerTest extends AbstractProtoPaceTest {
 
 	@Before
 	public void setUp() {
-		config = getResultFullConf();
+		config = getOrganizationTestConf();
 	}
 
 	@Test
 	public void testCombine() {
-		String title = "Dipping in Cygnus X-2 in a multi-wavelength campaign due to absorption of extended ADC emission";
-		MapDocument result = result(config, "A", title, "2013");
 
-		FieldListImpl fl = new FieldListImpl();
-		fl.add(new FieldValueImpl(Type.String, "desc", "lorem ipsum cabalie qwerty"));
+		final MapDocument organization = organization(config, "A", "University of Turin", "UNITO");
+		log.info("University of Turin");
+		log.info(ClusteringCombiner.combine(organization, config));
+	}
 
-		result.getFieldMap().put("desc", fl);
-		log.info(title);
-		log.info(ClusteringCombiner.combine(result, config));
+	@Test
+	public void testCombineBlacklistAware() {
+
+		final MapDocument organization = organization(config, "A", "University of Turin", "UNITO");
+		log.info("University of Turin");
+		log.info(BlacklistAwareClusteringCombiner.filterAndCombine(organization, config));
 	}
 
 }

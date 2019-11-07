@@ -3,6 +3,8 @@ package eu.dnetlib.pace.config;
 import eu.dnetlib.pace.AbstractPaceTest;
 import org.junit.Test;
 
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -11,14 +13,9 @@ public class ConfigTest extends AbstractPaceTest {
 
 	@Test
 	public void dedupConfigSerializationTest() {
-		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("org.curr.conf"));
+		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("organization.current.conf"));
 
 		final String conf = cfgFromClasspath.toString();
-
-//		System.out.println("*****SERIALIZED*****");
-//		System.out.println(conf);
-//		System.out.println("*****FROM CLASSPATH*****");
-//		System.out.println(readFromClasspath("result.pace.conf.json"));
 
 		final DedupConfig cfgFromSerialization = DedupConfig.load(conf);
 
@@ -27,29 +24,36 @@ public class ConfigTest extends AbstractPaceTest {
 		assertNotNull(cfgFromClasspath);
 		assertNotNull(cfgFromSerialization);
 
-
 	}
 
 	@Test
 	public void dedupConfigTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("org.curr.conf"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("organization.current.conf"));
 
 		System.out.println(load.toString());
 	}
 
 	@Test
-	public void translationMapTest() {
+	public void initTranslationMapTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("org.curr.conf"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("organization.current.conf"));
 
-		System.out.println("translationMap = " + load.getPace().translationMap().toString());
+		Map<String, String> translationMap = load.translationMap();
+
+		System.out.println("translationMap = " + translationMap.size());
+
+		for (String key: translationMap.keySet()) {
+			if (translationMap.get(key).equals("key::1"))
+				System.out.println("key = " + key);
+		}
+
 	}
 
 	@Test
 	public void emptyTranslationMapTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("org.test.conf"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("organization.no_synonyms.conf"));
 
 		assertEquals(0, load.getPace().translationMap().keySet().size());
 	}
