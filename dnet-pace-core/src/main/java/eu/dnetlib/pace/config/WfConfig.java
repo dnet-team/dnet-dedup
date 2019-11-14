@@ -256,9 +256,8 @@ public class WfConfig implements Serializable {
 		return maxIterations;
 	}
 
-	public WfConfig setMaxIterations(int maxIterations) {
+	public void setMaxIterations(int maxIterations) {
 		this.maxIterations = maxIterations;
-		return this;
 	}
 
 	/*
