@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.comparators;
 
 import eu.dnetlib.pace.clustering.NGramUtils;
+import eu.dnetlib.pace.tree.CityMatch;
 import eu.dnetlib.pace.tree.JaroWinklerNormalizedName;
 import eu.dnetlib.pace.config.DedupConfig;
 import org.junit.Before;
@@ -129,4 +130,24 @@ public class ComparatorTest extends AbstractPaceFunctions {
 
 		System.out.println("result = " + result);
 	}
+
+	@Test
+	public void cityMatchTest() {
+		final CityMatch cityMatch = new CityMatch(params);
+
+		//both names with no cities
+		assertEquals(1.0, cityMatch.distance("Università", "Centro di ricerca", conf));
+
+		//one of the two names with no cities
+		assertEquals(-1.0, cityMatch.distance("Università di Bologna", "Centro di ricerca", conf));
+
+		//both names with cities (same)
+		assertEquals(1.0, cityMatch.distance("Universita di Bologna", "Biblioteca di Bologna", conf));
+
+		//both names with cities (different)
+		assertEquals(0.0, cityMatch.distance("Universita di Bologna", "Universita di Torino", conf));
+
+	}
+
+
 }

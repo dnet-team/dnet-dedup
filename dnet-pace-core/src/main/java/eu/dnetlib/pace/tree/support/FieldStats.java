@@ -1,0 +1,54 @@
+package eu.dnetlib.pace.tree.support;
+
+import eu.dnetlib.pace.util.PaceException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+public class FieldStats implements Serializable {
+
+    private double weight;    //weight for the field (to be used in the aggregation)
+    private double result;    //the result of the comparison
+
+    private boolean countIfUndefined;
+
+    public FieldStats(double weight, double result, boolean countIfUndefined) {
+        this.weight = weight;
+        this.result = result;
+        this.countIfUndefined = countIfUndefined;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
+    }
+
+    public boolean isCountIfUndefined() {
+        return countIfUndefined;
+    }
+
+    public void setCountIfUndefined(boolean countIfUndefined) {
+        this.countIfUndefined = countIfUndefined;
+    }
+
+    @Override
+    public String toString(){
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (IOException e) {
+            throw new PaceException("Impossible to convert to JSON: ", e);
+        }
+    }
+}

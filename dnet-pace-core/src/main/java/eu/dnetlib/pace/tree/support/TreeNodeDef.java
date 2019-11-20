@@ -39,7 +39,6 @@ public class TreeNodeDef implements Serializable {
     public TreeNodeStats evaluate(MapDocument doc1, MapDocument doc2, Config conf) {
 
         TreeNodeStats stats = new TreeNodeStats();
-        stats.setFieldsCount(fields.size());
 
         for (FieldConf fieldConf : fields) {
 
@@ -47,16 +46,7 @@ public class TreeNodeDef implements Serializable {
 
             double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
 
-            if (result == -1) { //if the comparison is undefined
-                stats.incrementUndefinedCount();
-                if (fieldConf.isCountIfUndefined()) { //if it must be taken into account, increment weights (i.e. the average would be lower)
-                    stats.incrementWeightsSum(weight);
-                }
-            }
-            else {  //if the field is not missing
-                stats.incrementScoresSum(weight * result);
-                stats.incrementWeightsSum(weight);
-            }
+            stats.addFieldStats(fieldConf.getComparator() + " on " + fieldConf.getField(), new FieldStats(weight, result, fieldConf.isCountIfUndefined()));
 
         }
 

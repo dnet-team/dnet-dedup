@@ -6,12 +6,13 @@ import eu.dnetlib.pace.util.PaceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * The compare between two documents is given by the weighted mean of the field distances
  */
-public class TreeProcessor {
+public class TreeProcessor{
 
 	private static final Log log = LogFactory.getLog(TreeProcessor.class);
 
@@ -24,10 +25,12 @@ public class TreeProcessor {
 	public boolean compare(final MapDocument a, final MapDocument b) {
 
 		//evaluate the decision tree
-		return evaluateTree(a, b) == MatchType.MATCH;
+		return evaluateTree(a, b).getResult() == MatchType.MATCH;
 	}
 
-	public MatchType evaluateTree(final MapDocument doc1, final MapDocument doc2){
+	public TreeStats evaluateTree(final MapDocument doc1, final MapDocument doc2){
+
+		TreeStats treeStats = new TreeStats();
 
 		String current = "start";
 
@@ -39,9 +42,10 @@ public class TreeProcessor {
 				throw new PaceException("The Tree Node doesn't exist: " + current);
 
 			TreeNodeStats stats = currentNode.evaluate(doc1, doc2, config);
+			treeStats.addNodeStats(current, stats);
 
 			//if ignoreUndefined=false the miss is considered as undefined
-			if (!currentNode.isIgnoreUndefined() && stats.getUndefinedCount()>0) {
+			if (!currentNode.isIgnoreUndefined() && stats.undefinedCount()>0) {
 				current = currentNode.getUndefined();
 			}
 			//if ignoreUndefined=true the miss is ignored and the score computed anyway
@@ -54,7 +58,8 @@ public class TreeProcessor {
 
 		}
 
-		return MatchType.parse(current);
+		treeStats.setResult(MatchType.parse(current));
+		return treeStats;
 	}
 
 	public double computeScore(final MapDocument doc1, final MapDocument doc2) {
@@ -72,7 +77,7 @@ public class TreeProcessor {
 
 			score = stats.getFinalScore(currentNode.getAggregation());
 			//if ignoreUndefined=false the miss is considered as undefined
-			if (!currentNode.isIgnoreUndefined() && stats.getUndefinedCount()>0) {
+			if (!currentNode.isIgnoreUndefined() && stats.undefinedCount()>0) {
 				current = currentNode.getUndefined();
 			}
 			//if ignoreUndefined=true the miss is ignored and the score computed anyway

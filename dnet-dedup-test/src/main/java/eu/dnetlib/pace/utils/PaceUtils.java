@@ -11,6 +11,7 @@ import eu.dnetlib.pace.model.ProtoDocumentBuilder;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,7 @@ import static eu.dnetlib.proto.utils.OAFProtoUtils.*;
 import static eu.dnetlib.proto.utils.OAFProtoUtils.author;
 import static eu.dnetlib.proto.utils.OAFProtoUtils.sp;
 
-public class PaceUtils {
+public class PaceUtils implements Serializable {
 
     public static MapDocument result(final Config config, final String id, final String title) {
         return result(config, id, title, null, new ArrayList<>(), null);

@@ -1,90 +1,108 @@
 package eu.dnetlib.pace.tree.support;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TreeNodeStats implements Serializable {
 
-    private DescriptiveStatistics stats;
-    private int undefinedCount = 0; //counter for the number of undefined comparisons between the fields in the tree node
-    private int fieldsCount = 0;
-    private double weightsSum = 0.0;
+    private Map<String, FieldStats> results; //this is an accumulator for the results of the node
 
     public TreeNodeStats(){
-        this.stats = new DescriptiveStatistics();
+        this.results = new HashMap<>();
     }
 
-    public TreeNodeStats(int undefinedCount, int fieldsCount, double weightsSum) {
-        this.undefinedCount = undefinedCount;
-        this.fieldsCount = fieldsCount;
-        this.weightsSum = weightsSum;
+    public Map<String, FieldStats> getResults() {
+        return results;
     }
 
-    public DescriptiveStatistics getStats() {
-        return stats;
+    public void addFieldStats(String id, FieldStats fieldStats){
+        this.results.put(id, fieldStats);
     }
 
-    public void setStats(DescriptiveStatistics stats) {
-        this.stats = stats;
+    public int fieldsCount(){
+        return this.results.size();
     }
 
-    public int getUndefinedCount() {
+    public int undefinedCount(){
+        int undefinedCount = 0;
+        for(FieldStats fs: this.results.values()){
+            if(fs.getResult() == -1)
+                undefinedCount ++;
+        }
         return undefinedCount;
     }
 
-    public void setUndefinedCount(int undefinedCount) {
-        this.undefinedCount = undefinedCount;
+    public double scoreSum(){
+        double scoreSum = 0.0;
+        for(FieldStats fs: this.results.values()){
+            if(fs.getResult()>=0.0) {
+                scoreSum += fs.getResult();
+            }
+        }
+        return scoreSum;
     }
 
-    public int getFieldsCount() {
-        return fieldsCount;
+    //return the sum of the weights without considering the fields with countIfMissing=false && result=-1
+    public double weightSum(){
+        double weightSum = 0.0;
+        for(FieldStats fs: this.results.values()){
+            if(fs.getResult()>=0.0 || (fs.getResult()<0.0 && fs.isCountIfUndefined())) {
+                weightSum += fs.getWeight();
+            }
+        }
+        return weightSum;
     }
 
-    public void setFieldsCount(int fields) {
-        this.fieldsCount = fields;
+    public double weightedScoreSum(){
+        double weightedScoreSum = 0.0;
+        for(FieldStats fs: this.results.values()){
+            if(fs.getResult()>=0.0) {
+                weightedScoreSum += fs.getResult()*fs.getWeight();
+            }
+        }
+        return weightedScoreSum;
     }
 
-    public double getWeightsSum() {
-        return weightsSum;
+    public double max(){
+        double max = -1.0;
+        for(FieldStats fs: this.results.values()){
+            if(fs.getResult()>max)
+                max = fs.getResult();
+        }
+        return max;
     }
 
-    public void setWeightsSum(double weightsSum) {
-        this.weightsSum = weightsSum;
-    }
-
-    public void incrementWeightsSum(double delta){
-        this.weightsSum += delta;
-    }
-
-    public void incrementUndefinedCount(){
-        this.undefinedCount += 1;
-    }
-
-    public void incrementScoresSum(double delta){
-        this.stats.addValue(delta);
+    public double min(){
+        double min = 100.0;  //random high value
+        for(FieldStats fs: this.results.values()){
+            if(fs.getResult()<min) {
+                if (fs.getResult()>=0.0 || (fs.getResult() == -1 && fs.isCountIfUndefined()))
+                    min = fs.getResult();
+            }
+        }
+        return min;
     }
 
     public double getFinalScore(AggType aggregation){
 
         switch (aggregation){
             case AVG:
-                return stats.getMean();
+                return scoreSum()/fieldsCount();
             case SUM:
-                return stats.getSum();
+                return scoreSum();
             case SC:
             case OR:
             case MAX:
-                return stats.getMax();
+                return max();
             case NC:
             case AND:
             case MIN:
-                return stats.getMin();
+                return min();
             case W_MEAN:
-                return stats.getSum()/weightsSum;
+                return weightedScoreSum()/weightSum();
             default:
                 return 0.0;
         }
     }
-
 }

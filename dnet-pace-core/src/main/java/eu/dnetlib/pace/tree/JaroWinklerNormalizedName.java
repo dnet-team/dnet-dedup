@@ -45,40 +45,15 @@ public class JaroWinklerNormalizedName extends AbstractComparator {
         Set<String> cities1 = getCities(ca, params.getOrDefault("windowSize", 4).intValue());
         Set<String> cities2 = getCities(cb, params.getOrDefault("windowSize", 4).intValue());
 
-        if (checkCities(cities1,cities2)) {
+        ca = removeKeywords(ca, keywords1);
+        ca = removeKeywords(ca, cities1);
+        cb = removeKeywords(cb, keywords2);
+        cb = removeKeywords(cb, cities2);
 
-            if (keywordsCompare(keywords1, keywords2, conf.translationMap())>params.getOrDefault("threshold", 0.5).doubleValue()) {
-
-                ca = removeKeywords(ca, keywords1);
-                ca = removeKeywords(ca, cities1);
-                cb = removeKeywords(cb, keywords2);
-                cb = removeKeywords(cb, cities2);
-
-                if (ca.isEmpty() && cb.isEmpty())
-                    return 1.0;
-                else
-                    return normalize(ssalgo.score(ca,cb));
-
-            }
-        }
-
-        return 0.0;
-    }
-
-    //returns true if at least 1 city is in common
-    //returns true if no cities are contained in names
-    //returns false if one of the two names have no city
-    public boolean checkCities(Set<String> s1, Set<String> s2){
-        Set<String> c1 = citiesToCodes(s1);
-        Set<String> c2 = citiesToCodes(s2);
-
-        if (c1.isEmpty() && c2.isEmpty())
-            return true;
-        else {
-            if (c1.isEmpty() ^ c2.isEmpty())
-                return false;
-            return CollectionUtils.intersection(c1, c2).size() > 0;
-        }
+        if (ca.isEmpty() && cb.isEmpty())
+            return 1.0;
+        else
+            return normalize(ssalgo.score(ca,cb));
     }
 
     @Override

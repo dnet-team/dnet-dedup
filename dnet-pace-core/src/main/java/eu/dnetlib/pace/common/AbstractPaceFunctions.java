@@ -216,13 +216,18 @@ public abstract class AbstractPaceFunctions {
 		Set<String> k1 = keywordsToCodes(s1, translationMap);
 		Set<String> k2 = keywordsToCodes(s2, translationMap);
 
-        int longer = (k1.size()>k2.size())?k1.size():k2.size();
-
         if (k1.isEmpty() || k2.isEmpty())
             return 1.0;
-        else
-            return (double)CollectionUtils.intersection(k1,k2).size()/(double)longer;
+
+        return commonElementsPercentage(k1, k2);
     }
+
+    public double commonElementsPercentage(Set<String> s1, Set<String> s2){
+
+		int longer = (s1.size()>s2.size())?s1.size():s2.size();
+
+		return (double)CollectionUtils.intersection(s1,s2).size()/(double)longer;
+	}
 
 	//convert the set of keywords to codes
 	public Set<String> toCodes(Set<String> keywords, Map<String, String> translationMap) {
