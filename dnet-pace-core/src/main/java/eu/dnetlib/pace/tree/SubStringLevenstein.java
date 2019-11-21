@@ -31,9 +31,9 @@ public class SubStringLevenstein extends AbstractComparator {
 		super(w, new com.wcohen.ss.Levenstein());
 	}
 
-	public SubStringLevenstein(Map<String, Number> params){
+	public SubStringLevenstein(Map<String, String> params){
 		super(params, new com.wcohen.ss.Levenstein());
-		this.limit = params.get("limit").intValue();
+		this.limit = Integer.parseInt(params.getOrDefault("limit", "1"));
 	}
 
 	/**

@@ -10,9 +10,9 @@ import java.util.Set;
 @ComparatorClass("keywordMatch")
 public class KeywordMatch extends AbstractComparator {
 
-    Map<String, Number> params;
+    Map<String, String> params;
 
-    public KeywordMatch(Map<String, Number> params) {
+    public KeywordMatch(Map<String, String> params) {
         super(params);
         this.params = params;
     }
@@ -29,8 +29,8 @@ public class KeywordMatch extends AbstractComparator {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
-        Set<String> keywords1 = getKeywords(ca, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
-        Set<String> keywords2 = getKeywords(cb, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords1 = getKeywords(ca, conf.translationMap(), Integer.parseInt(params.getOrDefault("windowSize", "4")));
+        Set<String> keywords2 = getKeywords(cb, conf.translationMap(), Integer.parseInt(params.getOrDefault("windowSize", "4")));
 
         Set<String> codes1 = toCodes(keywords1, conf.translationMap());
         Set<String> codes2 = toCodes(keywords2, conf.translationMap());
@@ -41,7 +41,7 @@ public class KeywordMatch extends AbstractComparator {
         else {
             if (codes1.isEmpty() ^ codes2.isEmpty())
                 return -1; //undefined if one of the two has no keywords
-            return commonElementsPercentage(codes1, codes2) > params.getOrDefault("threshold", 0).intValue() ? 1.0 : 0.0;
+            return commonElementsPercentage(codes1, codes2) > Double.parseDouble(params.getOrDefault("threshold", "0.0")) ? 1.0 : 0.0;
         }
     }
 }

@@ -38,7 +38,7 @@ public class PaceResolver implements Serializable {
         }
     }
 
-    public Comparator getComparator(String name, Map<String, Number> params) throws PaceException {
+    public Comparator getComparator(String name, Map<String, String> params) throws PaceException {
         try {
             return comparators.get(name).getDeclaredConstructor(Map.class).newInstance(params);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | NullPointerException e) {

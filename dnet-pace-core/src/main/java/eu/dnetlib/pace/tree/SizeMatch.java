@@ -24,7 +24,7 @@ public class SizeMatch extends AbstractComparator {
      * @param params
      *            the parameters
      */
-    public SizeMatch(final Map<String, Number> params) {
+    public SizeMatch(final Map<String, String> params) {
         super(params);
     }
 

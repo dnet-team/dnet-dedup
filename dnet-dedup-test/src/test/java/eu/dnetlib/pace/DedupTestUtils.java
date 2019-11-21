@@ -1,14 +1,10 @@
 package eu.dnetlib.pace;
 
-import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
-import eu.dnetlib.pace.tree.support.TreeNodeDef;
-import eu.dnetlib.pace.tree.support.TreeNodeStats;
 import eu.dnetlib.support.ConnectedComponent;
 import org.apache.spark.api.java.JavaRDD;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class DedupTestUtils {
 
@@ -21,11 +17,6 @@ public abstract class DedupTestUtils {
         connectedComponents.foreach(cc -> {
             System.out.println(cc);
         });
-//        connectedComponents.foreach(cc -> {
-//            cc.getDocs().stream().forEach(d -> {
-//                System.out.println(d.getFieldMap().get("legalname") + " | " + d.getFieldMap().get("legalshortname"));
-//            });
-//        });
         //print nondeduped
         nonDeduplicated.foreach(cc -> {
             System.out.println(cc);

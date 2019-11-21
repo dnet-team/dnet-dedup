@@ -13,9 +13,9 @@ import java.util.Set;
 @ComparatorClass("jaroWinklerNormalizedName")
 public class JaroWinklerNormalizedName extends AbstractComparator {
 
-    private Map<String, Number> params;
+    private Map<String, String> params;
 
-    public JaroWinklerNormalizedName(Map<String, Number> params){
+    public JaroWinklerNormalizedName(Map<String, String> params){
         super(params, new com.wcohen.ss.JaroWinkler());
         this.params = params;
     }
@@ -39,11 +39,11 @@ public class JaroWinklerNormalizedName extends AbstractComparator {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
-        Set<String> keywords1 = getKeywords(ca, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
-        Set<String> keywords2 = getKeywords(cb, conf.translationMap(), params.getOrDefault("windowSize", 4).intValue());
+        Set<String> keywords1 = getKeywords(ca, conf.translationMap(), Integer.parseInt(params.getOrDefault("windowSize", "4")));
+        Set<String> keywords2 = getKeywords(cb, conf.translationMap(), Integer.parseInt(params.getOrDefault("windowSize", "4")));
 
-        Set<String> cities1 = getCities(ca, params.getOrDefault("windowSize", 4).intValue());
-        Set<String> cities2 = getCities(cb, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> cities1 = getCities(ca, Integer.parseInt(params.getOrDefault("windowSize", "4")));
+        Set<String> cities2 = getCities(cb, Integer.parseInt(params.getOrDefault("windowSize", "4")));
 
         ca = removeKeywords(ca, keywords1);
         ca = removeKeywords(ca, cities1);

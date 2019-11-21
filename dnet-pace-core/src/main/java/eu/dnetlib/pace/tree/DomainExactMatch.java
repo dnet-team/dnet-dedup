@@ -10,7 +10,7 @@ import java.util.Map;
 @ComparatorClass("domainExactMatch")
 public class DomainExactMatch extends ExactMatchIgnoreCase {
 
-    public DomainExactMatch(final Map<String, Number> params) {
+    public DomainExactMatch(final Map<String, String> params) {
         super(params);
     }
 

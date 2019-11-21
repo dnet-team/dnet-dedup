@@ -8,11 +8,11 @@ import java.util.Map;
 
 public class UtilTest {
 
-    Map<String, Number> params;
+    Map<String, String> params;
 
     @Before
     public void setUp(){
-        params = new HashMap<String, Number>();
+        params = new HashMap<String, String>();
     }
 
     @Test

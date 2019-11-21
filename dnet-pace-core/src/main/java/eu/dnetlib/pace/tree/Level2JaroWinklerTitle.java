@@ -10,7 +10,7 @@ import java.util.Map;
 @ComparatorClass("level2JaroWinklerTitle")
 public class Level2JaroWinklerTitle extends AbstractComparator {
 
-	public Level2JaroWinklerTitle(Map<String,Number> params){
+	public Level2JaroWinklerTitle(Map<String,String> params){
 		super(params, new com.wcohen.ss.Level2JaroWinkler());
 	}
 

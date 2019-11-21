@@ -10,7 +10,7 @@ import java.util.Map;
 @ComparatorClass("exactMatchIgnoreCase")
 public class ExactMatchIgnoreCase extends AbstractComparator {
 
-    public ExactMatchIgnoreCase(Map<String, Number> params) {
+    public ExactMatchIgnoreCase(Map<String, String> params) {
         super(params);
     }
 

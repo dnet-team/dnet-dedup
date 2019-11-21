@@ -1,6 +1,5 @@
 package eu.dnetlib.pace.tree;
 
-import java.util.List;
 import java.util.Map;
 
 import eu.dnetlib.pace.model.Field;
@@ -16,7 +15,7 @@ public class DoiExactMatch extends ExactMatchIgnoreCase {
 
     public final String PREFIX = "(http:\\/\\/dx\\.doi\\.org\\/)|(doi:)";
 
-    public DoiExactMatch(final Map<String, Number> params) {
+    public DoiExactMatch(final Map<String, String> params) {
         super(params);
     }
 

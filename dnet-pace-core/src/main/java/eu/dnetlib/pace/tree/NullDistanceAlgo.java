@@ -14,7 +14,7 @@ import java.util.Map;
 @ComparatorClass("null")
 public class NullDistanceAlgo implements Comparator {
 
-	public NullDistanceAlgo(Map<String, Number> params){
+	public NullDistanceAlgo(Map<String, String> params){
 	}
 
 	@Override

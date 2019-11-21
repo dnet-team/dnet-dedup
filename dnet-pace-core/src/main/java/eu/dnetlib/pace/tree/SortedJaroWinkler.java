@@ -12,7 +12,7 @@ import java.util.Map;
 @ComparatorClass("sortedJaroWinkler")
 public class SortedJaroWinkler extends AbstractSortedComparator {
 
-	public SortedJaroWinkler(Map<String,Number> params){
+	public SortedJaroWinkler(Map<String,String> params){
 		super(params, new com.wcohen.ss.Levenstein());
 	}
 

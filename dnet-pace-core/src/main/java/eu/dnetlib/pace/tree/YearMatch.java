@@ -18,7 +18,7 @@ public class YearMatch extends AbstractComparator {
 
     private int limit = 4;
 
-    public YearMatch(final Map<String, Number> params) {
+    public YearMatch(final Map<String, String> params) {
         super(params);
     }
 

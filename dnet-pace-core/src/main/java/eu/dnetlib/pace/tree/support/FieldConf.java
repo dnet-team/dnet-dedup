@@ -12,7 +12,7 @@ public class FieldConf implements Serializable {
     private String field;   //name of the field on which apply the comparator
     private String comparator;  //comparator name
     private double weight = 1.0;    //weight for the field (to be used in the aggregation)
-    private Map<String,Number> params;  //parameters
+    private Map<String,String> params;  //parameters
 
     private boolean countIfUndefined;
 
@@ -27,7 +27,7 @@ public class FieldConf implements Serializable {
     public FieldConf() {
     }
 
-    public FieldConf(String field, String comparator, double weight, Map<String, Number> params, boolean countIfUndefined) {
+    public FieldConf(String field, String comparator, double weight, Map<String, String> params, boolean countIfUndefined) {
         this.field = field;
         this.comparator = comparator;
         this.weight = weight;
@@ -59,11 +59,11 @@ public class FieldConf implements Serializable {
         this.weight = weight;
     }
 
-    public Map<String, Number> getParams() {
+    public Map<String, String> getParams() {
         return params;
     }
 
-    public void setParams(Map<String, Number> params) {
+    public void setParams(Map<String, String> params) {
         this.params = params;
     }
 

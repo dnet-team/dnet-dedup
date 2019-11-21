@@ -15,7 +15,7 @@ public class LevensteinTitle extends AbstractComparator {
 
 	private static final Log log = LogFactory.getLog(LevensteinTitle.class);
 
-	public LevensteinTitle(Map<String,Number> params){
+	public LevensteinTitle(Map<String,String> params){
 		super(params, new com.wcohen.ss.Levenstein());
 	}
 

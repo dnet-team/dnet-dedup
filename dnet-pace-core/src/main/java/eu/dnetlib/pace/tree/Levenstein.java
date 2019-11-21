@@ -9,7 +9,7 @@ import java.util.Map;
 @ComparatorClass("levenstein")
 public class Levenstein extends AbstractComparator {
 
-	public Levenstein(Map<String,Number> params){
+	public Levenstein(Map<String,String> params){
 		super(params, new com.wcohen.ss.Levenstein());
 	}
 

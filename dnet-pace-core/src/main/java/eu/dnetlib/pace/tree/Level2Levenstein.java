@@ -9,7 +9,7 @@ import java.util.Map;
 @ComparatorClass("level2Levenstein")
 public class Level2Levenstein extends AbstractComparator {
 
-	public Level2Levenstein(Map<String,Number> params){
+	public Level2Levenstein(Map<String,String> params){
 		super(params, new com.wcohen.ss.Level2Levenstein());
 	}
 

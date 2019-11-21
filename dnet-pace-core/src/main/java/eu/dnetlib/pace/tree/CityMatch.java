@@ -10,9 +10,9 @@ import java.util.Set;
 @ComparatorClass("cityMatch")
 public class CityMatch extends AbstractComparator {
 
-    private Map<String, Number> params;
+    private Map<String, String> params;
 
-    public CityMatch(Map<String, Number> params) {
+    public CityMatch(Map<String, String> params) {
         super(params);
         this.params = params;
     }
@@ -29,8 +29,8 @@ public class CityMatch extends AbstractComparator {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
-        Set<String> cities1 = getCities(ca, params.getOrDefault("windowSize", 4).intValue());
-        Set<String> cities2 = getCities(cb, params.getOrDefault("windowSize", 4).intValue());
+        Set<String> cities1 = getCities(ca, Integer.parseInt(params.getOrDefault("windowSize", "4")));
+        Set<String> cities2 = getCities(cb, Integer.parseInt(params.getOrDefault("windowSize", "4")));
 
         Set<String> codes1 = citiesToCodes(cities1);
         Set<String> codes2 = citiesToCodes(cities2);
@@ -41,7 +41,7 @@ public class CityMatch extends AbstractComparator {
         else {
             if (codes1.isEmpty() ^ codes2.isEmpty())
                 return -1; //undefined if one of the two has no cities
-            return commonElementsPercentage(codes1, codes2) > params.getOrDefault("threshold", 0).intValue() ? 1.0 : 0.0;
+            return commonElementsPercentage(codes1, codes2) > Integer.parseInt(params.getOrDefault("threshold", "0")) ? 1.0 : 0.0;
         }
     }
 }

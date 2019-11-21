@@ -10,7 +10,7 @@ import java.util.Map;
 @ComparatorClass("exactMatch")
 public class ExactMatch extends AbstractComparator {
 
-    public ExactMatch(Map<String, Number> params){
+    public ExactMatch(Map<String, String> params){
         super(params, new com.wcohen.ss.JaroWinkler());
     }
 

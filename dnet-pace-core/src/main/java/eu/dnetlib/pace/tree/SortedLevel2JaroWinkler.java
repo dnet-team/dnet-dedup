@@ -22,7 +22,7 @@ public class SortedLevel2JaroWinkler extends AbstractSortedComparator {
 		super(weight, new com.wcohen.ss.Level2JaroWinkler());
 	}
 
-	public SortedLevel2JaroWinkler(final Map<String, Number> params){
+	public SortedLevel2JaroWinkler(final Map<String, String> params){
 		super(params, new com.wcohen.ss.Level2JaroWinkler());
 	}
 

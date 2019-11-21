@@ -18,13 +18,13 @@ public abstract class AbstractComparator extends AbstractPaceFunctions implement
     /** The weight. */
     protected double weight = 0.0;
 
-    private Map<String, Number> params;
+    private Map<String, String> params;
 
-    protected AbstractComparator(Map<String, Number> params) {
+    protected AbstractComparator(Map<String, String> params) {
         this.params = params;
     }
 
-    protected AbstractComparator(Map<String, Number> params, final AbstractStringDistance ssalgo){
+    protected AbstractComparator(Map<String, String> params, final AbstractStringDistance ssalgo){
         this.params = params;
         this.weight = 1.0;
         this.ssalgo = ssalgo;

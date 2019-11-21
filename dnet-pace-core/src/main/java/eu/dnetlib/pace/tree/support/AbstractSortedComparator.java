@@ -23,8 +23,8 @@ public abstract class AbstractSortedComparator extends AbstractComparator {
         super(weight, ssalgo);
     }
 
-    protected AbstractSortedComparator(final Map<String, Number> params, final AbstractStringDistance ssalgo){
-        super(params.get("weight").doubleValue(), ssalgo);
+    protected AbstractSortedComparator(final Map<String, String> params, final AbstractStringDistance ssalgo){
+        super(Double.parseDouble(params.get("weight")), ssalgo);
     }
 
     @Override

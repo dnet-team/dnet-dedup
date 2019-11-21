@@ -14,7 +14,7 @@ import java.util.Map;
 @ComparatorClass("levensteinTitleIgnoreVersion")
 public class LevensteinTitleIgnoreVersion extends AbstractComparator {
 
-	public LevensteinTitleIgnoreVersion(Map<String,Number> params){
+	public LevensteinTitleIgnoreVersion(Map<String,String> params){
 		super(params, new com.wcohen.ss.Levenstein());
 	}
 

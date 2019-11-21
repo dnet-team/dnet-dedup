@@ -17,7 +17,7 @@ import eu.dnetlib.pace.tree.support.ComparatorClass;
 @ComparatorClass("titleVersionMatch")
 public class TitleVersionMatch extends AbstractComparator {
 
-    public TitleVersionMatch(final Map<String, Number> params) {
+    public TitleVersionMatch(final Map<String, String> params) {
         super(params);
     }
 

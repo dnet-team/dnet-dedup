@@ -23,7 +23,6 @@ public class TreeProcessor{
 	}
 
 	public boolean compare(final MapDocument a, final MapDocument b) {
-
 		//evaluate the decision tree
 		return evaluateTree(a, b).getResult() == MatchType.MATCH;
 	}

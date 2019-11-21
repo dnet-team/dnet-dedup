@@ -12,19 +12,19 @@ import java.util.Map;
 @ComparatorClass("urlMatcher")
 public class UrlMatcher extends Levenstein {
 
-    private Map<String, Number> params;
+    private Map<String, String> params;
 
-    public UrlMatcher(Map<String, Number> params){
+    public UrlMatcher(Map<String, String> params){
         super(params);
         this.params = params;
     }
 
-    public UrlMatcher(double weight, Map<String, Number> params) {
+    public UrlMatcher(double weight, Map<String, String> params) {
         super(weight);
         this.params = params;
     }
 
-    public void setParams(Map<String, Number> params) {
+    public void setParams(Map<String, String> params) {
         this.params = params;
     }
 
@@ -37,8 +37,8 @@ public class UrlMatcher extends Levenstein {
             return 0.0;
         }
 
-        Double hostW = params.get("host").doubleValue();
-        Double pathW = params.get("path").doubleValue();
+        Double hostW = Double.parseDouble(params.getOrDefault("host", "0.5"));
+        Double pathW = Double.parseDouble(params.getOrDefault("path", "0.5"));
 
         if (StringUtils.isBlank(urlA.getPath()) || StringUtils.isBlank(urlB.getPath())) {
             return hostW * 0.5;

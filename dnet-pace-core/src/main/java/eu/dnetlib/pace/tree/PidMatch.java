@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class PidMatch extends AbstractComparator {
 
     private static final Log log = LogFactory.getLog(PidMatch.class);
-    private Map<String, Number> params;
+    private Map<String, String> params;
 
-    public PidMatch(final Map<String, Number> params) {
+    public PidMatch(final Map<String, String> params) {
         super(params);
         this.params = params;
     }
@@ -50,7 +50,7 @@ public class PidMatch extends AbstractComparator {
             return 0.0;
         }
 
-        return (double)incommon / (incommon + simDiff) > params.getOrDefault("threshold", 0.5).doubleValue() ? 1 : 0;
+        return (double)incommon / (incommon + simDiff) > Double.parseDouble(params.getOrDefault("threshold", "0.5")) ? 1 : 0;
 
     }
 

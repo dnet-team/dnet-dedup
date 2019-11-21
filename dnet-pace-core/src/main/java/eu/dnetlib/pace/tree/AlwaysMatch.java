@@ -11,7 +11,7 @@ import java.util.Map;
 @ComparatorClass("alwaysMatch")
 public class AlwaysMatch extends AbstractComparator {
 
-    public AlwaysMatch(final Map<String, Number> params){
+    public AlwaysMatch(final Map<String, String> params){
         super(params, new com.wcohen.ss.JaroWinkler());
     }
 
