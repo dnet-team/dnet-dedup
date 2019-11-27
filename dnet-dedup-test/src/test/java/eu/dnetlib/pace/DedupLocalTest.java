@@ -77,7 +77,33 @@ public class DedupLocalTest extends DedupTestUtils {
         JavaPairRDD<String, String> relationRDD = Deduper.computeRelations(context, blocks, config);
 
         List<Tuple2<String, String>> rels = relationRDD
-                .filter(rel -> !getOrganizationLegalname(docsMap.get(rel._1())).equals(getOrganizationLegalname(docsMap.get(rel._2()))))
+                .filter(rel -> {
+                    String legalname1 = getOrganizationLegalname(docsMap.get(rel._1()))
+                            .replaceAll("&ndash;", " ")
+                            .replaceAll("&amp;", " ")
+                            .replaceAll("&quot;", " ")
+                            .replaceAll("&minus;", " ")
+                            .replaceAll("([0-9]+)", " $1 ")
+                            .replaceAll("[^\\p{ASCII}]", "")
+                            .replaceAll("[\\p{Punct}]", " ")
+                            .replaceAll("\\n", " ")
+                            .replaceAll("(?m)\\s+", " ")
+                            .toLowerCase()
+                            .trim();
+                    String legalname2 = getOrganizationLegalname(docsMap.get(rel._2()))
+                            .replaceAll("&ndash;", " ")
+                            .replaceAll("&amp;", " ")
+                            .replaceAll("&quot;", " ")
+                            .replaceAll("&minus;", " ")
+                            .replaceAll("([0-9]+)", " $1 ")
+                            .replaceAll("[^\\p{ASCII}]", "")
+                            .replaceAll("[\\p{Punct}]", " ")
+                            .replaceAll("\\n", " ")
+                            .replaceAll("(?m)\\s+", " ")
+                            .toLowerCase()
+                            .trim();
+                    return !legalname1.equals(legalname2);
+                })
                 .collect();
 
         System.out.println("Dubious relations = " + rels.size());
@@ -94,8 +120,8 @@ public class DedupLocalTest extends DedupTestUtils {
     @Test
     public void matchTest(){
 
-        String JSONEntity1 = "{\"dateoftransformation\":\"2018-09-19\",\"originalId\":[\"doajarticles::Sociedade_Brasileira_de_Ciência_do_Solo\"],\"collectedfrom\":[{\"value\":\"DOAJ-Articles\",\"key\":\"10|driver______::bee53aa31dc2cbb538c10c2b65fa5824\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"legalshortname\":{\"value\":\"Sociedade Brasileira de Ciência do Solo\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"Sociedade Brasileira de Ciência do Solo\"},\"country\":{\"classid\":\"BR\",\"classname\":\"Brazil\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2018-09-19\",\"type\":20,\"id\":\"20|doajarticles::699ed9ecc727c90e9321e43e495e03ee\"}";
-        String JSONEntity2 = "{\"dateoftransformation\":\"2018-09-19\",\"originalId\":[\"doajarticles::Sociedade_Brasileira_de_Educação_Matemática\"],\"collectedfrom\":[{\"value\":\"DOAJ-Articles\",\"key\":\"10|driver______::bee53aa31dc2cbb538c10c2b65fa5824\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"legalshortname\":{\"value\":\"Sociedade Brasileira de Educação Matemática\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"Sociedade Brasileira de Educação Matemática\"},\"country\":{\"classid\":\"BR\",\"classname\":\"Brazil\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2018-09-19\",\"type\":20,\"id\":\"20|doajarticles::ec10c30a33588ad4884e042a4ea76a4a\"}";
+        String JSONEntity1 = "{\"dateoftransformation\":\"2018-06-04\",\"originalId\":[\"opendoar____::Universiti_Sains_Malaysia\"],\"collectedfrom\":[{\"value\":\"OpenDOAR\",\"key\":\"10|openaire____::47ce9e9f4fad46e732cff06419ecaabb\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"websiteurl\":{\"value\":\"http://www.usm.my/my/\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"Universiti Sains Malaysia\"},\"country\":{\"classid\":\"MY\",\"classname\":\"Malaysia\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2015-08-24\",\"type\":20,\"id\":\"20|opendoar____::04315c25b0eb56eacb967901557f86b1\"}";
+        String JSONEntity2 = "{\"dateoftransformation\":\"2019-10-07\",\"originalId\":[\"corda_______::997941627\"],\"collectedfrom\":[{\"value\":\"CORDA - COmmon Research DAta Warehouse\",\"key\":\"10|openaire____::b30dac7baac631f3da7c2bb18dd9891f\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"true\"},\"eclegalperson\":{\"value\":\"true\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"legalshortname\":{\"value\":\"USM\"},\"ecresearchorganization\":{\"value\":\"true\"},\"ecnonprofit\":{\"value\":\"true\"},\"ecenterprise\":{\"value\":\"false\"},\"websiteurl\":{\"value\":\"http://www.usm.my/my\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"UNIVERSITI SAINS MALAYSIA*\"},\"country\":{\"classid\":\"MY\",\"classname\":\"Malaysia\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"true\"}}},\"dateofcollection\":\"2015-09-10\",\"type\":20,\"id\":\"20|corda_______::1fb0c86ddf389377454d5520d2796dad\"}";
 
         MapDocument mapDoc1 = PaceUtils.asMapDocument(config, JSONEntity1);
         MapDocument mapDoc2 = PaceUtils.asMapDocument(config, JSONEntity2);

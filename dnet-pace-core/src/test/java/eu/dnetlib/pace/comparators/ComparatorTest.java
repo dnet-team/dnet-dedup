@@ -1,11 +1,8 @@
 package eu.dnetlib.pace.comparators;
 
 import eu.dnetlib.pace.clustering.NGramUtils;
-import eu.dnetlib.pace.tree.CityMatch;
-import eu.dnetlib.pace.tree.ContainsMatch;
-import eu.dnetlib.pace.tree.JaroWinklerNormalizedName;
+import eu.dnetlib.pace.tree.*;
 import eu.dnetlib.pace.config.DedupConfig;
-import eu.dnetlib.pace.tree.KeywordMatch;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -52,6 +49,7 @@ public class ComparatorTest extends AbstractPaceFunctions {
 
 		//both names with cities (different)
 		assertEquals(0.0, cityMatch.distance("Universita di Bologna", "Universita di Torino", conf));
+		assertEquals(0.0, cityMatch.distance("Franklin College", "Concordia College", conf));
 
 		//particular cases
 		assertEquals(1.0, cityMatch.distance("Free University of Bozen-Bolzano", "Università di Bolzano", conf));
@@ -80,14 +78,17 @@ public class ComparatorTest extends AbstractPaceFunctions {
 
 	@Test
 	public void keywordMatchTest(){
-		params.put("threshold", "0.4");
+		params.put("threshold", "0.5");
 
 		final KeywordMatch keywordMatch = new KeywordMatch(params);
 
-		assertEquals(1.0, keywordMatch.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna", conf));
+		assertEquals(0.0, keywordMatch.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna", conf));
 		assertEquals(1.0, keywordMatch.distance("Universita degli studi di Pisa", "Universita di Pisa", conf));
 		assertEquals(1.0, keywordMatch.distance("Polytechnic University of Turin", "POLITECNICO DI TORINO", conf));
 		assertEquals(1.0, keywordMatch.distance("Istanbul Commerce University", "İstanbul Ticarət Universiteti", conf));
+		assertEquals(1.0, keywordMatch.distance("Franklin College", "Concordia College", conf));
+		assertEquals(0.0, keywordMatch.distance("University of Georgia", "Georgia State University", conf));
+
 	}
 
 	@Test
@@ -100,6 +101,13 @@ public class ComparatorTest extends AbstractPaceFunctions {
 		final ContainsMatch containsMatch = new ContainsMatch(params);
 
 		assertEquals(0.0, containsMatch.distance("openorgs", "openorgs", conf));
+	}
+
+	@Test
+	public void numbersMatchTest(){
+		final NumbersMatch numbersMatch = new NumbersMatch(params);
+
+		assertEquals(0.0, numbersMatch.distance("University of Rennes 2", "Universita di Rennes 7", conf));
 	}
 
 
