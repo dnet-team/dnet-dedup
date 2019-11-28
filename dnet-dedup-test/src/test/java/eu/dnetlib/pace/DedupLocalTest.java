@@ -56,7 +56,6 @@ public class DedupLocalTest extends DedupTestUtils {
         System.out.println("total time = " + (System.currentTimeMillis()-startTime));
 
         printStatistics(ccs);
-//        accumulators.forEach((name, acc) -> System.out.println(name + " -> " + acc.value()));
 
     }
 

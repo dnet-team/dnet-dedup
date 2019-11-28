@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +48,8 @@ public abstract class AbstractPaceFunctions {
 
 	//doi prefix for normalization
 	public final String DOI_PREFIX = "(https?:\\/\\/dx\\.doi\\.org\\/)|(doi:)";
+
+	private Pattern numberPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
 	protected final static FieldList EMPTY_FIELD = new FieldListImpl();
 
@@ -92,7 +95,18 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	protected String getNumbers(final String s) {
-		return s.replaceAll("\\D", "");
+		final StringBuilder sb = new StringBuilder();
+		for (final String t : s.split(" ")) {
+			sb.append(isNumber(t)? t : "");
+		}
+		return sb.toString();
+	}
+
+	public boolean isNumber(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		return numberPattern.matcher(strNum).matches();
 	}
 
 	protected static String fixAliases(final String s) {

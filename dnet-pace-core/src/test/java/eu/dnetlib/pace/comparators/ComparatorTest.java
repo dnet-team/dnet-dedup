@@ -54,27 +54,8 @@ public class ComparatorTest extends AbstractPaceFunctions {
 		//particular cases
 		assertEquals(1.0, cityMatch.distance("Free University of Bozen-Bolzano", "Università di Bolzano", conf));
 		assertEquals(1.0, cityMatch.distance("Politechniki Warszawskiej (Warsaw University of Technology)", "Warsaw University of Technology", conf));
+		assertEquals(-1.0, cityMatch.distance("Allen (United States)", "United States Military Academy", conf));
 	}
-
-	//    @Test
-//    public void testJaroWinklerNormalizedName6() {
-//
-//        final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-//        double result = jaroWinklerNormalizedName.distance("Fonds zur Förderung der wissenschaftlichen Forschung (Austrian Science Fund)", "Fonds zur Förderung der wissenschaftlichen Forschung", conf);
-//
-//        System.out.println("result = " + result);
-//        assertTrue(result > 0.9);
-//
-//    }
-// 	@Test
-//	public void testJaroWinklerNormalizedName10(){
-//
-//		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
-//
-//		double result = jaroWinklerNormalizedName.distance("Firenze University Press", "University of Florence", conf);
-//
-//		System.out.println("result = " + result);
-//	}
 
 	@Test
 	public void keywordMatchTest(){
@@ -88,6 +69,10 @@ public class ComparatorTest extends AbstractPaceFunctions {
 		assertEquals(1.0, keywordMatch.distance("Istanbul Commerce University", "İstanbul Ticarət Universiteti", conf));
 		assertEquals(1.0, keywordMatch.distance("Franklin College", "Concordia College", conf));
 		assertEquals(0.0, keywordMatch.distance("University of Georgia", "Georgia State University", conf));
+		assertEquals(0.0, keywordMatch.distance("University College London", "University of London", conf));
+		assertEquals(0.0, keywordMatch.distance("Washington State University", "University of Washington", conf));
+		assertEquals(-1.0, keywordMatch.distance("Allen (United States)", "United States Military Academy", conf));
+
 
 	}
 
@@ -108,7 +93,27 @@ public class ComparatorTest extends AbstractPaceFunctions {
 		final NumbersMatch numbersMatch = new NumbersMatch(params);
 
 		assertEquals(0.0, numbersMatch.distance("University of Rennes 2", "Universita di Rennes 7", conf));
+		assertEquals(1.0, numbersMatch.distance("Universit<C9><U3> de Rennes 2", "Universita di Rennes 2", conf));
 	}
+
+	@Test
+	public void romansMatchTest(){
+
+		final RomansMatch romansMatch = new RomansMatch(params);
+
+		assertEquals(-1.0, romansMatch.distance("University of Paris X", "Universita di Parigi", conf));
+		assertEquals(0.0, romansMatch.distance("University of Paris IX", "University of Paris X", conf));
+		assertEquals(1.0, romansMatch.distance("University of Paris VII", "University of Paris VII", conf));
+	}
+
+	@Test
+	public void jaroWinklerNormalizedNameTest() {
+
+		final JaroWinklerNormalizedName jaroWinklerNormalizedName = new JaroWinklerNormalizedName(params);
+
+        double result = jaroWinklerNormalizedName.distance("AT&T (United States)", "United States Military Academy", conf);
+        System.out.println("result = " + result);
+    }
 
 
 }

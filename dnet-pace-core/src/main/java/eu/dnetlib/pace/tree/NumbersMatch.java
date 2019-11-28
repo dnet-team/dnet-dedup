@@ -17,8 +17,12 @@ public class NumbersMatch extends AbstractComparator {
     @Override
     public double distance(String a, String b, Config conf) {
 
+        //extracts numbers from the field
         String numbers1 = getNumbers(nfd(a));
         String numbers2 = getNumbers(nfd(b));
+
+        if (numbers1.isEmpty() && numbers2.isEmpty())
+            return 1.0;
 
         if (numbers1.isEmpty() || numbers2.isEmpty())
             return -1.0;
