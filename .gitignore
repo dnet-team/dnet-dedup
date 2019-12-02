@@ -1,43 +1,21 @@
-*~
-
-# Compiled class file
-*.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-
-
-*target
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-
-*.idea
-*.iml
-
 .DS_Store
-**/.DS_Store
-
-.project
+.idea
+*.iml
+*~
 .classpath
+/*/.classpath
+/*/*/.classpath
+.metadata
+/*/.metadata
+/*/*/.metadata
+.project
+.log
 .settings
-**/.project
-**/.classpath
-**/.settings
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+/*/*/target
+/*/target
+/target
+/*/*/build
+/*/build
+/build
+spark-warehouse
+/dhp-workflows/dhp-graph-mapper/job-override.properties
