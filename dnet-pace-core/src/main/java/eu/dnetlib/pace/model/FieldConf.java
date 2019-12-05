@@ -1,7 +1,8 @@
 package eu.dnetlib.pace.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.dnetlib.pace.util.PaceException;
-import org.codehaus.jackson.map.ObjectMapper;
+
 
 import java.io.IOException;
 import java.io.Serializable;

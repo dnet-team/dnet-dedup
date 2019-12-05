@@ -36,6 +36,18 @@ public class BlockProcessor {
         this.dedupConf = dedupConf;
     }
 
+
+    public void processSortedBlock(final String key, final List<MapDocument> documents, final Reporter context)  {
+        if (documents.size() > 1) {
+//            log.info("reducing key: '" + key + "' records: " + q.size());
+            //process(q, context);
+            process(prepare(documents), context);
+
+        } else {
+            context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
+        }
+    }
+
     public void process(final String key, final Iterable<MapDocument> documents, final Reporter context)  {
 
         final Queue<MapDocument> q = prepare(documents);

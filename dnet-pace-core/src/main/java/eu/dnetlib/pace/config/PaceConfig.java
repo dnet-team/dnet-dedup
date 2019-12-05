@@ -1,15 +1,14 @@
 package eu.dnetlib.pace.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.CondDef;
 import eu.dnetlib.pace.model.FieldDef;
 import eu.dnetlib.pace.util.PaceResolver;
 import org.apache.commons.collections.CollectionUtils;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.Serializable;
 import java.text.Normalizer;

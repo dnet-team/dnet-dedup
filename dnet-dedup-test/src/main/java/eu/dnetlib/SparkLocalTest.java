@@ -3,6 +3,7 @@ package eu.dnetlib;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.util.MapDocumentUtil;
 import eu.dnetlib.pace.utils.PaceUtils;
 import eu.dnetlib.reporter.SparkBlockProcessor;
 import eu.dnetlib.reporter.SparkReporter;
@@ -16,14 +17,17 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.util.LongAccumulator;
 import scala.Tuple2;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SparkLocalTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException {
 
+        URL r = new URL("http://www.nlr.nl");
+        System.out.println(r.getPath());
         double startTime = System.currentTimeMillis();
 
         final SparkSession spark = SparkSession
@@ -44,7 +48,7 @@ public class SparkLocalTest {
 
         //create vertexes of the graph: <ID, MapDocument>
         JavaPairRDD<String, MapDocument> mapDocs = dataRDD.mapToPair(it -> {
-            MapDocument mapDocument = PaceUtils.asMapDocument(config, it);
+            MapDocument mapDocument = MapDocumentUtil.asMapDocument(config, it);
             return new Tuple2<>(mapDocument.getIdentifier(), mapDocument);
         });
 

@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.dnetlib.pace.condition.*;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.util.PaceException;
 import eu.dnetlib.pace.util.PaceResolver;
-import org.codehaus.jackson.map.ObjectMapper;
+
 
 public class CondDef implements Serializable {
 

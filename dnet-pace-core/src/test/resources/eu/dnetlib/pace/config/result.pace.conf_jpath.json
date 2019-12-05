@@ -1,35 +1,35 @@
-{ 
-	"wf" : { 
-        "threshold" : "0.99", 
+{
+	"wf" : {
+        "threshold" : "0.99",
         "dedupRun" : "001",
-        "entityType" : "result", 
-        "orderField" : "title", 
+        "entityType" : "result",
+        "orderField" : "title",
         "queueMaxSize" : "2000",
         "groupMaxSize" : "10",
         "slidingWindowSize" : "200",
-		"idPath": ".entity.id",
+		"idPath": "$.entity.id",
         "rootBuilder" : [ "result" ],
-        "includeChildren" : "true" 
+        "includeChildren" : "true"
     },
-	"pace" : {		
+	"pace" : {
 		"clustering" : [
 			{ "name" : "acronyms", "fields" : [ "title" ], "params" : { "max" : "1", "minLen" : "2", "maxLen" : "4"} },
 			{ "name" : "ngrampairs", "fields" : [ "title" ], "params" : { "max" : "1", "ngramLen" : "3"} },
-			{ "name" : "suffixprefix", "fields" : [ "title" ], "params" : { "max" : "1", "len" : "3" } } 
-		],		
+			{ "name" : "suffixprefix", "fields" : [ "title" ], "params" : { "max" : "1", "len" : "3" } }
+		],
 		"strictConditions" : [
   			{ "name" : "exactMatch", "fields" : [ "pid" ] }
-  		], 
-  		"conditions" : [ 
+  		],
+  		"conditions" : [
   			{ "name" : "yearMatch", "fields" : [ "dateofacceptance" ] },
   			{ "name" : "titleVersionMatch", "fields" : [ "title" ] },
-  			{ "name" : "sizeMatch", "fields" : [ "authors" ] } 
-  		],		
+  			{ "name" : "sizeMatch", "fields" : [ "authors" ] }
+  		],
 		"model" : [
-			{ "name" : "pid", "algo" : "Null", "type" : "JSON", "weight" : "0.0", "ignoreMissing" : "true", "path" : ".entity.pid", "overrideMatch" : "true" },
-			{ "name" : "title", "algo" : "JaroWinkler", "type" : "String", "weight" : "1.0", "ignoreMissing" : "false", "path" : ".entity.result.metadata.title[] | select(.qualifier.classid==\"main title\")  | .value" },
-			{ "name" : "dateofacceptance", "algo" : "Null", "type" : "String", "weight" : "0.0", "ignoreMissing" : "true", "path" : ".entity.result.metadata.dateofacceptance.value" } ,
-			{ "name" : "authors", "algo" : "Null", "type" : "List", "weight" : "0.0", "ignoreMissing" : "true", "path" : "[.entity.result.metadata.author[].fullname]" }
+			{ "name" : "pid", "algo" : "Null", "type" : "JSON", "weight" : "0.0", "ignoreMissing" : "true", "path" : "$.entity.pid", "overrideMatch" : "true" },
+			{ "name" : "dateofacceptance", "algo" : "Null", "type" : "String", "weight" : "0.0", "ignoreMissing" : "true", "path" : "$.entity.result.metadata.dateofacceptance.value", "overrideMatch" : "true" },
+			{ "name" : "title", "algo" : "JaroWinkler", "type" : "String", "weight" : "1.0", "ignoreMissing" : "false", "path" : "$.entity.result.metadata.title[?(@.qualifier.classid ==\"main title\")].value" },
+			{ "name" : "authors", "algo" : "Null", "type" : "List", "weight" : "0.0", "ignoreMissing" : "true", "path" : "$.entity.result.metadata.author[*].fullname" }
 		],
 		"blacklists" : {
 			"title" : [
