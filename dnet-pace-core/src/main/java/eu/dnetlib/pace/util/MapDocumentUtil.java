@@ -97,7 +97,7 @@ public class MapDocumentUtil {
         return m;
     }
 
-    private static List<String> getJPathList(String path, String json, Type type) {
+    public static List<String> getJPathList(String path, String json, Type type) {
         if (type == Type.List)
             return JsonPath.read(json, path);
         Object jresult;
@@ -136,7 +136,7 @@ public class MapDocumentUtil {
     }
 
 
-    private static String getJPathString(final String jsonPath, final String json) {
+    public static String getJPathString(final String jsonPath, final String json) {
         Object o = JsonPath.read(json, jsonPath);
 
         if (o instanceof String)
