@@ -1,6 +1,10 @@
 package eu.dnetlib.pace.config;
 
+
 import eu.dnetlib.pace.AbstractPaceTest;
+import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.util.MapDocumentUtil;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.util.Map;
@@ -56,5 +60,28 @@ public class ConfigTest extends AbstractPaceTest {
 
 		assertEquals(0, load.getPace().translationMap().keySet().size());
 	}
+
+
+
+	@Test
+	public void testAsMapDocumentJPath() throws  Exception {
+
+		DedupConfig load = DedupConfig.load(readFromClasspath("result.pace.conf_jpath.json"));
+
+
+		System.out.println(load.getWf().getIdPath());
+
+		final String result =IOUtils.toString(this.getClass().getResourceAsStream("result.json"));
+
+		System.out.println(result);
+		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(load, result);
+
+		System.out.println(mapDocument.getFieldMap());
+
+	}
+
+
+
+
 
 }

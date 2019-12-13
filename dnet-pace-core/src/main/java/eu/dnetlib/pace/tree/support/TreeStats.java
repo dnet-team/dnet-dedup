@@ -1,7 +1,7 @@
 package eu.dnetlib.pace.tree.support;
 
 import eu.dnetlib.pace.util.PaceException;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.HashMap;

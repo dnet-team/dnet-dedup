@@ -1,10 +1,11 @@
 package eu.dnetlib.pace.tree.support;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.PaceException;
-import org.codehaus.jackson.map.ObjectMapper;
+
 
 import java.io.IOException;
 import java.io.Serializable;

@@ -4,7 +4,7 @@ import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.BlockProcessor;
-import eu.dnetlib.pace.utils.PaceUtils;
+import eu.dnetlib.pace.util.MapDocumentUtil;
 import eu.dnetlib.pace.utils.Utility;
 import eu.dnetlib.reporter.SparkReporter;
 import eu.dnetlib.support.ConnectedComponent;
@@ -99,7 +99,7 @@ public class Deduper implements Serializable {
      */
     public static JavaPairRDD<String, MapDocument> mapToVertexes(JavaSparkContext context, JavaRDD<String> entities, DedupConfig config){
         return entities.mapToPair(it -> {
-            MapDocument mapDocument = PaceUtils.asMapDocument(config, it);
+            MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(config, it);
             return new Tuple2<>(mapDocument.getIdentifier(), mapDocument);
         });
     }

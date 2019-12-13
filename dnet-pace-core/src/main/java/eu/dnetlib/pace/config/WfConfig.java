@@ -1,17 +1,17 @@
 package eu.dnetlib.pace.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import eu.dnetlib.pace.util.PaceException;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gson.GsonBuilder;
-import eu.dnetlib.pace.util.PaceException;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class WfConfig implements Serializable {
 
@@ -76,11 +76,16 @@ public class WfConfig implements Serializable {
 	/** Maximum number of allowed children. */
 	private int maxChildren = MAX_CHILDREN;
 
+
 	/** Default maximum number of iterations. */
 	private final static int MAX_ITERATIONS = 20;
 
 	/** Maximum number of iterations */
 	private int maxIterations = MAX_ITERATIONS;
+
+	/** The Jquery path to retrieve the identifier */
+	private String  idPath = "$.id";
+
 
 	public WfConfig() {}
 
@@ -252,12 +257,22 @@ public class WfConfig implements Serializable {
 		this.maxChildren = maxChildren;
 	}
 
+
 	public int getMaxIterations() {
 		return maxIterations;
 	}
 
 	public void setMaxIterations(int maxIterations) {
 		this.maxIterations = maxIterations;
+	}
+
+	public String getIdPath() {
+		return idPath;
+	}
+
+	public void setIdPath(String idPath) {
+		this.idPath = idPath;
+
 	}
 
 	/*

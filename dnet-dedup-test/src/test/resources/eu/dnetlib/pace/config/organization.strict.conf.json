@@ -7,6 +7,7 @@
     "queueMaxSize" : "2000",
     "groupMaxSize" : "50",
     "slidingWindowSize" : "200",
+    "idPath":"$.id",
     "rootBuilder" : [ "organization", "projectOrganization_participation_isParticipant", "datasourceOrganization_provision_isProvidedBy" ],
     "includeChildren" : "true",
     "maxIterations": "20"
@@ -185,12 +186,12 @@
       }
     },
     "model" : [
-      { "name" : "country", "type" : "String", "path" : "organization/metadata/country/classid"},
-      { "name" : "legalshortname", "type" : "String", "path" : "organization/metadata/legalshortname/value"},
-      { "name" : "legalname", "type" : "String", "path" : "organization/metadata/legalname/value" },
-      { "name" : "websiteurl", "type" : "URL", "path" : "organization/metadata/websiteurl/value" },
-      { "name" : "gridid", "type" : "String", "path" : "pid[qualifier#classid = {grid}]/value"},
-      { "name" : "originalId", "type" : "String", "path" : "id" }
+      { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
+      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
+      { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
+      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid.ac')].value"},
+      { "name" : "originalId", "type" : "String", "path" : "$.id" }
     ],
     "blacklists" : {
       "legalname" : []
@@ -301,7 +302,7 @@
       "key::103": ["forschungsgemeinschaft","comunita ricerca","research community","research foundation","research association"],
       "key::104": ["commerce","ticaret","ticarət","commercio","trade","handel","comercio"],
       "key::105" : ["state", "stato", "etade", "estado", "statale", "etat", "zustand", "estado"],
-      "key::106" : ["seminary", "seminario", "seminaire", "seminar"]
+      "key::106" : ["seminary", "seminario", "seminaire", "seminar"],
       "key::107" : ["agricultural forestry", "af", "a f", "a&f"],
       "key::108" : ["agricultural mechanical", "am", "a m", "a&m"]
     }

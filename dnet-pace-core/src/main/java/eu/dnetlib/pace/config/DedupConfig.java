@@ -1,25 +1,25 @@
 package eu.dnetlib.pace.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import eu.dnetlib.pace.model.ClusteringDef;
+import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.util.PaceException;
+import org.antlr.stringtemplate.StringTemplate;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.BiFunction;
+
 
 import eu.dnetlib.pace.tree.support.TreeNodeDef;
-import eu.dnetlib.pace.util.PaceException;
-import org.antlr.stringtemplate.StringTemplate;
-import org.apache.commons.io.IOUtils;
 
-import com.google.common.collect.Maps;
-
-import eu.dnetlib.pace.model.ClusteringDef;
-import eu.dnetlib.pace.model.FieldDef;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class DedupConfig implements Config, Serializable {
 
