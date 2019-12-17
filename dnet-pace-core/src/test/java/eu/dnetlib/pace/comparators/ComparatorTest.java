@@ -4,7 +4,6 @@ import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.tree.*;
 import eu.dnetlib.pace.config.DedupConfig;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
@@ -24,7 +23,7 @@ public class ComparatorTest extends AbstractPaceFunctions {
 	public void setup() {
 		params = new HashMap<>();
 		params.put("weight", "1.0");
-		conf = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf", ComparatorTest.class));
+		conf = DedupConfig.load(readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf.json", ComparatorTest.class));
 
 	}
 
@@ -115,5 +114,9 @@ public class ComparatorTest extends AbstractPaceFunctions {
         System.out.println("result = " + result);
     }
 
+    @Test
+	public void jsonListMatchTest() {
+
+	}
 
 }

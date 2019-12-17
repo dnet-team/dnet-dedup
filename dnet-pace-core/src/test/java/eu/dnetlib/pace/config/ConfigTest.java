@@ -2,11 +2,15 @@ package eu.dnetlib.pace.config;
 
 
 import eu.dnetlib.pace.AbstractPaceTest;
+import eu.dnetlib.pace.model.Field;
+import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.tree.JsonListMatch;
 import eu.dnetlib.pace.util.MapDocumentUtil;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +20,7 @@ public class ConfigTest extends AbstractPaceTest {
 
 	@Test
 	public void dedupConfigSerializationTest() {
-		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("organization.current.conf"));
+		final DedupConfig cfgFromClasspath = DedupConfig.load(readFromClasspath("organization.current.conf.json"));
 
 		final String conf = cfgFromClasspath.toString();
 
@@ -26,13 +30,12 @@ public class ConfigTest extends AbstractPaceTest {
 
 		assertNotNull(cfgFromClasspath);
 		assertNotNull(cfgFromSerialization);
-
 	}
 
 	@Test
 	public void dedupConfigTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("organization.current.conf"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("organization.current.conf.json"));
 
 		System.out.println(load.toString());
 	}
@@ -40,7 +43,7 @@ public class ConfigTest extends AbstractPaceTest {
 	@Test
 	public void initTranslationMapTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("organization.current.conf"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("organization.current.conf.json"));
 
 		Map<String, String> translationMap = load.translationMap();
 
@@ -50,38 +53,26 @@ public class ConfigTest extends AbstractPaceTest {
 			if (translationMap.get(key).equals("key::1"))
 				System.out.println("key = " + key);
 		}
-
 	}
 
 	@Test
 	public void emptyTranslationMapTest() {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("organization.no_synonyms.conf"));
+		DedupConfig load = DedupConfig.load(readFromClasspath("organization.no_synonyms.conf.json"));
 
 		assertEquals(0, load.getPace().translationMap().keySet().size());
 	}
 
-
-
 	@Test
-	public void testAsMapDocumentJPath() throws  Exception {
+	public void asMapDocumentTest() throws Exception {
 
-		DedupConfig load = DedupConfig.load(readFromClasspath("result.pace.conf_jpath.json"));
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("publication.current.conf.json"));
 
+		final String json = readFromClasspath("publication.json");
 
-		System.out.println(load.getWf().getIdPath());
+		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
 
-		final String result =IOUtils.toString(this.getClass().getResourceAsStream("result.json"));
+		System.out.println("mapDocument = " + mapDocument.getFieldMap());
 
-		System.out.println(result);
-		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(load, result);
-
-		System.out.println(mapDocument.getFieldMap());
-
-	}
-
-
-
-
-
+    }
 }

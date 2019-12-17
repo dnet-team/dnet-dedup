@@ -13,6 +13,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import scala.Tuple2;
 
@@ -30,7 +31,7 @@ public class DedupLocalTest extends DedupTestUtils {
     @Before
     public void setup() {
 
-        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/organization.strict.conf.json", DedupLocalTest.class));
+        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/publication.current.conf.json", DedupLocalTest.class));
         treeProcessor = new TreeProcessor(config);
 
         final SparkSession spark = SparkSession
@@ -39,11 +40,13 @@ public class DedupLocalTest extends DedupTestUtils {
                 .master("local[*]")
                 .getOrCreate();
         context = new JavaSparkContext(spark.sparkContext());
-        final URL dataset = getClass().getResource("/eu/dnetlib/pace/examples/organization.to.fix.json");
+
+        final URL dataset = getClass().getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json");
         entities = context.textFile(dataset.getPath());
 
     }
 
+    @Ignore
     @Test
     public void dedupTest(){
 
@@ -57,6 +60,7 @@ public class DedupLocalTest extends DedupTestUtils {
 
     }
 
+    @Ignore
     @Test
     public void relationsTest() {
 
@@ -112,7 +116,7 @@ public class DedupLocalTest extends DedupTestUtils {
 
     }
 
-
+@Ignore
     @Test
     public void matchTest(){
 
@@ -128,7 +132,7 @@ public class DedupLocalTest extends DedupTestUtils {
 
     }
 
-
+@Ignore
     @Test
     public void parseJSONEntityTest(){
         String jsonEntity = "{\"dateoftransformation\":\"2018-09-19\",\"originalId\":[\"doajarticles::Sociedade_Brasileira_de_Reumatologia\"],\"collectedfrom\":[{\"value\":\"DOAJ-Articles\",\"key\":\"10|driver______::bee53aa31dc2cbb538c10c2b65fa5824\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"legalshortname\":{\"value\":\"Sociedade Brasileira de Reumatologia\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"Sociedade Brasileira de Reumatologia\"},\"country\":{\"classid\":\"BR\",\"classname\":\"Brazil\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2018-09-19\",\"type\":20,\"id\":\"20|doajarticles::0019ba7a22c5bc733c3206bde28ff568\"}";

@@ -18,7 +18,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	@Before
 	public void setUp() throws Exception {
 		params = Maps.newHashMap();
-        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf", ClusteringFunctionTest.class));
+        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf.json", ClusteringFunctionTest.class));
 	}
 
 	@Test
@@ -108,15 +108,6 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
 		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
-	}
-
-	@Test
-	public void testPersonClustering2() {
-		final ClusteringFunction cf = new PersonClustering(params);
-
-		final String s = readFromClasspath("gt.author.json");
-		System.out.println(s);
-		System.out.println(cf.apply(conf, Lists.newArrayList(person(s))));
 	}
 
 	@Test

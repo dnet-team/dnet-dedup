@@ -2,7 +2,9 @@ package eu.dnetlib.pace.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
@@ -55,7 +57,7 @@ public class MapDocumentUtil {
 
     public static List<String> getJPathList(String path, String json, Type type) {
         if (type == Type.List)
-            return JsonPath.read(json, path);
+            return JsonPath.using(Configuration.defaultConfiguration().addOptions(Option.ALWAYS_RETURN_LIST, Option.SUPPRESS_EXCEPTIONS)).parse(json).read(path);
         Object jresult;
         List<String> result = new ArrayList<>();
         try {
