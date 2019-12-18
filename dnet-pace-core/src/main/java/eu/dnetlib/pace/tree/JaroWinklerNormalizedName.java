@@ -39,6 +39,8 @@ public class JaroWinklerNormalizedName extends AbstractComparator {
         ca = filterAllStopWords(ca);
         cb = filterAllStopWords(cb);
 
+        //TODO change this implementation, it needs only to erase cities and keywords
+
         Set<String> keywords1 = getKeywords(ca, conf.translationMap(), Integer.parseInt(params.getOrDefault("windowSize", "4")));
         Set<String> keywords2 = getKeywords(cb, conf.translationMap(), Integer.parseInt(params.getOrDefault("windowSize", "4")));
 

@@ -18,12 +18,8 @@ import java.util.function.Predicate;
 
 public class MapDocumentUtil {
 
-
-    private static final ObjectMapper mapper = new ObjectMapper();
     public static final String URL_REGEX = "^(http|https|ftp)\\://.*";
     public static Predicate<String> urlFilter = s -> s.trim().matches(URL_REGEX);
-
-
 
     public static MapDocument asMapDocumentWithJPath(DedupConfig conf, final String json) {
         MapDocument m = new MapDocument();

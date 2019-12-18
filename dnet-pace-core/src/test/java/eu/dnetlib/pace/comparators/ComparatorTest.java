@@ -62,16 +62,15 @@ public class ComparatorTest extends AbstractPaceFunctions {
 
 		final KeywordMatch keywordMatch = new KeywordMatch(params);
 
-		assertEquals(0.0, keywordMatch.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna", conf));
+		assertEquals(0.5, keywordMatch.distance("Biblioteca dell'Universita di Bologna", "Università di Bologna", conf));
 		assertEquals(1.0, keywordMatch.distance("Universita degli studi di Pisa", "Universita di Pisa", conf));
 		assertEquals(1.0, keywordMatch.distance("Polytechnic University of Turin", "POLITECNICO DI TORINO", conf));
 		assertEquals(1.0, keywordMatch.distance("Istanbul Commerce University", "İstanbul Ticarət Universiteti", conf));
 		assertEquals(1.0, keywordMatch.distance("Franklin College", "Concordia College", conf));
-		assertEquals(0.0, keywordMatch.distance("University of Georgia", "Georgia State University", conf));
-		assertEquals(0.0, keywordMatch.distance("University College London", "University of London", conf));
-		assertEquals(0.0, keywordMatch.distance("Washington State University", "University of Washington", conf));
+		assertEquals(0.5, keywordMatch.distance("University of Georgia", "Georgia State University", conf));
+		assertEquals(0.5, keywordMatch.distance("University College London", "University of London", conf));
+		assertEquals(0.5, keywordMatch.distance("Washington State University", "University of Washington", conf));
 		assertEquals(-1.0, keywordMatch.distance("Allen (United States)", "United States Military Academy", conf));
-
 
 	}
 

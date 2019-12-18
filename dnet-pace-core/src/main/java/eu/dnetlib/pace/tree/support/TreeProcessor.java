@@ -38,7 +38,7 @@ public class TreeProcessor{
 			TreeNodeDef currentNode = config.decisionTree().get(current);
 			//throw an exception if the node doesn't exist
 			if (currentNode == null)
-				throw new PaceException("The Tree Node doesn't exist: " + current);
+				throw new PaceException("Missing tree node: " + current);
 
 			TreeNodeStats stats = currentNode.evaluate(doc1, doc2, config);
 			treeStats.addNodeStats(current, stats);

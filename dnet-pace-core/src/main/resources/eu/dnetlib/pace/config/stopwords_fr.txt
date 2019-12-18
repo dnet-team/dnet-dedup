@@ -211,7 +211,6 @@ encore
 enfin
 entre
 envers
-environ
 es
 essai
 est

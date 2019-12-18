@@ -1,6 +1,6 @@
 {
   "wf" : {
-    "threshold" : "0.9",
+    "threshold" : "0.99",
     "dedupRun" : "001",
     "entityType" : "organization",
     "orderField" : "legalname",
@@ -8,7 +8,9 @@
     "groupMaxSize" : "50",
     "slidingWindowSize" : "200",
     "rootBuilder" : [ "organization", "projectOrganization_participation_isParticipant", "datasourceOrganization_provision_isProvidedBy" ],
-    "includeChildren" : "true"
+    "includeChildren" : "true",
+    "maxIterations": "20",
+    "idPath": "$.id"
   },
   "pace" : {
     "clustering" : [
@@ -23,59 +25,110 @@
           {
             "field": "gridid",
             "comparator": "exactMatch",
-            "weight": 1.0,
-            "countIfUndefined": "true",
+            "weight": 1,
+            "countIfUndefined": "false",
             "params": {}
           }
         ],
-        "threshold": 1.0,
-        "aggregation": "MAX",
+        "threshold": 1,
+        "aggregation": "SC",
         "positive": "MATCH",
-        "negative": "layer2",
+        "negative": "NO_MATCH",
         "undefined": "layer2",
-        "ignoreUndefined": "true"
+        "ignoreUndefined": "false"
       },
       "layer2": {
         "fields": [
           {
             "field": "websiteurl",
             "comparator": "domainExactMatch",
-            "weight": 1.0,
-            "countIfUndefined": "true",
+            "weight": 1,
+            "countIfUndefined": "false",
             "params": {}
           },
           {
             "field": "country",
             "comparator": "exactMatch",
-            "weight": 1.0,
-            "countIfUndefined": "false",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          },
+          {
+            "field": "legalname",
+            "comparator": "numbersMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          },
+          {
+            "field": "legalname",
+            "comparator": "romansMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
             "params": {}
           }
         ],
-        "threshold": 1.0,
-        "aggregation": "MIN",
+        "threshold": 1,
+        "aggregation": "NC",
         "positive": "layer3",
         "negative": "NO_MATCH",
         "undefined": "layer3",
-        "ignoreUndefined": "false"
+        "ignoreUndefined": "true"
       },
       "layer3": {
         "fields": [
           {
             "field": "legalname",
-            "comparator": "jaroWinklerNormalizedName",
-            "weight": 0.9,
+            "comparator": "cityMatch",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          }
+        ],
+        "threshold": 0.1,
+        "aggregation": "W_MEAN",
+        "positive": "layer4",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      },
+      "layer4": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "keywordMatch",
+            "weight": 1.0,
             "countIfUndefined": "false",
             "params": {
-              "windowSize": 4,
-              "threshold": 0.7
+              "windowSize": "4"
+            }
+          }
+        ],
+        "threshold": 0.7,
+        "aggregation": "W_MEAN",
+        "positive": "layer5",
+        "negative": "NO_MATCH",
+        "undefined": "layer5",
+        "ignoreUndefined": "false"
+      },
+      "layer5": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "jaroWinklerNormalizedName",
+            "weight": 0.9,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
             }
           },
           {
             "field": "legalshortname",
             "comparator": "jaroWinklerNormalizedName",
             "weight": 0.1,
-            "countIfUndefined": "true",
+            "countIfUndefined": "false",
             "params": {}
           }
         ],
@@ -90,9 +143,9 @@
     "model" : [
       { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
       { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
-      { "name" : "legalname", "type" : "String", "path" : "$organization.metadata.legalname.value" },
+      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
       { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
-      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid ==\"grid\")].value"}
+      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid=='grid.ac')].value"}
     ],
     "blacklists" : {
       "legalname" : []
@@ -192,7 +245,7 @@
       "key::92": ["automation","automazione","automatización","automação","Automatisierung","automatisering","αυτοματοποίηση","otomasyon","automatizálás","avtomatizacija","automatiseeritud",""],
       "key::93": ["pediatric","pediatria","pediatriche","pediatrico","pediátrico","pediatría","pediátrico","pediatria","pädiatrisch","pediatrische","παιδιατρική","pediatrik","gyermekgyógyászat","pediatrija","pediaatria",""],
       "key::94": ["photonics","fotonica","fotoniche","fotónica","fotônica","Photonik","fotonica","φωτονική","fotonik","fotonika","fotonika","fotoonika",""],
-      "key::95": ["mechanics","meccanica","meccaniche","mecánica","mecânica","Mechanik","Maschinenbau","mechanica","werktuigkunde","μηχανικής","mekanik","gépészet","mehanika","mehaanika",""],
+      "key::95": ["mechanics", "mechanical", "meccanica","meccaniche","mecánica","mecânica","Mechanik","Maschinenbau","mechanica","werktuigkunde","μηχανικής","mekanik","gépészet","mehanika","mehaanika",""],
       "key::96": ["psychiatrics","psichiatria","psichiatrica","psichiatriche","psiquiatría","psiquiatria","Psychiatrie","psychiatrie","ψυχιατρική","psikiyatrik","pszihiátria","psihiatrija","psühhaatria",""],
       "key::97": ["psychology","fisiologia","psicología","psicologia","Psychologie","psychologie","ψυχολογία","psikoloji","pszihológia","psihologija","psühholoogia",""],
       "key::98": ["automotive","industriaautomobilistica","industriadelautomóvil","automotriz","industriaautomotriz","automotivo","Automobilindustrie","autoindustrie","αυτοκίνητος","αυτοκίνητη","αυτοκίνητο","αυτοκινούμενος","αυτοκινούμενη","αυτοκινούμενο","αυτοκινητιστικός","αυτοκινητιστική","αυτοκινητιστικό","otomotiv","autóipari","samogiben","avtomobilskaindustrija","auto-",""],
@@ -202,7 +255,10 @@
       "key::102": ["informatics","informatica","informática","informática","informatica",""],
       "key::103": ["forschungsgemeinschaft","comunita ricerca","research community","research foundation","research association"],
       "key::104": ["commerce","ticaret","ticarət","commercio","trade","handel","comercio"],
-      "key::105" : ["state", "stato", "etade", "statale", "etat", "zustand", "estado"]
+      "key::105" : ["state", "stato", "etade", "estado", "statale", "etat", "zustand", "estado"],
+      "key::106" : ["seminary", "seminario", "seminaire", "seminar"],
+      "key::107" : ["agricultural forestry", "af", "a f", "a&f"],
+      "key::108" : ["agricultural mechanical", "am", "a m", "a&m"]
     }
   }
 }

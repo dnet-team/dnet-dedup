@@ -47,7 +47,7 @@ public class TreeNodeDef implements Serializable {
 
             double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
 
-            stats.addFieldStats(fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf), new FieldStats(weight, result, fieldConf.isCountIfUndefined(), doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField())));
+            stats.addFieldStats(fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf), new FieldStats(weight, Double.parseDouble(fieldConf.getParams().getOrDefault("threshold", "0.5")), result, fieldConf.isCountIfUndefined(), doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField())));
 
         }
 

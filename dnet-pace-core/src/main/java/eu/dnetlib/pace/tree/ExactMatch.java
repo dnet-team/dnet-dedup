@@ -24,6 +24,9 @@ public class ExactMatch extends AbstractComparator {
 
     @Override
     public double distance(final String a, final String b, final Config conf) {
+        if (a.isEmpty() || b.isEmpty()) {
+            return -1.0;  //return -1 if a field is missing
+        }
         return a.equals(b) ? 1.0 : 0;
     }
 

@@ -84,6 +84,32 @@ public class TreeNodeStats implements Serializable {
         return min;
     }
 
+    //if at least one is true, return 1.0
+    public double or(){
+        for (FieldStats fieldStats : this.results.values()) {
+            if (fieldStats.getResult() >= fieldStats.getThreshold())
+                return 1.0;
+        }
+        return 0.0;
+    }
+
+    //if at least one is false, return 0.0
+    public double and() {
+        for (FieldStats fieldStats : this.results.values()) {
+
+            if (fieldStats.getResult() == -1) {
+                if (fieldStats.isCountIfUndefined())
+                    return 0.0;
+            }
+            else {
+                if (fieldStats.getResult() < fieldStats.getThreshold())
+                    return 0.0;
+            }
+
+        }
+        return 1.0;
+    }
+
     public double getFinalScore(AggType aggregation){
 
         switch (aggregation){
@@ -91,16 +117,16 @@ public class TreeNodeStats implements Serializable {
                 return scoreSum()/fieldsCount();
             case SUM:
                 return scoreSum();
-            case SC:
-            case OR:
             case MAX:
                 return max();
-            case NC:
-            case AND:
             case MIN:
                 return min();
             case W_MEAN:
                 return weightedScoreSum()/weightSum();
+            case OR:
+                return or();
+            case AND:
+                return and();
             default:
                 return 0.0;
         }

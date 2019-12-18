@@ -74,7 +74,7 @@
           }
         ],
         "threshold": 1,
-        "aggregation": "SC",
+        "aggregation": "OR",
         "positive": "MATCH",
         "negative": "NO_MATCH",
         "undefined": "layer2",
@@ -112,7 +112,7 @@
           }
         ],
         "threshold": 1,
-        "aggregation": "NC",
+        "aggregation": "AND",
         "positive": "layer3",
         "negative": "NO_MATCH",
         "undefined": "layer3",
@@ -126,12 +126,11 @@
             "weight": 1.0,
             "countIfUndefined": "true",
             "params": {
-              "windowSize": "4",
-              "threshold": "0.7"
+              "windowSize": "4"
             }
           }
         ],
-        "threshold": 1.0,
+        "threshold": 0.7,
         "aggregation": "W_MEAN",
         "positive": "layer4",
         "negative": "NO_MATCH",
@@ -146,13 +145,12 @@
             "weight": 1.0,
             "countIfUndefined": "true",
             "params": {
-              "windowSize": "4",
-              "threshold": "0.9"
+              "windowSize": "4"
             }
           }
         ],
-        "threshold": 1.0,
-        "aggregation": "W_MEAN",
+        "threshold": 0.9,
+        "aggregation": "AVG",
         "positive": "layer5",
         "negative": "NO_MATCH",
         "undefined": "layer5",
@@ -303,8 +301,8 @@
       "key::104": ["commerce","ticaret","ticarət","commercio","trade","handel","comercio"],
       "key::105" : ["state", "stato", "etade", "estado", "statale", "etat", "zustand", "estado"],
       "key::106" : ["seminary", "seminario", "seminaire", "seminar"],
-      "key::107" : ["agricultural forestry", "af", "a f", "a&f"],
-      "key::108" : ["agricultural mechanical", "am", "a m", "a&m"]
+      "key::107" : ["agricultural forestry", "af", "a f"],
+      "key::108" : ["agricultural mechanical", "am", "a m"]
     }
   }
 }

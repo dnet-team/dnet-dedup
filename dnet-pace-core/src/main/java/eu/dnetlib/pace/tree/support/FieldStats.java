@@ -11,18 +11,28 @@ import java.io.Serializable;
 public class FieldStats implements Serializable {
 
     private double weight;    //weight for the field (to be used in the aggregation)
+    private double threshold; //threshold for the field (to be used in case it is a sufficient or a necessary condition)
     private double result;    //the result of the comparison
     private Field a;
     private Field b;
 
     private boolean countIfUndefined;
 
-    public FieldStats(double weight, double result, boolean countIfUndefined, Field a, Field b) {
+    public FieldStats(double weight, double threshold, double result, boolean countIfUndefined, Field a, Field b) {
         this.weight = weight;
+        this.threshold = threshold;
         this.result = result;
         this.countIfUndefined = countIfUndefined;
         this.a = a;
         this.b = b;
+    }
+
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 
     public double getWeight() {

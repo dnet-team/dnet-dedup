@@ -18,9 +18,9 @@ public abstract class DedupTestUtils {
             System.out.println(cc);
         });
         //print nondeduped
-        nonDeduplicated.foreach(cc -> {
-            System.out.println(cc);
-        });
+//        nonDeduplicated.foreach(cc -> {
+//            System.out.println(cc.getFieldMap().get("legalname").stringValue());
+//        });
 
         System.out.println("Non duplicates: " + nonDeduplicated.count());
         System.out.println("Duplicates: " + connectedComponents.flatMap(cc -> cc.getDocs().iterator()).count());

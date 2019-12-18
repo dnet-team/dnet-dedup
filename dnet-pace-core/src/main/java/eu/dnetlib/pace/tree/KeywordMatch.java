@@ -41,7 +41,7 @@ public class KeywordMatch extends AbstractComparator {
         else {
             if (codes1.isEmpty() ^ codes2.isEmpty())
                 return -1; //undefined if one of the two has no keywords
-            return commonElementsPercentage(codes1, codes2) > Double.parseDouble(params.getOrDefault("threshold", "0.0")) ? 1.0 : 0.0;
+            return commonElementsPercentage(codes1, codes2);
         }
     }
 }

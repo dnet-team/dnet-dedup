@@ -9,10 +9,8 @@ public enum AggType {
     SUM,
     MAX,
     MIN,
-    NC, //necessary condition
-    SC, //sufficient condition
-    AND,
-    OR;
+    AND, //used for necessary conditions
+    OR; //used for sufficient conditions
 
     public static AggType getEnum(String value) {
 

@@ -31,7 +31,7 @@ public class DedupLocalTest extends DedupTestUtils {
     @Before
     public void setup() {
 
-        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/publication.current.conf.json", DedupLocalTest.class));
+        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf.json", DedupLocalTest.class));
         treeProcessor = new TreeProcessor(config);
 
         final SparkSession spark = SparkSession
@@ -41,7 +41,7 @@ public class DedupLocalTest extends DedupTestUtils {
                 .getOrCreate();
         context = new JavaSparkContext(spark.sparkContext());
 
-        final URL dataset = getClass().getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json");
+        final URL dataset = getClass().getResource("/eu/dnetlib/pace/examples/organization.to.fix.json");
         entities = context.textFile(dataset.getPath());
 
     }
@@ -116,12 +116,12 @@ public class DedupLocalTest extends DedupTestUtils {
 
     }
 
-@Ignore
+    @Ignore
     @Test
     public void matchTest(){
 
-        String JSONEntity1 = "{\"dateoftransformation\":\"2018-06-04\",\"originalId\":[\"opendoar____::Universiti_Sains_Malaysia\"],\"collectedfrom\":[{\"value\":\"OpenDOAR\",\"key\":\"10|openaire____::47ce9e9f4fad46e732cff06419ecaabb\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"websiteurl\":{\"value\":\"http://www.usm.my/my/\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"Universiti Sains Malaysia\"},\"country\":{\"classid\":\"MY\",\"classname\":\"Malaysia\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2015-08-24\",\"type\":20,\"id\":\"20|opendoar____::04315c25b0eb56eacb967901557f86b1\"}";
-        String JSONEntity2 = "{\"dateoftransformation\":\"2019-10-07\",\"originalId\":[\"corda_______::997941627\"],\"collectedfrom\":[{\"value\":\"CORDA - COmmon Research DAta Warehouse\",\"key\":\"10|openaire____::b30dac7baac631f3da7c2bb18dd9891f\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"true\"},\"eclegalperson\":{\"value\":\"true\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"legalshortname\":{\"value\":\"USM\"},\"ecresearchorganization\":{\"value\":\"true\"},\"ecnonprofit\":{\"value\":\"true\"},\"ecenterprise\":{\"value\":\"false\"},\"websiteurl\":{\"value\":\"http://www.usm.my/my\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"UNIVERSITI SAINS MALAYSIA*\"},\"country\":{\"classid\":\"MY\",\"classname\":\"Malaysia\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"true\"}}},\"dateofcollection\":\"2015-09-10\",\"type\":20,\"id\":\"20|corda_______::1fb0c86ddf389377454d5520d2796dad\"}";
+        String JSONEntity1 = "{\"dateoftransformation\":\"2019-10-14 08:59:35.295767\",\"originalId\":[\"openorgs____::0000010656\"],\"pid\":[{\"qualifier\":{\"classid\":\"ISNI\",\"classname\":\"ISNI\",\"schemename\":\"dnet:pid_types\",\"schemeid\":\"dnet:pid_types\"},\"value\":\"0000 0004 0370 7052\"},{\"qualifier\":{\"classid\":\"Wikidata\",\"classname\":\"Wikidata\",\"schemename\":\"dnet:pid_types\",\"schemeid\":\"dnet:pid_types\"},\"value\":\"Q17012267\"},{\"qualifier\":{\"classid\":\"grid.ac\",\"classname\":\"grid.ac\",\"schemename\":\"dnet:pid_types\",\"schemeid\":\"dnet:pid_types\"},\"value\":\"grid.418822.5\"}],\"collectedfrom\":[{\"value\":\"OpenOrgs Database\",\"key\":\"10|openaire____::0362fcdb3076765d9c0041ad331553e8\"}],\"organization\":{\"metadata\":{\"legalshortname\":{\"value\":\"ENVIRON (United States)\"},\"websiteurl\":{\"value\":\"http://www.ramboll-environ.com/\"},\"country\":{\"classid\":\"US\",\"classname\":\"United States\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"alternativeNames\":[{\"value\":\"ENVIRON (United States)\"},{\"value\":\"Ramboll Environ\"}],\"legalname\":{\"value\":\"ENVIRON (United States)\"}}},\"dateofcollection\":\"\",\"type\":20,\"id\":\"20|openorgs____::d3c5966e2089c408f43aa899fd0df656\"}";
+        String JSONEntity2 = "{\"dateoftransformation\":\"2018-06-04\",\"originalId\":[\"nsf_________::United_States_Military_Academy\"],\"collectedfrom\":[{\"value\":\"NSF - National Science Foundation\",\"key\":\"10|openaire____::dd69b4a1513c9de9f46faf24048da1e8\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"United States Military Academy\"},\"country\":{\"classid\":\"US\",\"classname\":\"United States\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2016-03-10\",\"type\":20,\"id\":\"20|nsf_________::177e8a2cf0c987cf8ac33933ddf3e260\"}";
 
         MapDocument mapDoc1 = MapDocumentUtil.asMapDocumentWithJPath(config, JSONEntity1);
         MapDocument mapDoc2 = MapDocumentUtil.asMapDocumentWithJPath(config, JSONEntity2);
@@ -131,15 +131,4 @@ public class DedupLocalTest extends DedupTestUtils {
         System.out.println(treeStats);
 
     }
-
-@Ignore
-    @Test
-    public void parseJSONEntityTest(){
-        String jsonEntity = "{\"dateoftransformation\":\"2018-09-19\",\"originalId\":[\"doajarticles::Sociedade_Brasileira_de_Reumatologia\"],\"collectedfrom\":[{\"value\":\"DOAJ-Articles\",\"key\":\"10|driver______::bee53aa31dc2cbb538c10c2b65fa5824\"}],\"organization\":{\"metadata\":{\"eclegalbody\":{\"value\":\"false\"},\"eclegalperson\":{\"value\":\"false\"},\"ecinternationalorganization\":{\"value\":\"false\"},\"legalshortname\":{\"value\":\"Sociedade Brasileira de Reumatologia\"},\"ecresearchorganization\":{\"value\":\"false\"},\"ecnonprofit\":{\"value\":\"false\"},\"ecenterprise\":{\"value\":\"false\"},\"ecnutscode\":{\"value\":\"false\"},\"ecinternationalorganizationeurinterests\":{\"value\":\"false\"},\"legalname\":{\"value\":\"Sociedade Brasileira de Reumatologia\"},\"country\":{\"classid\":\"BR\",\"classname\":\"Brazil\",\"schemename\":\"dnet:countries\",\"schemeid\":\"dnet:countries\"},\"echighereducation\":{\"value\":\"false\"},\"ecsmevalidated\":{\"value\":\"false\"}}},\"dateofcollection\":\"2018-09-19\",\"type\":20,\"id\":\"20|doajarticles::0019ba7a22c5bc733c3206bde28ff568\"}";
-
-        MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(config, jsonEntity);
-
-        System.out.println("mapDocument = " + mapDocument);
-    }
-
 }

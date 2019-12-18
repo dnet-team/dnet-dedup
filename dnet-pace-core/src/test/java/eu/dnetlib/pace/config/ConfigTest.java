@@ -65,36 +65,23 @@ public class ConfigTest extends AbstractPaceTest {
 	}
 
 	@Test
-	public void asMapDocumentTest() throws Exception {
+	public void asMapDocumentTest() {
 
-		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("publication.current.conf.json"));
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("organization.current.conf.json"));
 
-		final String json = readFromClasspath("pub2.json");
+		final String json = readFromClasspath("organization.json");
 
 		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
 
 		System.out.println("mapDocument = " + mapDocument.getFieldMap());
-
-
-		System.out.println(mapDocument.getFieldMap().values().stream().map(Field::isEmpty).count());
-
     }
-
-
-
-
 
     @Test
     public  void testJPath()  {
-        final String json = readFromClasspath("pub2.json");
+        final String json = readFromClasspath("organization.json");
 
-        final String jpath ="$.pid";
+        final String jpath ="$.id";
 
-
-        final List<String> jPathList = MapDocumentUtil.getJPathList(jpath, json, Type.JSON);
-
-        System.out.println("jPathList = " + jPathList);
-
-
+        System.out.println("result = " + MapDocumentUtil.getJPathString(jpath, json));
     }
 }

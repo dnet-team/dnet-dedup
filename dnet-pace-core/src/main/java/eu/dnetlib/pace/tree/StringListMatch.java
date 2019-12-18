@@ -41,7 +41,7 @@ public class StringListMatch extends AbstractComparator {
             return 0.0;
         }
 
-        return (double)incommon / (incommon + simDiff) > Double.parseDouble(params.getOrDefault("threshold", "0.5")) ? 1 : 0;
+        return (double)incommon / (incommon + simDiff);
 
     }
 }
