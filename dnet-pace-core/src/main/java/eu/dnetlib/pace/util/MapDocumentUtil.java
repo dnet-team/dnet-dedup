@@ -45,7 +45,7 @@ public class MapDocumentUtil {
                     FieldListImpl fi = new FieldListImpl(fdef.getName(), fdef.getType());
                     getJPathList(fdef.getPath(), json, fdef.getType())
                             .stream()
-                            .map(item -> new FieldValueImpl(fdef.getType(), fdef.getName(), item))
+                            .map(item -> new FieldValueImpl(Type.String, fdef.getName(), item))
                             .forEach(fi::add);
                     stringField.put(fdef.getName(), fi);
                     break;

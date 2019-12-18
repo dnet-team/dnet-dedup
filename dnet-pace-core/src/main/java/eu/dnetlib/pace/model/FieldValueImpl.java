@@ -47,13 +47,17 @@ public class FieldValueImpl extends AbstractField implements FieldValue {
 		if (value == null) return false;
 
 		switch (type) {
-		case String:
-		case JSON:
+			case String:
+			case JSON:
 			return value.toString().isEmpty();
-		case List:
-			List<?> list = (List<?>) value;
-			return list.isEmpty() || ((FieldValueImpl) list.get(0)).isEmpty();
-		case URL:
+			case List:
+				try {
+					List<?> list = (List<?>) value;
+					return list.isEmpty() || ((FieldValueImpl) list.get(0)).isEmpty();
+				} catch (Exception e) {
+					throw new RuntimeException(value.toString());
+				}
+			case URL:
 			String str = value.toString();
 			return StringUtils.isBlank(str) || !isValidURL(str);
 		default:

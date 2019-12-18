@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -68,11 +69,32 @@ public class ConfigTest extends AbstractPaceTest {
 
 		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("publication.current.conf.json"));
 
-		final String json = readFromClasspath("publication.json");
+		final String json = readFromClasspath("pub2.json");
 
 		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
 
 		System.out.println("mapDocument = " + mapDocument.getFieldMap());
+
+
+		System.out.println(mapDocument.getFieldMap().values().stream().map(Field::isEmpty).count());
+
+    }
+
+
+
+
+
+    @Test
+    public  void testJPath()  {
+        final String json = readFromClasspath("pub2.json");
+
+        final String jpath ="$.pid";
+
+
+        final List<String> jPathList = MapDocumentUtil.getJPathList(jpath, json, Type.JSON);
+
+        System.out.println("jPathList = " + jPathList);
+
 
     }
 }

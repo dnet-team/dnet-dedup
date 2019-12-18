@@ -20,4 +20,5 @@ public class UtilTest {
         PaceResolver paceResolver = new PaceResolver();
         paceResolver.getComparator("keywordMatch", params);
     }
+
 }

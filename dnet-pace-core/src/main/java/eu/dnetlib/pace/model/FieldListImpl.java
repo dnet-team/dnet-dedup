@@ -136,13 +136,7 @@ public class FieldListImpl extends AbstractField implements FieldList {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return Iterables.all(fields, new Predicate<Field>() {
-
-			@Override
-			public boolean apply(final Field f) {
-				return f.isEmpty();
-			}
-		});
+		return Iterables.all(fields, f -> f.isEmpty());
 	}
 
 	/*
