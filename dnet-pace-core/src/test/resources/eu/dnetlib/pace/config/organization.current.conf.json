@@ -7,10 +7,10 @@
     "queueMaxSize" : "2000",
     "groupMaxSize" : "50",
     "slidingWindowSize" : "200",
+    "idPath":"$.id",
     "rootBuilder" : [ "organization", "projectOrganization_participation_isParticipant", "datasourceOrganization_provision_isProvidedBy" ],
     "includeChildren" : "true",
-    "maxIterations": "20",
-    "idPath": "$.id"
+    "maxIterations": "20"
   },
   "pace" : {
     "clustering" : [
@@ -31,7 +31,7 @@
           }
         ],
         "threshold": 1,
-        "aggregation": "SC",
+        "aggregation": "AVG",
         "positive": "MATCH",
         "negative": "NO_MATCH",
         "undefined": "layer2",
@@ -69,7 +69,7 @@
           }
         ],
         "threshold": 1,
-        "aggregation": "NC",
+        "aggregation": "AND",
         "positive": "layer3",
         "negative": "NO_MATCH",
         "undefined": "layer3",
@@ -87,7 +87,7 @@
             }
           }
         ],
-        "threshold": 0.1,
+        "threshold": 0.7,
         "aggregation": "W_MEAN",
         "positive": "layer4",
         "negative": "NO_MATCH",
@@ -100,18 +100,18 @@
             "field": "legalname",
             "comparator": "keywordMatch",
             "weight": 1.0,
-            "countIfUndefined": "false",
+            "countIfUndefined": "true",
             "params": {
               "windowSize": "4"
             }
           }
         ],
-        "threshold": 0.7,
-        "aggregation": "W_MEAN",
+        "threshold": 0.9,
+        "aggregation": "AVG",
         "positive": "layer5",
         "negative": "NO_MATCH",
         "undefined": "layer5",
-        "ignoreUndefined": "false"
+        "ignoreUndefined": "true"
       },
       "layer5": {
         "fields": [
@@ -132,7 +132,7 @@
             "params": {}
           }
         ],
-        "threshold": 0.9,
+        "threshold": 0.99,
         "aggregation": "W_MEAN",
         "positive": "MATCH",
         "negative": "NO_MATCH",
@@ -145,7 +145,8 @@
       { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
       { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
       { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
-      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid=='grid.ac')].value"}
+      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid.ac')].value"},
+      { "name" : "originalId", "type" : "String", "path" : "$.id" }
     ],
     "blacklists" : {
       "legalname" : []
@@ -257,8 +258,8 @@
       "key::104": ["commerce","ticaret","ticarət","commercio","trade","handel","comercio"],
       "key::105" : ["state", "stato", "etade", "estado", "statale", "etat", "zustand", "estado"],
       "key::106" : ["seminary", "seminario", "seminaire", "seminar"],
-      "key::107" : ["agricultural forestry", "af", "a f", "a&f"],
-      "key::108" : ["agricultural mechanical", "am", "a m", "a&m"]
+      "key::107" : ["agricultural forestry", "af", "a f"],
+      "key::108" : ["agricultural mechanical", "am", "a m"]
     }
   }
 }
