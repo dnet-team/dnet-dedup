@@ -1,6 +1,7 @@
 package eu.dnetlib.pace.utils;
 
 import com.google.common.collect.Sets;
+import com.google.common.hash.Hashing;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
@@ -77,5 +78,9 @@ public class Utility {
 
     public static Set<String> getGroupingKeys(DedupConfig conf, MapDocument doc) {
         return Sets.newHashSet(BlacklistAwareClusteringCombiner.filterAndCombine(doc, conf));
+    }
+
+    public  static long getHashcode(final String id) {
+        return Hashing.murmur3_128().hashUnencodedChars(id).asLong();
     }
 }

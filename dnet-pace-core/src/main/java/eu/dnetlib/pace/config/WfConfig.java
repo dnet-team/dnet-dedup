@@ -86,7 +86,6 @@ public class WfConfig implements Serializable {
 	/** The Jquery path to retrieve the identifier */
 	private String  idPath = "$.id";
 
-
 	public WfConfig() {}
 
 	/**
@@ -100,8 +99,6 @@ public class WfConfig implements Serializable {
 	 *            the root builder families
 	 * @param dedupRun
 	 *            the dedup run
-	 * @param threshold
-	 *            the threshold
 	 * @param skipList
 	 *            the skip list
 	 * @param queueMaxSize
@@ -112,22 +109,25 @@ public class WfConfig implements Serializable {
 	 *            the sliding window size
 	 * @param includeChildren
 	 *            allows the children to be included in the representative records or not.
+	 * @param maxIterations
+	 * 			  the maximum number of iterations
+	 * @param idPath
+	 * 			  the path for the id of the entity
 	 */
 	public WfConfig(final String entityType, final String orderField, final List<String> rootBuilder, final String dedupRun,
-			final double threshold,
-			final Set<String> skipList, final int queueMaxSize, final int groupMaxSize, final int slidingWindowSize, final boolean includeChildren, final int maxIterations) {
+			final Set<String> skipList, final int queueMaxSize, final int groupMaxSize, final int slidingWindowSize, final boolean includeChildren, final int maxIterations, final String idPath) {
 		super();
 		this.entityType = entityType;
 		this.orderField = orderField;
 		this.rootBuilder = rootBuilder;
 		this.dedupRun = cleanupStringNumber(dedupRun);
-		this.threshold = threshold;
 		this.skipList = skipList;
 		this.queueMaxSize = queueMaxSize;
 		this.groupMaxSize = groupMaxSize;
 		this.slidingWindowSize = slidingWindowSize;
 		this.includeChildren = includeChildren;
 		this.maxIterations = maxIterations;
+		this.idPath = idPath;
 	}
 
 	/**

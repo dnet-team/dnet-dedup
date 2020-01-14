@@ -8,11 +8,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * The class that defines the configuration of each field in the decision tree.
+ * */
 public class FieldConf implements Serializable {
 
-    private String field;   //name of the field on which apply the comparator
-    private String comparator;  //comparator name
-    private double weight = 1.0;    //weight for the field (to be used in the aggregation)
+    private String field;               //name of the field on which apply the comparator
+    private String comparator;          //comparator name
+    private double weight = 1.0;        //weight for the field (to be used in the aggregation)
     private Map<String,String> params;  //parameters
 
     private boolean countIfUndefined;

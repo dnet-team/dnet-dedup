@@ -39,7 +39,7 @@ public class Deduper implements Serializable {
 
         //create vertexes of the graph: <ID, MapDocument>
         JavaPairRDD<String, MapDocument> mapDocs = mapToVertexes(context, entities, config);
-        RDD<Tuple2<Object, MapDocument>> vertexes = mapDocs.mapToPair(t -> new Tuple2<Object, MapDocument>( (long) t._1().hashCode(), t._2())).rdd();
+        RDD<Tuple2<Object, MapDocument>> vertexes = mapDocs.mapToPair(t -> new Tuple2<Object, MapDocument>(Utility.getHashcode(t._1()), t._2())).rdd();
 
         //create blocks for deduplication
         JavaPairRDD<String, Iterable<MapDocument>> blocks = createBlocks(context, mapDocs, config);
@@ -47,7 +47,9 @@ public class Deduper implements Serializable {
         //create relations by comparing only elements in the same group
         final JavaPairRDD<String, String> relationRDD = computeRelations(context, blocks, config);
 
-        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(it._1().hashCode(),it._2().hashCode(), "equalTo")).rdd();
+        System.out.println("Number of relations = " + relationRDD.distinct().count());
+
+        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(Utility.getHashcode(it._1()),Utility.getHashcode(it._2()), "equalTo")).rdd();
 
         accumulators.forEach((name, acc) -> log.info(name + " -> " + acc.value()));
 

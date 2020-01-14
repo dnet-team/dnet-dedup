@@ -195,13 +195,13 @@
       "legalname" : []
     },
     "synonyms": {
-      "key::1": ["university","università","università studi","universitario","universitaria","université","universitaire","universitaires","universidad","universitade","Universität","universitaet","Uniwersytet","университет","universiteit","πανεπιστήμιο","universitesi","universiteti", "universiti"],
+      "key::1": ["university","università","università studi","universitario","universitaria","université", "universite", "universitaire","universitaires","universidad","universitade","Universität","universitaet","Uniwersytet","университет","universiteit","πανεπιστήμιο","universitesi","universiteti", "universiti"],
       "key::2": ["studies","studi","études","estudios","estudos","Studien","studia","исследования","studies","σπουδές"],
       "key::3": ["advanced","superiore","supérieur","supérieure","supérieurs","supérieures","avancado","avancados","fortgeschrittene","fortgeschritten","zaawansowany","передовой","gevorderd","gevorderde","προχωρημένος","προχωρημένη","προχωρημένο","προχωρημένες","προχωρημένα","wyzsza"],
       "key::4": ["institute","istituto","institut","instituto","instituto","Institut","instytut","институт","instituut","ινστιτούτο"],
       "key::5": ["hospital","ospedale","hôpital","hospital","hospital","Krankenhaus","szpital","больница","ziekenhuis","νοσοκομείο"],
       "key::6": ["research","ricerca","recherche","investigacion","pesquisa","Forschung","badania","исследования","onderzoek","έρευνα","erevna","erevnas"],
-      "key::7": ["college","collegio","université","colegio","faculdade","Hochschule","Szkoła Wyższa","Высшая школа","universiteit","κολλέγιο"],
+      "key::7": ["college","collegio","colegio","faculdade","Hochschule","Szkoła Wyższa","Высшая школа","κολλέγιο"],
       "key::8": ["foundation","fondazione","fondation","fundación","fundação","Stiftung","Fundacja","фонд","stichting","ίδρυμα","idryma"],
       "key::9": ["center","centro","centre","centro","centro","zentrum","centrum","центр","centrum","κέντρο"],
       "key::10": ["national","nazionale","national","nationale","nationaux","nationales","nacional","nacional","national","krajowy","национальный","nationaal","nationale","εθνικό"],
@@ -302,7 +302,8 @@
       "key::105" : ["state", "stato", "etade", "estado", "statale", "etat", "zustand", "estado"],
       "key::106" : ["seminary", "seminario", "seminaire", "seminar"],
       "key::107" : ["agricultural forestry", "af", "a f"],
-      "key::108" : ["agricultural mechanical", "am", "a m"]
+      "key::108" : ["agricultural mechanical", "am", "a m"],
+      "key::109" : ["catholic", "catholique", "katholische", "catolica", "cattolica", "catolico"]
     }
   }
 }

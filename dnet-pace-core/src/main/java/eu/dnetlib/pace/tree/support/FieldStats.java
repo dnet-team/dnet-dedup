@@ -8,10 +8,13 @@ import eu.dnetlib.pace.util.PaceException;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * The class that contains the result of each comparison in the decision tree
+ * */
 public class FieldStats implements Serializable {
 
     private double weight;    //weight for the field (to be used in the aggregation)
-    private double threshold; //threshold for the field (to be used in case it is a sufficient or a necessary condition)
+    private double threshold; //threshold for the field (to be used in some kind of aggregations)
     private double result;    //the result of the comparison
     private Field a;
     private Field b;

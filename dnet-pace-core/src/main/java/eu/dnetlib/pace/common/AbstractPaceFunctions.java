@@ -225,17 +225,6 @@ public abstract class AbstractPaceFunctions {
 		return s.trim();
 	}
 
-	public double keywordsCompare(Set<String> s1, Set<String> s2, Map<String, String> translationMap){
-
-		Set<String> k1 = keywordsToCodes(s1, translationMap);
-		Set<String> k2 = keywordsToCodes(s2, translationMap);
-
-        if (k1.isEmpty() || k2.isEmpty())
-            return 1.0;
-
-        return commonElementsPercentage(k1, k2);
-    }
-
     public double commonElementsPercentage(Set<String> s1, Set<String> s2){
 
 		int longer = (s1.size()>s2.size())?s1.size():s2.size();

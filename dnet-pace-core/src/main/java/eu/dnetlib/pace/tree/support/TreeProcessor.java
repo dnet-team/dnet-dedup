@@ -2,6 +2,7 @@ package eu.dnetlib.pace.tree.support;
 
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.*;
+import eu.dnetlib.pace.model.gt.Match;
 import eu.dnetlib.pace.util.PaceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

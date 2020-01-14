@@ -6,7 +6,6 @@ import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.PaceException;
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -34,21 +33,30 @@ public class TreeNodeDef implements Serializable {
         this.ignoreUndefined = ignoreUndefined;
     }
 
-    public TreeNodeDef() {
-    }
+    public TreeNodeDef() {}
 
+    //function for the evaluation of the node
     public TreeNodeStats evaluate(MapDocument doc1, MapDocument doc2, Config conf) {
 
         TreeNodeStats stats = new TreeNodeStats();
 
+        //for each field in the node, it computes the
         for (FieldConf fieldConf : fields) {
 
             double weight = fieldConf.getWeight();
 
             double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
 
-            stats.addFieldStats(fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf), new FieldStats(weight, Double.parseDouble(fieldConf.getParams().getOrDefault("threshold", "0.5")), result, fieldConf.isCountIfUndefined(), doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField())));
-
+            stats.addFieldStats(
+                    fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf),
+                    new FieldStats(
+                            weight,
+                            Double.parseDouble(fieldConf.getParams().getOrDefault("threshold", "0.5")),
+                            result,
+                            fieldConf.isCountIfUndefined(),
+                            doc1.getFieldMap().get(fieldConf.getField()),
+                            doc2.getFieldMap().get(fieldConf.getField())
+                    ));
         }
 
         return stats;

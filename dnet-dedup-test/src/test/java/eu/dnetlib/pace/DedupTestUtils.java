@@ -14,13 +14,18 @@ public abstract class DedupTestUtils {
         final JavaRDD<ConnectedComponent> nonDeduplicated = ccs.filter(cc -> cc.getDocs().size()==1);
 
         //print deduped
-        connectedComponents.foreach(cc -> {
-            System.out.println(cc);
-        });
+        connectedComponents.map(cc -> {
+            StringBuilder sb = new StringBuilder();
+            for (MapDocument m : cc.getDocs()){
+                sb.append(m.getFieldMap().get("originalId").stringValue() + " - "+ m.getFieldMap().get("legalname").stringValue() + "\n");
+            }
+            return sb.toString();
+        }).foreach(s -> System.out.println("*******\n" + s + "*******\n"));
+
         //print nondeduped
-//        nonDeduplicated.foreach(cc -> {
-//            System.out.println(cc.getFieldMap().get("legalname").stringValue());
-//        });
+        nonDeduplicated.foreach(cc -> {
+            System.out.println(cc.getId() + " - " + cc.getFieldMap().get("legalname").stringValue());
+        });
 
         System.out.println("Non duplicates: " + nonDeduplicated.count());
         System.out.println("Duplicates: " + connectedComponents.flatMap(cc -> cc.getDocs().iterator()).count());

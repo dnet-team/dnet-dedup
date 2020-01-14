@@ -50,5 +50,10 @@ public interface Config {
 	public Map<String, List<String>> blacklists();
 
 
+	/**
+	 * Translation map.
+	 *
+	 * @return the map
+	 * */
 	public Map<String, String> translationMap();
 }

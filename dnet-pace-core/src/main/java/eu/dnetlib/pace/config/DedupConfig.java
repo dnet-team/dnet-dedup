@@ -34,7 +34,6 @@ public class DedupConfig implements Config, Serializable {
 	private static Map<String, String> defaults = Maps.newHashMap();
 
 	static {
-		defaults.put("threshold", "0");
 		defaults.put("dedupRun", "001");
 		defaults.put("entityType", "result");
 		defaults.put("subEntityType", "resulttype");
@@ -46,6 +45,7 @@ public class DedupConfig implements Config, Serializable {
 		defaults.put("rootBuilder", "result");
 		defaults.put("includeChildren", "true");
 		defaults.put("maxIterations", "20");
+		defaults.put("idPath", "$.id");
 	}
 
 	public DedupConfig() {}
