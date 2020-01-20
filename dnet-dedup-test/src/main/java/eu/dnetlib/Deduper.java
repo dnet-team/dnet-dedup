@@ -49,7 +49,7 @@ public class Deduper implements Serializable {
 
         System.out.println("Number of relations = " + relationRDD.distinct().count());
 
-        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(Utility.getHashcode(it._1()),Utility.getHashcode(it._2()), "equalTo")).rdd();
+        final RDD<Edge<String>> edgeRdd = relationRDD.map(it -> new Edge<>(Utility.getHashcode(it._1()),Utility.getHashcode(it._2()), "isSimilarTo")).rdd();
 
         accumulators.forEach((name, acc) -> log.info(name + " -> " + acc.value()));
 

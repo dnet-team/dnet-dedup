@@ -66,13 +66,12 @@
             "weight": 1.0,
             "countIfUndefined": "false",
             "params": {
-              "threshold": "0.5",
               "jpath_value": "$.value",
               "jpath_classid": "$.qualifier.classid"
             }
           }
         ],
-        "threshold": 1.0,
+        "threshold": 0.5,
         "aggregation": "MAX",
         "positive": "MATCH",
         "negative": "layer2",
