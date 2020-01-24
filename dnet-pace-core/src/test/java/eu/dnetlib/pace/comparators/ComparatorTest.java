@@ -1,8 +1,10 @@
 package eu.dnetlib.pace.comparators;
 
 import eu.dnetlib.pace.clustering.NGramUtils;
+import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.tree.*;
 import eu.dnetlib.pace.config.DedupConfig;
+import eu.dnetlib.pace.util.MapDocumentUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +32,7 @@ public class ComparatorTest extends AbstractPaceFunctions {
 	@Test
 	public void testCleanForSorting() {
 		NGramUtils utils = new NGramUtils();
-		System.out.println("utils = " + utils.cleanupForOrdering("University of Pisa"));
+		System.out.println(utils.cleanupForOrdering("University of Pisa"));
 	}
 
 	@Test
@@ -111,10 +113,15 @@ public class ComparatorTest extends AbstractPaceFunctions {
 
         double result = jaroWinklerNormalizedName.distance("AT&T (United States)", "United States Military Academy", conf);
         System.out.println("result = " + result);
-    }
 
-    @Test
-	public void jsonListMatchTest() {
+		result = jaroWinklerNormalizedName.distance("NOAA - Servicio Meteorol\\u00f3gico Nacional", "NOAA - NWS", conf);
+		System.out.println("result = " + result);
+
+
+	}
+
+	@Test
+	public void jsonListMatchTest(){
 
 	}
 

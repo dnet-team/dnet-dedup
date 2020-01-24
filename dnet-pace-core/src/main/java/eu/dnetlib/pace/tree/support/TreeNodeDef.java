@@ -51,7 +51,7 @@ public class TreeNodeDef implements Serializable {
                     fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf),
                     new FieldStats(
                             weight,
-                            Double.parseDouble(fieldConf.getParams().getOrDefault("threshold", "0.5")),
+                            Double.parseDouble(fieldConf.getParams().getOrDefault("threshold", "-1.0")),
                             result,
                             fieldConf.isCountIfUndefined(),
                             doc1.getFieldMap().get(fieldConf.getField()),

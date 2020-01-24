@@ -25,37 +25,13 @@
 		],
 		"includeChildren": "true",
 		"maxIterations": 20,
-		"idPath": "$.entity.id"
+		"idPath": "$.id"
 	},
 	"pace": {
-		"clustering": [
-			{
-				"name": "ngrampairs",
-				"fields": [
-					"title"
-				],
-				"params": {
-					"max": "1",
-					"ngramLen": "3"
-				}
-			},
-			{
-				"name": "suffixprefix",
-				"fields": [
-					"title"
-				],
-				"params": {
-					"max": "1",
-					"len": "3"
-				}
-			},
-			{
-				"name": "lowercase",
-				"fields": [
-					"doi"
-				],
-				"params": {}
-			}
+		"clustering" : [
+			{ "name" : "ngrampairs", "fields" : [ "title" ], "params" : { "max" : "1", "ngramLen" : "3"} },
+			{ "name" : "suffixprefix", "fields" : [ "title" ], "params" : { "max" : "1", "len" : "3" } },
+			{ "name" : "lowercase", "fields" : [ "doi" ], "params" : { } }
 		],
 		"decisionTree": {
 			"start": {
@@ -66,14 +42,13 @@
 						"weight": 1.0,
 						"countIfUndefined": "false",
 						"params": {
-							"threshold": "0.5",
 							"jpath_value": "$.value",
 							"jpath_classid": "$.qualifier.classid"
 						}
 					}
 				],
-				"threshold": 1.0,
-				"aggregation": "MAX",
+				"threshold": 0.5,
+				"aggregation": "AVG",
 				"positive": "MATCH",
 				"negative": "layer2",
 				"undefined": "layer2",
@@ -97,7 +72,7 @@
 					}
 				],
 				"threshold": 1.0,
-				"aggregation": "NC",
+				"aggregation": "AND",
 				"positive": "layer3",
 				"negative": "NO_MATCH",
 				"undefined": "layer3",
@@ -107,14 +82,14 @@
 				"fields": [
 					{
 						"field": "title",
-						"comparator": "LevensteinTitle",
+						"comparator": "levensteinTitle",
 						"weight": 1.0,
 						"countIfUndefined": "true",
 						"params": {}
 					}
 				],
 				"threshold": 0.99,
-				"aggregation": "SUM",
+				"aggregation": "AVG",
 				"positive": "MATCH",
 				"negative": "NO_MATCH",
 				"undefined": "NO_MATCH",
@@ -130,7 +105,7 @@
 			{
 				"name": "pid",
 				"type": "JSON",
-				"path": "$.pid[*]",
+				"path": "$.pid",
 				"overrideMatch": "true"
 			},
 			{

@@ -7,6 +7,7 @@ import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.tree.JsonListMatch;
 import eu.dnetlib.pace.util.MapDocumentUtil;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -18,6 +19,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class ConfigTest extends AbstractPaceTest {
+
+	private Map<String, String> params;
+
+	@Before
+	public void setup() {
+		params = new HashMap<>();
+		params.put("jpath_value", "$.value");
+		params.put("jpath_classid", "$.qualifier.classid");
+	}
 
 	@Test
 	public void dedupConfigSerializationTest() {
@@ -67,13 +77,18 @@ public class ConfigTest extends AbstractPaceTest {
 	@Test
 	public void asMapDocumentTest() {
 
-		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("organization.current.conf.json"));
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("publication.current.conf.json"));
 
-		final String json = readFromClasspath("organization.json");
+		final String json = readFromClasspath("publication.json");
 
 		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
 
 		System.out.println("mapDocument = " + mapDocument.getFieldMap());
+
+		JsonListMatch jsonListMatch = new JsonListMatch(params);
+
+		jsonListMatch.compare(mapDocument.getFieldMap().get("pid"), mapDocument.getFieldMap().get("pid"), null);
+
     }
 
     @Test

@@ -40,7 +40,7 @@ public class KeywordMatch extends AbstractComparator {
             return 1.0;
         else {
             if (codes1.isEmpty() ^ codes2.isEmpty())
-                return -1; //undefined if one of the two has no keywords
+                return -1.0; //undefined if one of the two has no keywords
             return commonElementsPercentage(codes1, codes2);
         }
     }

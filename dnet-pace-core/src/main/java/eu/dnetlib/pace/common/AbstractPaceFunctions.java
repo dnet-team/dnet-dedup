@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,8 @@ public abstract class AbstractPaceFunctions {
 
 	private Pattern numberPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
+	private Pattern hexUnicodePattern = Pattern.compile("\\\\u(\\p{XDigit}{4})");
+
 	protected final static FieldList EMPTY_FIELD = new FieldListImpl();
 
 	protected String concat(final List<String> l) {
@@ -58,7 +61,7 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	protected String cleanup(final String s) {
-		final String s0 = s.toLowerCase();
+		final String s0 = unicodeNormalization(s.toLowerCase());
 		final String s1 = fixAliases(s0);
 		final String s2 = nfd(s1);
 		final String s3 = s2.replaceAll("&ndash;", " ");
@@ -136,7 +139,7 @@ public abstract class AbstractPaceFunctions {
 	}
 
 	protected String normalize(final String s) {
-		return nfd(s)
+		return nfd(unicodeNormalization(s))
 				.toLowerCase()
 				// do not compact the regexes in a single expression, would cause StackOverflowError in case of large input strings
 				.replaceAll("[^ \\w]+", "")
@@ -149,6 +152,18 @@ public abstract class AbstractPaceFunctions {
 
 	public String nfd(final String s) {
 		return Normalizer.normalize(s, Normalizer.Form.NFD);
+	}
+
+	public String unicodeNormalization(final String s) {
+
+		Matcher m = hexUnicodePattern.matcher(s);
+		StringBuffer buf = new StringBuffer(s.length());
+		while (m.find()) {
+			String ch = String.valueOf((char) Integer.parseInt(m.group(1), 16));
+			m.appendReplacement(buf, Matcher.quoteReplacement(ch));
+		}
+		m.appendTail(buf);
+		return buf.toString();
 	}
 
 	protected String filterStopWords(final String s, final Set<String> stopwords) {
