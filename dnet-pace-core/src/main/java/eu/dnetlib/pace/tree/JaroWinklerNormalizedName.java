@@ -5,7 +5,7 @@ import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import eu.dnetlib.pace.config.Config;
-import org.apache.commons.collections.CollectionUtils;
+
 
 import java.util.Map;
 import java.util.Set;

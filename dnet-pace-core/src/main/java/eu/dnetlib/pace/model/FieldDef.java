@@ -1,8 +1,9 @@
 package eu.dnetlib.pace.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import eu.dnetlib.pace.config.Type;
 
 import java.io.Serializable;
@@ -103,7 +104,11 @@ public class FieldDef implements Serializable {
 
 	@Override
 	public String toString() {
-		return new Gson().toJson(this);
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			return null;
+		}
 	}
 
 }

@@ -4,7 +4,7 @@ import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 

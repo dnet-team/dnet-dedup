@@ -5,7 +5,7 @@ import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.Person;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.List;

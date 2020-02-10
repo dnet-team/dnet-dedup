@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 @ClusteringClass("lowercase")
 public class LowercaseClustering extends AbstractClusteringFunction {

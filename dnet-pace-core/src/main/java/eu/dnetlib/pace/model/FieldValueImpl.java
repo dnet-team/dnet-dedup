@@ -2,12 +2,12 @@ package eu.dnetlib.pace.model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import eu.dnetlib.pace.config.Type;
-import org.apache.commons.collections.iterators.SingletonIterator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The Class FieldValueImpl.
@@ -124,7 +124,7 @@ public class FieldValueImpl extends AbstractField implements FieldValue {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Iterator<Field> iterator() {
-		return new SingletonIterator(this);
+		return Collections.singleton((Field) this).iterator();
 	}
 
 }

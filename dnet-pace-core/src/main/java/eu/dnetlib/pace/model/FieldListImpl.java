@@ -1,11 +1,11 @@
 package eu.dnetlib.pace.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import eu.dnetlib.pace.config.Type;
 
 import java.util.Collection;
@@ -283,7 +283,12 @@ public class FieldListImpl extends AbstractField implements FieldList {
 		case String:
 			return Joiner.on(" ").join(stringList());
 		case JSON:
-			final String json = new Gson().toJson(stringList());
+			String json;
+			try {
+				json = new ObjectMapper().writeValueAsString(this);
+			} catch (JsonProcessingException e) {
+				json = null;
+			}
 			return json;
 		default:
 			throw new IllegalArgumentException("Unknown type: " + getType().toString());
