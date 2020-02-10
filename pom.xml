@@ -21,7 +21,7 @@
     </licenses>
 
     <scm>
-        <developerConnection>scm:git:https://github.com/dnet-team/dnet-dedup.git</developerConnection>
+        <developerConnection>scm:git:https://code-repo.d4science.org/D-Net/dnet-dedup.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
