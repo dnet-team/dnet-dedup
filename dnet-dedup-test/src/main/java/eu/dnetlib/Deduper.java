@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.Optional;
 import org.apache.spark.graphx.Edge;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.util.LongAccumulator;
@@ -90,6 +91,7 @@ public class Deduper implements Serializable {
                     return Utility.getGroupingKeys(config, currentDocument).stream()
                             .map(it -> new Tuple2<>(it, currentDocument)).collect(Collectors.toList()).iterator();
                 }).groupByKey();
+
     }
 
     /**
