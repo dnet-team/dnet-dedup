@@ -29,7 +29,7 @@ public class MapDocumentUtil {
             switch (fdef.getType()) {
                 case String:
                 case Int:
-                    stringField.put(fdef.getName(), new FieldValueImpl(fdef.getType(), fdef.getName(), getJPathString(fdef.getPath(), json)));
+                    stringField.put(fdef.getName(), new FieldValueImpl(fdef.getType(), fdef.getName(), truncateValue(getJPathString(fdef.getPath(), json), fdef.getLength())));
                     break;
                 case URL:
                     String uv = getJPathString(fdef.getPath(), json);
@@ -39,7 +39,7 @@ public class MapDocumentUtil {
                 case List:
                 case JSON:
                     FieldListImpl fi = new FieldListImpl(fdef.getName(), fdef.getType());
-                    getJPathList(fdef.getPath(), json, fdef.getType())
+                    truncateList(getJPathList(fdef.getPath(), json, fdef.getType()), fdef.getSize())
                             .stream()
                             .map(item -> new FieldValueImpl(Type.String, fdef.getName(), item))
                             .forEach(fi::add);
@@ -103,5 +103,20 @@ public class MapDocumentUtil {
         }
     }
 
+
+    public static String truncateValue(String value, int length) {
+
+        if (length == -1 || length > value.length())
+            return value;
+
+        return value.substring(0, length);
+    }
+
+    public static List<String> truncateList(List<String> list, int size) {
+        if (size == -1 || size > list.size())
+            return list;
+
+        return list.subList(0, size);
+    }
 
 }

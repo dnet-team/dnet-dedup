@@ -83,11 +83,14 @@ public class ConfigTest extends AbstractPaceTest {
 
 		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
 
-		System.out.println("mapDocument = " + mapDocument.getFieldMap());
+//		System.out.println("mapDocument = " + mapDocument.getFieldMap());
 
-		JsonListMatch jsonListMatch = new JsonListMatch(params);
+//		JsonListMatch jsonListMatch = new JsonListMatch(params);
+//
+//		jsonListMatch.compare(mapDocument.getFieldMap().get("pid"), mapDocument.getFieldMap().get("pid"), null);
 
-		jsonListMatch.compare(mapDocument.getFieldMap().get("pid"), mapDocument.getFieldMap().get("pid"), null);
+		System.out.println("mapDocument = " + mapDocument.getFieldMap().get("title").stringValue());
+
 
     }
 
