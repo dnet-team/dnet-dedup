@@ -5,6 +5,7 @@ import com.google.common.hash.Hashing;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -18,6 +19,7 @@ import org.apache.spark.util.LongAccumulator;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -83,4 +85,16 @@ public class Utility {
     public  static long getHashcode(final String id) {
         return Hashing.murmur3_128().hashUnencodedChars(id).asLong();
     }
+
+    public static String md5(final String s) {
+        try {
+            final MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(s.getBytes(StandardCharsets.UTF_8));
+            return new String(Hex.encodeHex(md.digest()));
+        } catch (final Exception e) {
+            System.err.println("Error creating id");
+            return null;
+        }
+    }
+
 }

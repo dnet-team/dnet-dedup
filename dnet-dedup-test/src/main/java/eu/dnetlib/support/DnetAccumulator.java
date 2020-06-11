@@ -4,7 +4,7 @@ import org.apache.spark.util.AccumulatorV2;
 
 public class DnetAccumulator extends AccumulatorV2<Long, Long> {
 
-    private Long counter= 0L;
+    private Long counter = 0L;
 
     private String group;
 

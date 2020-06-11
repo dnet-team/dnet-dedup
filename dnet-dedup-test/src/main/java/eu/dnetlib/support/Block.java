@@ -1,29 +1,68 @@
 package eu.dnetlib.support;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.dnetlib.pace.model.MapDocument;
-import eu.dnetlib.pace.util.PaceException;
-
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import com.google.common.collect.Lists;
+
+import eu.dnetlib.pace.model.MapDocument;
 
 public class Block implements Serializable {
 
-    String key;
-    List<MapDocument> elements;
+    private String key;
 
-    public Block(String key, Iterable<MapDocument> elements){
-        this.key = key;
-        this.elements = StreamSupport.stream(elements.spliterator(), false).collect(Collectors.toList());
+    private List<MapDocument> documents;
+
+    public Block() {
+        super();
     }
 
-    public Block(String key, List<MapDocument> elements){
+    public Block(String key, Iterable<MapDocument> documents) {
         this.key = key;
-        this.elements = elements;
+        this.documents = Lists.newArrayList(documents);
+    }
+
+    public static Block from(String key, MapDocument doc) {
+        Block block = new Block();
+        block.setKey(key);
+        block.setDocuments(Lists.newArrayList(doc));
+        return block;
+    }
+
+    public static Block from(String key, Iterator<Block> blocks, String orderField, int maxSize) {
+        Block block = new Block();
+        block.setKey(key);
+
+        Iterable<Block> it = () -> blocks;
+
+        block
+                .setDocuments(
+                        StreamSupport
+                                .stream(it.spliterator(), false)
+                                .flatMap(b -> b.getDocuments().stream())
+                                .sorted(Comparator.comparing(a -> a.getFieldMap().get(orderField).stringValue()))
+                                .limit(maxSize)
+                                .collect(Collectors.toCollection(ArrayList::new)));
+        return block;
+    }
+
+    public static Block from(Block b1, Block b2, String orderField, int maxSize) {
+        Block block = new Block();
+        block.setKey(b1.getKey());
+        block
+                .setDocuments(
+                        Stream
+                                .concat(b1.getDocuments().stream(), b2.getDocuments().stream())
+                                .sorted(Comparator.comparing(a -> a.getFieldMap().get(orderField).stringValue()))
+                                .limit(maxSize)
+                                .collect(Collectors.toCollection(ArrayList::new)));
+        return block;
     }
 
     public String getKey() {
@@ -34,30 +73,22 @@ public class Block implements Serializable {
         this.key = key;
     }
 
-    public List<MapDocument> getElements() {
-        return elements;
+    public List<MapDocument> getDocuments() {
+        return documents;
     }
 
-    public void setElements(List<MapDocument> elements) {
-        this.elements = elements;
+    public void setDocuments(List<MapDocument> documents) {
+        this.documents = documents;
     }
 
-    public int comparisons(){
-        int size = elements.size();
-        return (size*(size-1)/2);
+    public int comparisons() {
+        return (documents.size()*(documents.size()-1))/2;
     }
 
-    public int elements(){
-        return elements.size();
+    public int elements() {
+        return documents.size();
     }
 
-    @Override
-    public String toString(){
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (IOException e) {
-            throw new PaceException("Failed to create Json: ", e);
-        }
-    }
+
 }
+
