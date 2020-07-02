@@ -99,6 +99,19 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	}
 
 	@Test
+	public void testWordsSuffixPrefix() {
+
+		params.put("len", 3);
+		params.put("max", 4);
+
+		final ClusteringFunction sp = new WordsSuffixPrefix(params);
+
+		final String s = "Search for the Standard Model Higgs Boson";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+	}
+
+	@Test
 	public void testFieldValue() {
 
 		params.put("randomLength", 5);

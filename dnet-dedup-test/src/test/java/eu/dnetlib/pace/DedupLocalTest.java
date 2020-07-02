@@ -28,12 +28,12 @@ public class DedupLocalTest extends DedupTestUtils {
     DedupConfig config;
     JavaSparkContext context;
 
-    final String entitiesPath = "/Users/miconis/IdeaProjects/DnetDedup/dnet-dedup/dnet-dedup-test/src/test/resources/eu/dnetlib/pace/examples/organization";
+    final String entitiesPath = "/Users/miconis/Desktop/publications_to_fix.json";
 
     @Before
     public void setup() {
 
-        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf.json", DedupLocalTest.class));
+        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/publication.current.conf.json", DedupLocalTest.class));
 
         spark = SparkSession
                 .builder()
@@ -51,20 +51,20 @@ public class DedupLocalTest extends DedupTestUtils {
                 config,
                 spark,
                 entitiesPath,
-                "/tmp/deduptest/organization_simrel"
+                "/tmp/deduptest/publication_simrel"
         );
 
         Deduper.createMergeRels(
                 config,
                 entitiesPath,
-                "/tmp/deduptest/organization_mergerel",
-                "/tmp/deduptest/organization_simrel",
+                "/tmp/deduptest/publication_mergerel",
+                "/tmp/deduptest/publication_simrel",
                 spark
         );
 
         Deduper.createDedupEntity(
                 config,
-                "/tmp/deduptest/organization_mergerel",
+                "/tmp/deduptest/publication_mergerel",
                 entitiesPath,
                 spark,
                 "/tmp/deduptest/dedupentity"
