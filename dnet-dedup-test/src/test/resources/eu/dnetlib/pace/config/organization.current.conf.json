@@ -143,10 +143,10 @@
       }
     },
     "model" : [
-      { "name" : "country", "type" : "String", "path" : "$.country.classid"},
-      { "name" : "legalshortname", "type" : "String", "path" : "$.legalshortname.value"},
-      { "name" : "legalname", "type" : "String", "path" : "$.legalname.value" },
-      { "name" : "websiteurl", "type" : "URL", "path" : "$.websiteurl.value" },
+      { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
+      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
+      { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
       { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid')].value"},
       { "name" : "originalId", "type" : "String", "path" : "$.id" }
     ],
