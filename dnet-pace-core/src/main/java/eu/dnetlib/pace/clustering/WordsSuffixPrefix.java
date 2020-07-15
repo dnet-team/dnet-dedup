@@ -22,6 +22,21 @@ public class WordsSuffixPrefix extends AbstractClusteringFunction {
     private Collection<String> suffixPrefix(String s, int len, int max) {
 
         final int words = s.split(" ").length;
+
+        // adjust the token length according to the number of words
+        switch (words) {
+            case 1:
+                return Sets.newLinkedHashSet();
+            case 2:
+                return doSuffixPrefix(s, len+2, max, words);
+            case 3:
+                return doSuffixPrefix(s, len+1, max, words);
+            default:
+                return doSuffixPrefix(s, len, max, words);
+        }
+    }
+
+    private Collection<String> doSuffixPrefix(String s, int len, int max, int words) {
         final Set<String> bigrams = Sets.newLinkedHashSet();
         int i = 0;
         while (++i < s.length() && bigrams.size() < max) {
