@@ -6,10 +6,8 @@ import eu.dnetlib.pace.utils.Utility;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class DedupLocalTest extends DedupTestUtils {
 
     SparkSession spark;
