@@ -5,7 +5,7 @@
 
     <groupId>eu.dnetlib</groupId>
     <artifactId>dnet-dedup</artifactId>
-    <version>4.0.3</version>
+    <version>4.0.3-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
