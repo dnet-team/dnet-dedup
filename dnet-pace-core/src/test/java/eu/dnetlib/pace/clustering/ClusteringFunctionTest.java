@@ -112,6 +112,30 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	}
 
 	@Test
+	public void testWordsStatsSuffixPrefix() {
+		params.put("mod", 10);
+
+		final ClusteringFunction sp = new WordsStatsSuffixPrefixChain(params);
+
+		String s = "Search for the Standard Model Higgs Boson";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "A Physical Education Teacher Is Like...: Examining Turkish Students  Perceptions of Physical Education Teachers Through Metaphor Analysis";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "Structure of a Eukaryotic Nonribosomal Peptide Synthetase Adenylation Domain That Activates a Large Hydroxamate Amino Acid in Siderophore Biosynthesis";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "Performance Evaluation";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+	}
+
+	@Test
 	public void testFieldValue() {
 
 		params.put("randomLength", 5);
