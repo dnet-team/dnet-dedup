@@ -105,6 +105,8 @@ public class MapDocumentUtil {
 
 
     public static String truncateValue(String value, int length) {
+        if (value == null)
+            return "";
 
         if (length == -1 || length > value.length())
             return value;
