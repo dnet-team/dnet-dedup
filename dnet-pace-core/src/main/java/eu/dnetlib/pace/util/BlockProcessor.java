@@ -131,7 +131,7 @@ public class BlockProcessor {
 
             WfConfig wf = dedupConf.getWf();
             final Field fieldsPivot = pivot.values(wf.getOrderField());
-            final String fieldPivot = (fieldsPivot == null) || fieldsPivot.isEmpty() ? null : fieldsPivot.stringValue();
+            final String fieldPivot = (fieldsPivot == null) || fieldsPivot.isEmpty() ? "" : fieldsPivot.stringValue();
 
             if (fieldPivot != null) {
                 int i = 0;
