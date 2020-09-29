@@ -47,4 +47,13 @@ public class Relation implements Serializable {
     public Edge<String> toEdgeRdd(){
         return new Edge<>(Deduper.hash(source), Deduper.hash(target), type);
     }
+
+    @Override
+    public String toString() {
+        return "Relation{" +
+                "source='" + source + '\'' +
+                ", target='" + target + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

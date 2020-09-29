@@ -2,6 +2,7 @@ package eu.dnetlib.support;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import eu.dnetlib.pace.utils.Utility;
@@ -14,14 +15,14 @@ import eu.dnetlib.pace.util.PaceException;
 
 public class ConnectedComponent implements Serializable {
 
-    private Set<String> docs;
+    private HashSet<String> docs;
     private String ccId;
 
     public ConnectedComponent() {
     }
 
     public ConnectedComponent(Set<String> docs) {
-        this.docs = docs;
+        this.docs = new HashSet<>(docs);
         createID();
     }
 
@@ -68,7 +69,7 @@ public class ConnectedComponent implements Serializable {
         return docs;
     }
 
-    public void setDocs(Set<String> docs) {
+    public void setDocs(HashSet<String> docs) {
         this.docs = docs;
     }
 

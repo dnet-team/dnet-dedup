@@ -71,6 +71,13 @@
             "weight": 1,
             "countIfUndefined": "false",
             "params": {}
+          },
+          {
+            "field": "rorid",
+            "comparator": "exactMatch",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {}
           }
         ],
         "threshold": 1,
@@ -115,8 +122,8 @@
         "aggregation": "AND",
         "positive": "layer3",
         "negative": "NO_MATCH",
-        "undefined": "layer3",
-        "ignoreUndefined": "true"
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "false"
       },
       "layer3": {
         "fields": [
@@ -184,11 +191,12 @@
       }
     },
     "model" : [
-      { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
-      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
-      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
-      { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
-      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid.ac')].value"},
+      { "name" : "country", "type" : "String", "path" : "$.country.classid"},
+      { "name" : "legalshortname", "type" : "String", "path" : "$.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.legalname.value" },
+      { "name" : "websiteurl", "type" : "URL", "path" : "$.websiteurl.value" },
+      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='GRID')].value"},
+      { "name" : "rorid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='ROR')].value"},
       { "name" : "originalId", "type" : "String", "path" : "$.id" }
     ],
     "blacklists" : {

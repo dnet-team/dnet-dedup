@@ -1,5 +1,6 @@
 package eu.dnetlib;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.hash.Hashing;
 import eu.dnetlib.graph.GraphProcessor;
 import eu.dnetlib.pace.config.DedupConfig;
@@ -11,6 +12,7 @@ import eu.dnetlib.reporter.SparkReporter;
 import eu.dnetlib.support.Block;
 import eu.dnetlib.support.ConnectedComponent;
 import eu.dnetlib.support.Relation;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -27,7 +29,9 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.util.LongAccumulator;
 import scala.Serializable;
 import scala.Tuple2;
+import scala.math.Ordering;
 
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,6 +39,8 @@ import java.util.stream.StreamSupport;
 public class Deduper implements Serializable {
 
     private static final Log log = LogFactory.getLog(Deduper.class);
+
+    private static ObjectMapper mapper = new ObjectMapper();
 
     public static JavaPairRDD<String, Block> createSortedBlocks(
             JavaPairRDD<String, MapDocument> mapDocs, DedupConfig config) {
@@ -71,7 +77,7 @@ public class Deduper implements Serializable {
     }
 
     public static long hash(final String id) {
-        return Hashing.murmur3_128().hashString(id).asLong();
+        return Hashing.murmur3_128().hashString(id, Charset.defaultCharset()).asLong();
     }
 
     public static ConnectedComponent entityMerger(String key, Iterator<String> values) {
@@ -79,7 +85,7 @@ public class Deduper implements Serializable {
         ConnectedComponent cc = new ConnectedComponent();
         cc.setCcId(key);
         cc.setDocs(StreamSupport.stream(Spliterators.spliteratorUnknownSize(values, Spliterator.ORDERED), false)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toCollection(HashSet::new)));
         return cc;
     }
 
@@ -115,6 +121,13 @@ public class Deduper implements Serializable {
         // create blocks for deduplication
         JavaPairRDD<String, Block> blocks = Deduper.createSortedBlocks(mapDocuments, dedupConf);
 
+
+        //TODO test purpose
+        blocks.foreach(b -> System.out.println("b = " + b));
+        blocks = blocks.filter(b -> b._1().equals("ghahos"));
+
+
+
         // create relations by comparing only elements in the same group
         JavaRDD<Relation> relations = Deduper.computeRelations(sc, blocks, dedupConf);
 
@@ -145,15 +158,18 @@ public class Deduper implements Serializable {
                 .map(Relation::toEdgeRdd)
                 .rdd();
 
+        JavaRDD<ConnectedComponent> ccs = GraphProcessor
+                .findCCs(vertexes.rdd(), edgeRdd, maxIterations)
+                .toJavaRDD();
+
+        JavaRDD<Relation> mergeRel = ccs
+                .filter(k -> k.getDocs().size() > 1)
+                .flatMap(cc -> ccToMergeRel(cc, dedupConf))
+                .map(it -> new Relation(it._1(), it._2(), "mergeRel"));
+
         final Dataset<Relation> mergeRels = spark
                 .createDataset(
-                        GraphProcessor
-                                .findCCs(vertexes.rdd(), edgeRdd, maxIterations)
-                                .toJavaRDD()
-                                .filter(k -> k.getDocs().size() > 1)
-                                .flatMap(cc -> ccToMergeRel(cc, dedupConf))
-                                .map(it -> new Relation(it._1(), it._2(), "mergeRel"))
-                                .rdd(),
+                        mergeRel.rdd(),
                         Encoders.bean(Relation.class));
 
         mergeRels.write().mode(SaveMode.Overwrite).parquet(mergeRelsPath);

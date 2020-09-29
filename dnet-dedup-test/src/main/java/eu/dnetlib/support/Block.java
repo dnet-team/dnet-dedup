@@ -89,6 +89,13 @@ public class Block implements Serializable {
         return documents.size();
     }
 
-
+    @Override
+    public String toString() {
+        return "Block{" +
+                "key='" + key + '\'' +
+                ", size=" + documents.size() + '\'' +
+                ", names=" + documents.stream().map(d -> d.getFieldMap().get("country").stringValue()).collect(Collectors.toList()) + '\'' +
+                '}';
+    }
 }
 
