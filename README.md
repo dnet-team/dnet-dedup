@@ -1,4 +1,6 @@
-## Dnet-Dedup
+## Dnet-Dedup (gDup)
+
+The GDup Software enables an integrated, scalable, general-purpose system for entity deduplication over big information graphs. GDup supports practitioners with the functionalities needed to realize a fully-fledged entity deduplication workflow over a generic input graph, inclusive of Ground Truth support, end-user feedback, and strategies for identifying and merging duplicates to obtain an output disambiguated graph. GDup is today one of the core components of the OpenAIRE infrastructure production system, monitoring Open Science trends on behalf of the European Commission.
 
 # Decision Tree for authors deduplication
 
