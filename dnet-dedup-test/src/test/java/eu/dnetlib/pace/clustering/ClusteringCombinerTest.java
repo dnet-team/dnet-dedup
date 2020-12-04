@@ -4,8 +4,8 @@ import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.MapDocument;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.*;
 
 public class ClusteringCombinerTest  {
 

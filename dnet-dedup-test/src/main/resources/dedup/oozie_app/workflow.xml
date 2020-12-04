@@ -93,19 +93,22 @@
             <class>eu.dnetlib.jobs.SparkCreateSimRels</class>
             <jar>dnet-dedup-test-${projectVersion}.jar</jar>
             <spark-opts>
-                --executor-memory=${sparkExecutorMemory}
-                --executor-cores=${sparkExecutorCores}
-                --driver-memory=${sparkDriverMemory}
+                --num-executors=32
+                --executor-memory=12G
+                --executor-cores=4
+                --driver-memory=4G
                 --conf spark.extraListeners=${spark2ExtraListeners}
                 --conf spark.sql.queryExecutionListeners=${spark2SqlQueryExecutionListeners}
                 --conf spark.yarn.historyServer.address=${spark2YarnHistoryServerAddress}
                 --conf spark.eventLog.dir=${nameNode}${spark2EventLogDir}
                 --conf spark.sql.shuffle.partitions=3840
+                --conf spark.dynamicAllocation.enabled=false
             </spark-opts>
             <arg>--entitiesPath</arg><arg>${entitiesPath}</arg>
             <arg>--workingPath</arg><arg>${workingPath}</arg>
             <arg>--numPartitions</arg><arg>${numPartitions}</arg>
             <arg>--dedupConfPath</arg><arg>${dedupConfPath}</arg>
+            <arg>--useTree</arg><arg>${useTree}</arg>
         </spark>
         <ok to="CreateMergeRels"/>
         <error to="Kill"/>
@@ -117,33 +120,35 @@
             <mode>cluster</mode>
             <name>Create Merge Relations</name>
             <class>eu.dnetlib.jobs.SparkCreateMergeRels</class>
-            <jar>dhp-dedup-test-${projectVersion}.jar</jar>
+            <jar>dnet-dedup-test-${projectVersion}.jar</jar>
             <spark-opts>
-                --executor-memory=${sparkExecutorMemory}
-                --executor-cores=${sparkExecutorCores}
-                --driver-memory=${sparkDriverMemory}
+                --num-executors=32
+                --executor-memory=12G
+                --executor-cores=4
+                --driver-memory=4G
                 --conf spark.extraListeners=${spark2ExtraListeners}
                 --conf spark.sql.queryExecutionListeners=${spark2SqlQueryExecutionListeners}
                 --conf spark.yarn.historyServer.address=${spark2YarnHistoryServerAddress}
                 --conf spark.eventLog.dir=${nameNode}${spark2EventLogDir}
                 --conf spark.sql.shuffle.partitions=3840
+                --conf spark.dynamicAllocation.enabled=false
             </spark-opts>
             <arg>--entitiesPath</arg><arg>${entitiesPath}</arg>
             <arg>--workingPath</arg><arg>${workingPath}</arg>
             <arg>--numPartitions</arg><arg>${numPartitions}</arg>
             <arg>--dedupConfPath</arg><arg>${dedupConfPath}</arg>
         </spark>
-        <ok to="CreateDedupEntities"/>
+        <ok to="ComputeStatistics"/>
         <error to="Kill"/>
     </action>
 
-    <action name="CreateDedupEntities">
+    <action name="ComputeStatistics">
         <spark xmlns="uri:oozie:spark-action:0.2">
             <master>yarn</master>
             <mode>cluster</mode>
-            <name>Create Dedup Entities</name>
-            <class>eu.dnetlib.jobs.SparkCreateDedupEntity</class>
-            <jar>dhp-dedup-test-${projectVersion}.jar</jar>
+            <name>Compute Statistics</name>
+            <class>eu.dnetlib.jobs.SparkComputeStatistics</class>
+            <jar>dnet-dedup-test-${projectVersion}.jar</jar>
             <spark-opts>
                 --executor-memory=${sparkExecutorMemory}
                 --executor-cores=${sparkExecutorCores}
@@ -157,11 +162,36 @@
             <arg>--entitiesPath</arg><arg>${entitiesPath}</arg>
             <arg>--workingPath</arg><arg>${workingPath}</arg>
             <arg>--numPartitions</arg><arg>${numPartitions}</arg>
-            <arg>--dedupConfPath</arg><arg>${dedupConfPath}</arg>
         </spark>
         <ok to="End"/>
         <error to="Kill"/>
     </action>
+
+    <!--<action name="CreateDedupEntities">-->
+        <!--<spark xmlns="uri:oozie:spark-action:0.2">-->
+            <!--<master>yarn</master>-->
+            <!--<mode>cluster</mode>-->
+            <!--<name>Create Dedup Entities</name>-->
+            <!--<class>eu.dnetlib.jobs.SparkCreateDedupEntity</class>-->
+            <!--<jar>dnet-dedup-test-${projectVersion}.jar</jar>-->
+            <!--<spark-opts>-->
+                <!--&#45;&#45;executor-memory=${sparkExecutorMemory}-->
+                <!--&#45;&#45;executor-cores=${sparkExecutorCores}-->
+                <!--&#45;&#45;driver-memory=${sparkDriverMemory}-->
+                <!--&#45;&#45;conf spark.extraListeners=${spark2ExtraListeners}-->
+                <!--&#45;&#45;conf spark.sql.queryExecutionListeners=${spark2SqlQueryExecutionListeners}-->
+                <!--&#45;&#45;conf spark.yarn.historyServer.address=${spark2YarnHistoryServerAddress}-->
+                <!--&#45;&#45;conf spark.eventLog.dir=${nameNode}${spark2EventLogDir}-->
+                <!--&#45;&#45;conf spark.sql.shuffle.partitions=3840-->
+            <!--</spark-opts>-->
+            <!--<arg>&#45;&#45;entitiesPath</arg><arg>${entitiesPath}</arg>-->
+            <!--<arg>&#45;&#45;workingPath</arg><arg>${workingPath}</arg>-->
+            <!--<arg>&#45;&#45;numPartitions</arg><arg>${numPartitions}</arg>-->
+            <!--<arg>&#45;&#45;dedupConfPath</arg><arg>${dedupConfPath}</arg>-->
+        <!--</spark>-->
+        <!--<ok to="End"/>-->
+        <!--<error to="Kill"/>-->
+    <!--</action>-->
 
     <end name="End"/>
 </workflow-app>

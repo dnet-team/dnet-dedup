@@ -15,32 +15,6 @@
 
     <build>
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-shade-plugin</artifactId>-->
-            <!--                <version>2.4.3</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <phase>package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>shade</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <filters>-->
-            <!--                                <filter>-->
-            <!--                                    <artifact>*:*</artifact>-->
-            <!--                                    <excludes>-->
-            <!--                                        <exclude>META-INF/*.SF</exclude>-->
-            <!--                                        <exclude>META-INF/*.DSA</exclude>-->
-            <!--                                        <exclude>META-INF/*.RSA</exclude>-->
-            <!--                                    </excludes>-->
-            <!--                                </filter>-->
-            <!--                            </filters>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -60,10 +34,6 @@
                     <includes>
                         <include>**/*.java</include>
                     </includes>
-                    <!--<includes>-->
-                    <!--<include>src/main/java/**/*.java</include>-->
-                    <!--<include>src/main/java/**/*.scala</include>-->
-                    <!--</includes>-->
                 </configuration>
             </plugin>
 
@@ -71,14 +41,6 @@
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>4.0.1</version>
-                <!--<executions>-->
-                <!--<execution>-->
-                <!--<goals>-->
-                <!--<goal>compile</goal>-->
-                <!--<goal>testCompile</goal>-->
-                <!--</goals>-->
-                <!--</execution>-->
-                <!--</executions>-->
                 <executions>
                     <execution>
                         <id>scala-compile-first</id>
@@ -108,6 +70,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>edu.cmu</groupId>
+            <artifactId>secondstring</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>eu.dnetlib</groupId>
             <artifactId>dnet-pace-core</artifactId>
             <version>${project.version}</version>
@@ -129,14 +96,26 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jsonSchema</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
         </dependency>
 
         <dependency>
@@ -144,6 +123,439 @@
             <artifactId>scala-library</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+        </dependency>
+
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>oozie-package</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>1.4.1</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-connection-properties-file-existence</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireFilesExist>
+                                            <files>
+                                                <file>${dhpConnectionProperties}</file>
+                                            </files>
+                                            <message>
+                                                The file with connection properties could not be found. Please, create the ${dhpConnectionProperties} file or set the location to another already created file by using
+                                                -DdhpConnectionProperties property.
+                                            </message>
+                                        </requireFilesExist>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy dependencies</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <includeScope>${oozie.package.dependencies.include.scope}</includeScope>
+                                    <excludeScope>${oozie.package.dependencies.exclude.scope}</excludeScope>
+                                    <silent>true</silent>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Plugin originally defined in attach-test-resources It was moved here to ensure that it will execute before priming -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-test-resources-package</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>test-jar</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${oozie.package.skip.test.jar}</skip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>eu.dnetlib.primer</groupId>
+                        <artifactId>primer-maven-plugin</artifactId>
+                        <version>1.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>priming</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>prime</goal>
+                                </goals>
+                                <configuration>
+                                    <classProviderFiles>
+                                        <classProviderFile>${project.build.directory}/dependency/*.jar</classProviderFile>
+                                        <classProviderFile>${project.build.directory}/*-tests.jar</classProviderFile>
+                                        <classProviderFile>${project.build.directory}/classes</classProviderFile>
+                                    </classProviderFiles>
+                                    <coansysPackageDir>${project.build.directory}/dependency</coansysPackageDir>
+                                    <destination>${project.build.directory}/${primed.dir}</destination>
+                                    <classpath>${workflow.source.dir}</classpath>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- reading job.properties to use them in .sh scripts -->
+                    <plugin>
+                        <groupId>org.kuali.maven.plugins</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>${properties.maven.plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>eu.dnetlib</groupId>
+                                <artifactId>dhp-build-assembly-resources</artifactId>
+                                <version>${project.version}</version>
+                                <!-- contains project-default.properties -->
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>reading-dhp-properties</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <locations>
+                                        <location>${dhpConnectionProperties}</location>
+                                    </locations>
+                                    <quiet>false</quiet>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>read-default-properties</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <locations>
+                                        <location>classpath:project-default.properties</location>
+                                    </locations>
+                                    <quiet>true</quiet>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>read-job-properties</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <locations>
+                                        <param>${project.build.directory}/${primed.dir}/job.properties</param>
+                                        <param>job-override.properties</param>
+                                    </locations>
+                                    <quiet>true</quiet>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>eu.dnetlib</groupId>
+                        <artifactId>dhp-build-properties-maven-plugin</artifactId>
+                        <version>${project.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>generate-properties</goal>
+                                    <!-- generates sandboxName based on workflow.source.dir when not specified as commandline parameter -->
+                                </goals>
+                                <configuration>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>write-job-properties</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>write-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <outputFile>target/${oozie.package.file.name}/job.properties</outputFile>
+                                    <!-- notice: dots are not allowed for job.properties! -->
+                                    <include>nameNode,jobTracker,queueName,importerQueueName,oozieLauncherQueueName,
+                                        workingDir,oozieTopWfApplicationPath,oozieServiceLoc,
+                                        sparkDriverMemory,sparkExecutorMemory,sparkExecutorCores,
+                                        oozie.wf.application.path,projectVersion,oozie.use.system.libpath,
+                                        oozieActionShareLibForSpark1,spark1YarnHistoryServerAddress,spark1EventLogDir,
+                                        oozieActionShareLibForSpark2,spark2YarnHistoryServerAddress,spark2EventLogDir,
+                                        sparkSqlWarehouseDir
+                                    </include>
+                                    <includeSystemProperties>true</includeSystemProperties>
+                                    <includePropertyKeysFromFiles>
+                                        <!-- <param>${workflow.source.dir}/job.properties</param> -->
+                                        <param>${project.build.directory}/${primed.dir}/job.properties</param>
+                                        <param>job-override.properties</param>
+
+                                    </includePropertyKeysFromFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>pl.project13.maven</groupId>
+                        <artifactId>git-commit-id-plugin</artifactId>
+                        <version>2.1.11</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>revision</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+                            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                            <generateGitPropertiesFilename>target/${oozie.package.file.name}/${oozieAppDir}/version.properties</generateGitPropertiesFilename>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>eu.dnetlib</groupId>
+                                <artifactId>dhp-build-assembly-resources</artifactId>
+                                <version>${project.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>assembly-oozie-installer</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <finalName>${oozie.package.file.name}_shell_scripts</finalName>
+                                    <descriptorRefs>
+                                        <descriptorRef>oozie-installer</descriptorRef>
+                                    </descriptorRefs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+
+                    <plugin>
+                        <!-- this plugin prepares oozie installer package-->
+
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- extracting shared resources phase -->
+                            <execution>
+                                <id>installer-copy-custom</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <property name="assembly-resources.loc" value="${maven.dependency.eu.dnetlib.dhp.dhp-build-assembly-resources.jar.path}" />
+                                        <unjar src="${assembly-resources.loc}" dest="${project.build.directory}/assembly-resources" />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                            <!-- packaging phase -->
+                            <execution>
+                                <phase>package</phase>
+                                <configuration>
+                                    <tasks>
+                                        <!-- copying workflow resources -->
+                                        <mkdir dir="target/${oozie.package.file.name}" />
+                                        <mkdir dir="target/${oozie.package.file.name}/${oozieAppDir}" />
+                                        <copy todir="target/${oozie.package.file.name}/${oozieAppDir}">
+                                            <!-- <fileset dir="${workflow.source.dir}/${oozieAppDir}" /> replacing with primed dir location -->
+                                            <fileset dir="target/${primed.dir}/${oozieAppDir}" />
+                                        </copy>
+                                        <!-- copying all jars to oozie lib directory -->
+                                        <mkdir dir="target/${oozie.package.file.name}/${oozieAppDir}/lib" />
+                                        <copy todir="target/${oozie.package.file.name}/${oozieAppDir}/lib">
+                                            <fileset dir="${project.build.directory}/dependency" />
+                                        </copy>
+                                        <!-- copying current module lib -->
+                                        <copy todir="target/${oozie.package.file.name}/${oozieAppDir}/lib">
+                                            <fileset dir="${project.build.directory}">
+                                                <include name="*.jar" />
+                                            </fileset>
+                                        </copy>
+
+
+                                        <fixcrlf srcdir="target/${oozie.package.file.name}/${oozieAppDir}/" encoding="UTF-8" outputencoding="UTF-8" includes="**/*.sh,**/*.json,**/*.py,**/*.sql" eol="lf" />
+
+
+                                        <!-- creating tar.gz package -->
+                                        <tar destfile="target/${oozie.package.file.name}.tar.gz" compression="gzip" longfile="gnu">
+                                            <tarfileset dir="target/${oozie.package.file.name}" />
+                                            <tarfileset dir="target/${oozie.package.file.name}_shell_scripts" filemode="0755">
+                                                <include name="**/*.sh" />
+                                            </tarfileset>
+                                            <tarfileset dir="target/${oozie.package.file.name}_shell_scripts" filemode="0644">
+                                                <exclude name="**/*.sh" />
+                                            </tarfileset>
+                                        </tar>
+                                        <!-- cleanup -->
+                                        <delete dir="target/${oozie.package.file.name}" />
+                                        <delete dir="target/${oozie.package.file.name}_shell_scripts" />
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>create-target-dir</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>ssh</executable>
+                                    <arguments>
+                                        <argument>${dhp.hadoop.frontend.user.name}@${dhp.hadoop.frontend.host.name}</argument>
+                                        <argument>-p ${dhp.hadoop.frontend.port.ssh}</argument>
+                                        <argument>-o StrictHostKeyChecking=no</argument>
+                                        <argument>rm -rf ${dhp.hadoop.frontend.temp.dir}/oozie-packages/${sandboxName}/${output.dir.name}/; mkdir -p ${dhp.hadoop.frontend.temp.dir}/oozie-packages/${sandboxName}/${output.dir.name}/</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>upload-oozie-package</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>scp</executable>
+                                    <arguments>
+                                        <argument>-P ${dhp.hadoop.frontend.port.ssh}</argument>
+                                        <argument>-o StrictHostKeyChecking=no</argument>
+                                        <argument>target/${oozie.package.file.name}.tar.gz</argument>
+                                        <argument>${dhp.hadoop.frontend.user.name}@${dhp.hadoop.frontend.host.name}:${dhp.hadoop.frontend.temp.dir}/oozie-packages/${sandboxName}/${output.dir.name}/${oozie.package.file.name}.tar.gz</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>extract-and-upload-to-hdfs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>ssh</executable>
+                                    <!-- <outputFile>target/redirected_upload.log</outputFile> -->
+                                    <arguments>
+                                        <argument>${dhp.hadoop.frontend.user.name}@${dhp.hadoop.frontend.host.name}</argument>
+                                        <argument>-p ${dhp.hadoop.frontend.port.ssh}</argument>
+                                        <argument>-o StrictHostKeyChecking=no</argument>
+                                        <argument>cd ${dhp.hadoop.frontend.temp.dir}/oozie-packages/${sandboxName}/${output.dir.name}/; </argument>
+                                        <argument>tar -zxf oozie-package.tar.gz; </argument>
+                                        <argument>rm ${dhp.hadoop.frontend.temp.dir}/oozie-packages/${sandboxName}/${output.dir.name}/oozie-package.tar.gz; </argument>
+                                        <argument>./upload_workflow.sh</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>run</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>run-job</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>ssh</executable>
+                                    <!-- this file will be used by test verification profile reading job identifier -->
+                                    <outputFile>${oozie.execution.log.file.location}</outputFile>
+                                    <arguments>
+                                        <argument>${dhp.hadoop.frontend.user.name}@${dhp.hadoop.frontend.host.name}</argument>
+                                        <argument>-p ${dhp.hadoop.frontend.port.ssh}</argument>
+                                        <argument>-o StrictHostKeyChecking=no</argument>
+                                        <argument>cd ${dhp.hadoop.frontend.temp.dir}/oozie-packages/${sandboxName}/${output.dir.name}/; </argument>
+                                        <argument>./run_workflow.sh</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>show-run-log-on-stdout</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cat</executable>
+                                    <arguments>
+                                        <argument>${oozie.execution.log.file.location}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

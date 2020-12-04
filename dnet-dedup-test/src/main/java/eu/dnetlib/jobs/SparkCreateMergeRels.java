@@ -1,14 +1,32 @@
 package eu.dnetlib.jobs;
 
 import eu.dnetlib.Deduper;
+import eu.dnetlib.graph.GraphProcessor;
+import eu.dnetlib.pace.config.DedupConfig;
+import eu.dnetlib.pace.util.MapDocumentUtil;
 import eu.dnetlib.pace.utils.Utility;
 import eu.dnetlib.support.ArgumentApplicationParser;
+import eu.dnetlib.support.ConnectedComponent;
+import eu.dnetlib.support.Relation;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.graphx.Edge;
+import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Tuple2;
 
+import java.io.IOException;
 import java.util.Optional;
+
+import static eu.dnetlib.Deduper.hash;
 
 public class SparkCreateMergeRels extends AbstractSparkJob {
 
@@ -21,21 +39,21 @@ public class SparkCreateMergeRels extends AbstractSparkJob {
     public static void main(String[] args) throws Exception {
 
         ArgumentApplicationParser parser = new ArgumentApplicationParser(
-                Utility.readFromClasspath("/eu/dnetlib/pace/createMergeRels_parameters.json", SparkCreateSimRels.class)
+                Utility.readResource("/jobs/parameters/createMergeRels_parameters.json", SparkCreateMergeRels.class)
         );
 
         parser.parseArgument(args);
 
         SparkConf conf = new SparkConf();
 
-        new SparkCreateSimRels(
+        new SparkCreateMergeRels(
                 parser,
                 getSparkSession(conf)
         ).run();
     }
 
     @Override
-    public void run() {
+    public void run() throws IOException {
 
         // read oozie parameters
         final String entitiesPath = parser.get("entitiesPath");
@@ -51,12 +69,38 @@ public class SparkCreateMergeRels extends AbstractSparkJob {
         log.info("dedupConfPath: '{}'", dedupConfPath);
         log.info("numPartitions: '{}'", numPartitions);
 
-        Deduper.createMergeRels(
-                loadDedupConfig(dedupConfPath),
-                entitiesPath,
-                workingPath + "/mergerels",
-                workingPath + "/simrels",
-                spark
-        );
+        DedupConfig dedupConf = DedupConfig.load(readFileFromHDFS(dedupConfPath));
+
+        JavaSparkContext sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
+
+        final JavaPairRDD<Object, String> vertexes = sc
+                .textFile(entitiesPath)
+                .map(s -> MapDocumentUtil.getJPathString(dedupConf.getWf().getIdPath(), s))
+                .mapToPair((PairFunction<String, Object, String>) s -> new Tuple2<>(hash(s), s));
+
+        final RDD<Edge<String>> edgeRdd = spark
+                .read()
+                .load(workingPath + "/simrels")
+                .as(Encoders.bean(Relation.class))
+                .javaRDD()
+                .map(Relation::toEdgeRdd)
+                .rdd();
+
+        JavaRDD<ConnectedComponent> ccs = GraphProcessor
+                .findCCs(vertexes.rdd(), edgeRdd, dedupConf.getWf().getMaxIterations())
+                .toJavaRDD();
+
+        JavaRDD<Relation> mergeRel = ccs
+                .filter(k -> k.getDocs().size() > 1)
+                .flatMap(cc -> Deduper.ccToMergeRel(cc, dedupConf))
+                .map(it -> new Relation(it._1(), it._2(), "mergeRel"));
+
+        final Dataset<Relation> mergeRels = spark
+                .createDataset(
+                        mergeRel.rdd(),
+                        Encoders.bean(Relation.class));
+
+        mergeRels.write().mode(SaveMode.Overwrite).parquet(workingPath + "/mergerels");
+
     }
 }

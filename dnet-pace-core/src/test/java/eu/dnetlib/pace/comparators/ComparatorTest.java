@@ -5,23 +5,22 @@ import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.tree.*;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.util.MapDocumentUtil;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 public class ComparatorTest extends AbstractPaceFunctions {
 
 	private Map<String, String> params;
 	private DedupConfig conf;
 
-	@Before
+	@BeforeAll
 	public void setup() {
 		params = new HashMap<>();
 		params.put("weight", "1.0");

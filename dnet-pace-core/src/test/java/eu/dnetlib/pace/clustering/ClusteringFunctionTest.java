@@ -5,18 +5,17 @@ import com.google.common.collect.Maps;
 import eu.dnetlib.pace.AbstractPaceTest;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.DedupConfig;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Map;
 
 public class ClusteringFunctionTest extends AbstractPaceTest {
 
-	private Map<String, Integer> params;
-	DedupConfig conf;
+	private static Map<String, Integer> params;
+	private static DedupConfig conf;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeAll
+	public static void setUp() throws Exception {
 		params = Maps.newHashMap();
         conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf.json", ClusteringFunctionTest.class));
 	}

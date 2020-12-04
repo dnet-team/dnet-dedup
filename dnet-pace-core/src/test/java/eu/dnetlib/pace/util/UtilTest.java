@@ -1,7 +1,6 @@
 package eu.dnetlib.pace.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +9,7 @@ public class UtilTest {
 
     Map<String, String> params;
 
-    @Before
+    @BeforeAll
     public void setUp(){
         params = new HashMap<String, String>();
     }

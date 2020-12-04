@@ -7,22 +7,22 @@ import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.tree.JsonListMatch;
 import eu.dnetlib.pace.util.MapDocumentUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class ConfigTest extends AbstractPaceTest {
 
 	private Map<String, String> params;
 
-	@Before
+	@BeforeAll
 	public void setup() {
 		params = new HashMap<>();
 		params.put("jpath_value", "$.value");

@@ -7,28 +7,52 @@ import eu.dnetlib.jobs.SparkCreateSimRels;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.utils.Utility;
 import eu.dnetlib.support.ArgumentApplicationParser;
+import org.apache.commons.io.FileUtils;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
-@Ignore
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+
+@Disabled
 public class DedupLocalTest extends DedupTestUtils {
 
-    SparkSession spark;
-    DedupConfig config;
-    JavaSparkContext context;
+    static SparkSession spark;
+    static DedupConfig config;
+    static JavaSparkContext context;
 
-    final String entitiesPath   = "/Users/miconis/IdeaProjects/DnetDedup/dnet-dedup/dnet-dedup-test/src/test/resources/eu/dnetlib/pace/examples/openorgs.to.fix.json";
-    final String workingPath    = "/tmp/working_dir";
-    final String numPartitions  = "10";
-    final String dedupConfPath  = "/eu/dnetlib/pace/config/organization.strict.conf.json";
 
-    @Before
-    public void setup() {
+    final String entitiesPath   = Paths
+            .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/orgs_dump").toURI())
+            .toFile()
+            .getAbsolutePath();
+    final static String workingPath    = "/tmp/working_dir";
+    final static String numPartitions  = "20";
 
-        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/organization.strict.conf.json", DedupLocalTest.class));
+    final static String dedupConfPath   = "/eu/dnetlib/pace/config/orgs.tree.conf.json";
+    final static String simRelsPath     = workingPath + "/organization_simrel";
+    final static String mergeRelsPath   = workingPath + "/organization_mergerel";
+    final static String dedupEntityPath = workingPath + "/organization_dedupentity";
+
+    public DedupLocalTest() throws URISyntaxException {
+    }
+
+    public static void cleanup() throws IOException {
+        //remove directories to clean workspace
+        FileUtils.deleteDirectory(new File(simRelsPath));
+        FileUtils.deleteDirectory(new File(mergeRelsPath));
+        FileUtils.deleteDirectory(new File(dedupEntityPath));
+    }
+
+    @BeforeAll
+    public static void setup() throws IOException {
+
+        cleanup();
+
+        config = DedupConfig.load(Utility.readFromClasspath("/eu/dnetlib/pace/config/orgs.tree.conf.json", DedupLocalTest.class));
 
         spark = SparkSession
                 .builder()
@@ -42,7 +66,7 @@ public class DedupLocalTest extends DedupTestUtils {
     @Test
     public void createSimRelTest() throws Exception {
 
-        ArgumentApplicationParser parser = new ArgumentApplicationParser(Utility.readFromClasspath("/eu/dnetlib/pace/parameters/createSimRels_parameters.json", SparkCreateSimRels.class));
+        ArgumentApplicationParser parser = new ArgumentApplicationParser(Utility.readResource("/eu/dnetlib/pace/parameters/createSimRels_parameters.json", SparkCreateSimRels.class));
 
         parser.parseArgument(
                         new String[] {
@@ -61,7 +85,7 @@ public class DedupLocalTest extends DedupTestUtils {
     @Test
     public void createMergeRelTest() throws Exception {
 
-        ArgumentApplicationParser parser = new ArgumentApplicationParser(Utility.readFromClasspath("/eu/dnetlib/pace/parameters/createMergeRels_parameters.json", SparkCreateMergeRels.class));
+        ArgumentApplicationParser parser = new ArgumentApplicationParser(Utility.readResource("/eu/dnetlib/pace/parameters/createMergeRels_parameters.json", SparkCreateMergeRels.class));
 
         parser.parseArgument(
                 new String[] {
@@ -80,7 +104,7 @@ public class DedupLocalTest extends DedupTestUtils {
     @Test
     public void createDedupEntityTest() throws Exception {
 
-        ArgumentApplicationParser parser = new ArgumentApplicationParser(Utility.readFromClasspath("/eu/dnetlib/pace/parameters/createDedupEntity_parameters.json", SparkCreateDedupEntity.class));
+        ArgumentApplicationParser parser = new ArgumentApplicationParser(Utility.readResource("/eu/dnetlib/pace/parameters/createDedupEntity_parameters.json", SparkCreateDedupEntity.class));
 
         parser.parseArgument(
                 new String[] {
@@ -97,31 +121,50 @@ public class DedupLocalTest extends DedupTestUtils {
     }
 
     @Test
-    public void deduplicationTest() {
+    public void deduplicationTest() throws IOException {
 
+        long before_simrels = System.currentTimeMillis();
         Deduper.createSimRels(
                 config,
                 spark,
                 entitiesPath,
-                "/tmp/deduptest/publication_simrel"
+                simRelsPath
         );
+        long simrels_time = System.currentTimeMillis() - before_simrels;
 
+        long simrels_number = spark.read().load(simRelsPath).count();
+
+        long before_mergerels = System.currentTimeMillis();
         Deduper.createMergeRels(
                 config,
                 entitiesPath,
-                "/tmp/deduptest/publication_mergerel",
-                "/tmp/deduptest/publication_simrel",
+                mergeRelsPath,
+                simRelsPath,
                 spark
         );
+        long mergerels_time = System.currentTimeMillis() - before_mergerels;
 
+        long mergerels_number = spark.read().load(mergeRelsPath).count();
+
+        long before_dedupentity = System.currentTimeMillis();
         Deduper.createDedupEntity(
                 config,
-                "/tmp/deduptest/publication_mergerel",
+                mergeRelsPath,
                 entitiesPath,
                 spark,
-                "/tmp/deduptest/dedupentity"
+                dedupEntityPath
         );
+        long dedupentity_time = System.currentTimeMillis() - before_dedupentity;
 
+        long dedupentity_number = context.textFile(dedupEntityPath).count();
+
+        System.out.println("Number of simrels                   : " + simrels_number);
+        System.out.println("Number of mergerels                 : " + mergerels_number);
+        System.out.println("Number of dedupentities             : " + dedupentity_number);
+        System.out.println("Total time for simrels creation     : " + simrels_time);
+        System.out.println("Total time for mergerels creation   : " + mergerels_time);
+        System.out.println("Total time for dedupentity creation : " + dedupentity_time);
+
+        cleanup();
     }
-
 }

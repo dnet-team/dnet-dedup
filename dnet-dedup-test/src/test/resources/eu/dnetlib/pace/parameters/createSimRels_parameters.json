@@ -21,6 +21,6 @@
     "paramName": "dc",
     "paramLongName": "dedupConfPath",
     "paramDescription": "path of the dedup configuration",
-    "paramRequired": false
+    "paramRequired": true
   }
 ]

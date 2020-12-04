@@ -1,10 +1,8 @@
 package eu.dnetlib.pace.common;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PaceFunctionTest extends AbstractPaceFunctions {
 
@@ -27,7 +25,7 @@ public class PaceFunctionTest extends AbstractPaceFunctions {
 
     @Test
     public void normalizeTest() {
-        Assert.assertEquals("universitat", normalize("Universität"));
+        assertEquals("universitat", normalize("Universität"));
 
         System.out.println(normalize("İstanbul Ticarət Universiteti"));
     }

@@ -2,9 +2,11 @@ package eu.dnetlib.pace.utils;
 
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
+import eu.dnetlib.jobs.*;
 import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
+import eu.dnetlib.pace.model.MapDocumentComparator;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -20,9 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Utility {
 
@@ -95,6 +95,11 @@ public class Utility {
             System.err.println("Error creating id");
             return null;
         }
+    }
+
+    public static String readResource(String path, Class<? extends AbstractSparkJob> clazz) throws IOException {
+        return IOUtils.toString(
+                clazz.getResourceAsStream(path));
     }
 
 }
