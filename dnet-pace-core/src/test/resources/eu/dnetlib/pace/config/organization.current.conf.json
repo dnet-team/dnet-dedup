@@ -1,0 +1,265 @@
+{
+  "wf" : {
+    "threshold" : "0.99",
+    "dedupRun" : "001",
+    "entityType" : "organization",
+    "orderField" : "legalname",
+    "queueMaxSize" : "2000",
+    "groupMaxSize" : "50",
+    "slidingWindowSize" : "200",
+    "idPath":"$.id",
+    "rootBuilder" : [ "organization", "projectOrganization_participation_isParticipant", "datasourceOrganization_provision_isProvidedBy" ],
+    "includeChildren" : "true",
+    "maxIterations": "20"
+  },
+  "pace" : {
+    "clustering" : [
+      { "name" : "sortedngrampairs", "fields" : [ "legalname" ], "params" : { "max" : 2, "ngramLen" : "3"} },
+      { "name" : "suffixprefix", "fields" : [ "legalname" ], "params" : { "max" : 1, "len" : "3" } },
+      { "name" : "urlclustering", "fields" : [ "websiteurl" ], "params" : { } },
+      { "name" : "keywordsclustering", "fields" : [ "legalname" ], "params" : { "max": 2, "windowSize": 4} }
+    ],
+    "decisionTree" : {
+      "start": {
+        "fields": [
+          {
+            "field": "gridid",
+            "comparator": "exactMatch",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {}
+          }
+        ],
+        "threshold": 1,
+        "aggregation": "AVG",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "layer2",
+        "ignoreUndefined": "false"
+      },
+      "layer2": {
+        "fields": [
+          {
+            "field": "websiteurl",
+            "comparator": "domainExactMatch",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {}
+          },
+          {
+            "field": "country",
+            "comparator": "exactMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          },
+          {
+            "field": "legalname",
+            "comparator": "numbersMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          },
+          {
+            "field": "legalname",
+            "comparator": "romansMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          }
+        ],
+        "threshold": 1,
+        "aggregation": "AND",
+        "positive": "layer3",
+        "negative": "NO_MATCH",
+        "undefined": "layer3",
+        "ignoreUndefined": "true"
+      },
+      "layer3": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "cityMatch",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          }
+        ],
+        "threshold": 0.7,
+        "aggregation": "W_MEAN",
+        "positive": "layer4",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      },
+      "layer4": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "keywordMatch",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          }
+        ],
+        "threshold": 0.9,
+        "aggregation": "AVG",
+        "positive": "layer5",
+        "negative": "NO_MATCH",
+        "undefined": "layer5",
+        "ignoreUndefined": "true"
+      },
+      "layer5": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "jaroWinklerNormalizedName",
+            "weight": 0.9,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          },
+          {
+            "field": "legalshortname",
+            "comparator": "jaroWinklerNormalizedName",
+            "weight": 0.1,
+            "countIfUndefined": "false",
+            "params": {}
+          }
+        ],
+        "threshold": 0.99,
+        "aggregation": "W_MEAN",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      }
+    },
+    "model" : [
+      { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
+      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
+      { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
+      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid.ac')].value"},
+      { "name" : "originalId", "type" : "String", "path" : "$.id" }
+    ],
+    "blacklists" : {
+      "legalname" : []
+    },
+    "synonyms": {
+      "key::1": ["university","università","università studi","universitario","universitaria","université","universitaire","universitaires","universidad","universitade","Universität","universitaet","Uniwersytet","университет","universiteit","πανεπιστήμιο","universitesi","universiteti", "universiti"],
+      "key::2": ["studies","studi","études","estudios","estudos","Studien","studia","исследования","studies","σπουδές"],
+      "key::3": ["advanced","superiore","supérieur","supérieure","supérieurs","supérieures","avancado","avancados","fortgeschrittene","fortgeschritten","zaawansowany","передовой","gevorderd","gevorderde","προχωρημένος","προχωρημένη","προχωρημένο","προχωρημένες","προχωρημένα","wyzsza"],
+      "key::4": ["institute","istituto","institut","instituto","instituto","Institut","instytut","институт","instituut","ινστιτούτο"],
+      "key::5": ["hospital","ospedale","hôpital","hospital","hospital","Krankenhaus","szpital","больница","ziekenhuis","νοσοκομείο"],
+      "key::6": ["research","ricerca","recherche","investigacion","pesquisa","Forschung","badania","исследования","onderzoek","έρευνα","erevna","erevnas"],
+      "key::7": ["college","collegio","université","colegio","faculdade","Hochschule","Szkoła Wyższa","Высшая школа","universiteit","κολλέγιο"],
+      "key::8": ["foundation","fondazione","fondation","fundación","fundação","Stiftung","Fundacja","фонд","stichting","ίδρυμα","idryma"],
+      "key::9": ["center","centro","centre","centro","centro","zentrum","centrum","центр","centrum","κέντρο"],
+      "key::10": ["national","nazionale","national","nationale","nationaux","nationales","nacional","nacional","national","krajowy","национальный","nationaal","nationale","εθνικό"],
+      "key::11": ["association","associazione","association","asociación","associação","Verein","verband","stowarzyszenie","ассоциация","associatie"],
+      "key::12": ["society","societa","société","sociedad","sociedade","gesellschaft","społeczeństwo","общество","maatschappij","κοινωνία"],
+      "key::13": ["international","internazionale","international","internacional","internacional","international","międzynarodowy","Международный","internationaal","internationale","διεθνής","διεθνή","διεθνές"],
+      "key::14": ["community","comunita","communauté","comunidad","comunidade","Gemeinschaft","społeczność","сообщество","gemeenschap","κοινότητα"],
+      "key::15": ["school","scuola","école","escuela","escola","schule","Szkoła","школа","school","σχολείο"],
+      "key::16": ["education","educazione","éducation","educacion","Educação","Bildung","Edukacja","образование","opleiding","εκπαίδευση"],
+      "key::17": ["academy","accademia","académie","academia","academia","Akademie","akademie","академия","academie","ακαδημία"],
+      "key::18": ["public","pubblico","public","publique","publics","publiques","publico","publico","Öffentlichkeit","publiczny","публичный","publiek","publieke","δημόσιος","δημόσια","δημόσιο"],
+      "key::19": ["museum","museo","musée","mueso","museu","museum","muzeum","музей","museum","μουσείο"],
+      "key::20": ["group","gruppo","groupe","grupo","grupo","gruppe","grupa","группа","groep","ομάδα","όμιλος"],
+      "key::21": ["department","dipartimento","département","departamento","departamento","abteilung","departament","отдел","afdeling","τμήμα"],
+      "key::22": ["council","consiglio","conseil","Consejo","conselho","gesellschaft","rada","совет","raad","συμβούλιο"],
+      "key::23": ["library","biblioteca","bibliothèque","biblioteca","biblioteca","Bibliothek","biblioteka","библиотека","bibliotheek","βιβλιοθήκη"],
+      "key::24": ["ministry","ministero","ministère","ministerio","ministério","Ministerium","ministerstwo","министерство","ministerie","υπουργείο"],
+      "key::25": ["services","servizi","services","servicios","Serviços","Dienstleistungen","usługi","услуги","diensten","υπηρεσίες"],
+      "key::26": ["central","centrale","central","centrale","centrales","central","central","zentral","centralny","цетральный","centraal","κεντρικός","κεντρική","κεντρικό","κεντρικά"],
+      "key::27": ["general","generale","général","générale","généraux","générales","general","geral","general","Allgemeines","general","общий","algemeen","algemene","γενικός","γενική","γενικό","γενικά"],
+      "key::28": ["applied","applicati","appliqué","appliquée","appliqués","appliquées","aplicado","aplicada","angewendet","stosowany","прикладной","toegepast","toegepaste","εφαρμοσμένος","εφαρμοσμένη","εφαρμοσμένο","εφαρμοσμένα"],
+      "key::29": ["european","europee","europea","européen","européenne","européens","européennes","europeo","europeu","europäisch","europejski","европейский","Europees","Europese","ευρωπαϊκός","ευρωπαϊκή","ευρωπαϊκό","ευρωπαϊκά"],
+      "key::30": ["agency","agenzia","agence","agencia","agencia","agentur","agencja","агенция","agentschap","πρακτορείο"],
+      "key::31": ["laboratory","laboratorio","laboratoire","laboratorio","laboratorio","labor","laboratorium","лаборатория","laboratorium","εργαστήριο"],
+      "key::32": ["industry","industria","industrie","индустрия","industrie","βιομηχανία"],
+      "key::33": ["industrial","industriale","industriel","industrielle","industriels","industrielles","индустриальный","industrieel","βιομηχανικός","βιομηχανική","βιομηχανικό","βιομηχανικά","βιομηχανικές"],
+      "key::34": ["consortium","consorzio","consortium","консорциум","consortium","κοινοπραξία"],
+      "key::35": ["organization","organizzazione","organisation","organización","organização","organizacja","организация","organisatie","οργανισμός"],
+      "key::36": ["authority","autorità","autorité","авторитет","autoriteit"],
+      "key::37": ["federation","federazione","fédération","федерация","federatie","ομοσπονδία"],
+      "key::38": ["observatory","osservatorio","observatoire","обсерватория","observatorium","αστεροσκοπείο"],
+      "key::39": ["bureau","ufficio","bureau","офис","bureau","γραφείο"],
+      "key::40": ["company","impresa","compagnie","société","компания","bedrijf","εταιρία"],
+      "key::41": ["polytechnic","politecnico","polytechnique","политехника","polytechnisch","πολυτεχνείο","universita politecnica","polytechnic university","universidad politecnica","universitat politecnica","politechnika","politechniki","university technology","university science technology"],
+      "key::42": ["coalition","coalizione","coalition","коалиция","coalitie","συνασπισμός"],
+      "key::43": ["initiative","iniziativa","initiative","инициатива","initiatief","πρωτοβουλία"],
+      "key::44": ["academic","accademico","académique","universitaire","акадеческий academisch","ακαδημαϊκός","ακαδημαϊκή","ακαδημαϊκό","ακαδημαϊκές","ακαδημαϊκοί"],
+      "key::45": ["institution","istituzione","institution","институциональный","instelling","ινστιτούτο"],
+      "key::46": ["division","divisione","division","отделение","divisie","τμήμα"],
+      "key::47": ["committee","comitato","comité","комитет","commissie","επιτροπή"],
+      "key::48": ["promotion","promozione","продвижение","proothisis","forderung"],
+      "key::49": ["medical","medicine","clinical","medicina","clinici","médico","medicina","clínica","médico","medicina","clínica","medizinisch","Medizin","klinisch","medisch","geneeskunde","klinisch","ιατρικός","ιατρική","ιατρικό","ιατρικά","κλινικός","κλινική","κλινικό","κλινικά","tıbbi","tıp","klinik","orvosi","orvostudomány","klinikai","zdravniški","medicinski","klinični","meditsiini","kliinik","kliiniline"],
+      "key::50": ["technology","technological","tecnologia","tecnologie","tecnología","tecnológico","tecnologia","tecnológico","Technologie","technologisch","technologie","technologisch","τεχνολογία","τεχνολογικός","τεχνολογική","τεχνολογικό","teknoloji","teknolojik","technológia","technológiai","tehnologija","tehnološki","tehnoloogia","tehnoloogiline","technologii","technical","texniki","teknik"],
+      "key::51": ["science","scientific","scienza","scientifiche","scienze","ciencia","científico","ciência","científico","Wissenschaft","wissenschaftlich","wetenschap","wetenschappelijk","επιστήμη","επιστημονικός","επιστημονική","επιστημονικό","επιστημονικά","bilim","bilimsel","tudomány","tudományos","znanost","znanstveni","teadus","teaduslik",""],
+      "key::52": ["engineering","ingegneria","ingeniería","engenharia","Ingenieurwissenschaft","ingenieurswetenschappen","bouwkunde","μηχανικός","μηχανική","μηχανικό","mühendislik","mérnöki","Inženirstvo","inseneeria","inseneri",""],
+      "key::53": ["management","gestione","gestionale","gestionali","gestión","administración","gestão","administração","Verwaltung","management","διαχείριση","yönetim","menedzsment","vodstvo","upravljanje","management","juhtkond","juhtimine","haldus",""],
+      "key::54": ["energy","energia","energía","energia","Energie","energie","ενέργεια","enerji","energia","energija","energia",""],
+      "key::55": ["agricultural","agriculture","agricoltura","agricole","agrícola","agricultura","agrícola","agricultura","landwirtschaftlich","Landwirtschaft","landbouwkundig","landbouw","αγροτικός","αγροτική","αγροτικό","γεωργικός","γεωργική","γεωργικό","γεωργία","tarımsal","tarım","mezőgazdasági","mezőgazdaság","poljedelski","poljedelstvo","põllumajandus","põllumajanduslik",""],
+      "key::56": ["information","informazione","información","informação","Information","informatie","πληροφορία","bilgi","információ","informacija","informatsioon","informatycznych",""],
+      "key::57": ["social","sociali","social","social","Sozial","sociaal","maatschappelijk","κοινωνικός","κοινωνική","κοινωνικό","κοινωνικά","sosyal","szociális","družbeni","sotsiaal","sotsiaalne",""],
+      "key::58": ["environmental","ambiente","medioambiental","ambiente","medioambiente","meioambiente","Umwelt","milieu","milieuwetenschap","milieukunde","περιβαλλοντικός","περιβαλλοντική","περιβαλλοντικό","περιβαλλοντικά","çevre","környezeti","okoliški","keskonna",""],
+      "key::59": ["business","economia","economiche","economica","negocio","empresa","negócio","Unternehmen","bedrijf","bedrijfskunde","επιχείρηση","iş","üzleti","posel","ettevõte/äri",""],
+      "key::60": ["pharmaceuticals","pharmacy","farmacia","farmaceutica","farmacéutica","farmacia","farmacêutica","farmácia","Pharmazeutika","Arzneimittelkunde","farmaceutica","geneesmiddelen","apotheek","φαρμακευτικός","φαρμακευτική","φαρμακευτικό","φαρμακευτικά","φαρμακείο","ilaç","eczane","gyógyszerészeti","gyógyszertár","farmacevtika","lekarništvo","farmaatsia","farmatseutiline",""],
+      "key::61": ["healthcare","health services","salute","atenciónmédica","cuidadodelasalud","cuidadoscomasaúde","Gesundheitswesen","gezondheidszorg","ιατροφαρμακευτικήπερίθαλψη","sağlıkhizmeti","egészségügy","zdravstvo","tervishoid","tervishoiu",""],
+      "key::62": ["history","storia","historia","história","Geschichte","geschiedenis","geschiedkunde","ιστορία","tarih","történelem","zgodovina","ajalugu",""],
+      "key::63": ["materials","materiali","materia","materiales","materiais","materialen","υλικά","τεκμήρια","malzemeler","anyagok","materiali","materjalid","vahendid",""],
+      "key::64": ["economics","economia","economiche","economica","economía","economia","Wirtschaft","economie","οικονομικά","οικονομικέςεπιστήμες","ekonomi","közgazdaságtan","gospodarstvo","ekonomija","majanduslik","majandus",""],
+      "key::65": ["therapeutics","terapeutica","terapéutica","terapêutica","therapie","θεραπευτική","tedavibilimi","gyógykezelés","terapevtika","terapeutiline","ravi",""],
+      "key::66": ["oncology","oncologia","oncologico","oncología","oncologia","Onkologie","oncologie","ογκολογία","onkoloji","onkológia","onkologija","onkoloogia",""],
+      "key::67": ["natural","naturali","naturale","natural","natural","natürlich","natuurlijk","φυσικός","φυσική","φυσικό","φυσικά","doğal","természetes","naraven","loodus",""],
+      "key::68": ["educational","educazione","pedagogia","educacional","educativo","educacional","pädagogisch","educatief","εκπαιδευτικός","εκπαιδευτική","εκπαιδευτικό","εκπαιδευτικά","eğitimsel","oktatási","izobraževalen","haridus","hariduslik",""],
+      "key::69": ["biomedical","biomedica","biomédico","biomédico","biomedizinisch","biomedisch","βιοιατρικός","βιοιατρική","βιοιατρικό","βιοιατρικά","biyomedikal","orvosbiológiai","biomedicinski","biomeditsiiniline",""],
+      "key::70": ["veterinary","veterinaria","veterinarie","veterinaria","veterinária","tierärtzlich","veterinair","veeartsenijlkunde","κτηνιατρικός","κτηνιατρική","κτηνιατρικό","κτηνιατρικά","veteriner","állatorvosi","veterinar","veterinarski","veterinaaria",""],
+      "key::71": ["chemistry","chimica","química","química","Chemie","chemie","scheikunde","χημεία","kimya","kémia","kemija","keemia",""],
+      "key::72": ["security","sicurezza","seguridad","segurança","Sicherheit","veiligheid","ασφάλεια","güvenlik","biztonsági","varnost","turvalisus","julgeolek",""],
+      "key::73": ["biotechnology","biotecnologia","biotecnologie","biotecnología","biotecnologia","Biotechnologie","biotechnologie","βιοτεχνολογία","biyoteknoloji","biotechnológia","biotehnologija","biotehnoloogia",""],
+      "key::74": ["military","militare","militari","militar","militar","Militär","militair","leger","στρατιωτικός","στρατιωτική","στρατιωτικό","στρατιωτικά","askeri","katonai","vojaški","vojni","militaar","wojskowa",""],
+      "key::75": ["theological","teologia","teologico","teológico","tecnológica","theologisch","theologisch","θεολογικός","θεολογική","θεολογικό","θεολογικά","teolojik","technológiai","teološki","teoloogia","usuteadus","teoloogiline",""],
+      "key::76": ["electronics","elettronica","electrónica","eletrônicos","Elektronik","elektronica","ηλεκτρονική","elektronik","elektronika","elektronika","elektroonika",""],
+      "key::77": ["forestry","forestale","forestali","silvicultura","forestal","floresta","Forstwirtschaft","bosbouw","δασοκομία","δασολογία","ormancılık","erdészet","gozdarstvo","metsandus",""],
+      "key::78": ["maritime","marittima","marittime","marittimo","marítimo","marítimo","maritiem","ναυτικός","ναυτική","ναυτικό","ναυτικά","ναυτιλιακός","ναυτιλιακή","ναυτιλιακό","ναυτιλιακά","θαλάσσιος","θαλάσσια","θαλάσσιο","denizcilik","tengeri","morski","mere","merendus",""],
+      "key::79": ["sports","sport","deportes","esportes","Sport","sport","sportwetenschappen","άθληση","γυμναστικήδραστηριότητα","spor","sport","šport","sport","spordi",""],
+      "key::80": ["surgery","chirurgia","chirurgiche","cirugía","cirurgia","Chirurgie","chirurgie","heelkunde","εγχείρηση","επέμβαση","χειρουργικήεπέμβαση","cerrahi","sebészet","kirurgija","kirurgia",""],
+      "key::81": ["cultural","culturale","culturali","cultura","cultural","cultural","kulturell","cultureel","πολιτιστικός","πολιτιστική","πολιτιστικό","πολιτισμικός","πολιτισμική","πολιτισμικό","kültürel","kultúrális","kulturni","kultuuri","kultuuriline",""],
+      "key::82": ["computerscience","informatica","ordenador","computadora","informática","computación","cienciasdelacomputación","ciênciadacomputação","Computer","computer","υπολογιστής","ηλεκτρονικόςυπολογιστής","bilgisayar","számítógép","računalnik","arvuti",""],
+      "key::83": ["finance","financial","finanza","finanziarie","finanza","financiero","finanças","financeiro","Finanzen","finanziell","financiën","financieel","χρηματοοικονομικά","χρηματοδότηση","finanse","finansal","pénzügy","pénzügyi","finance","finančni","finants","finantsiline",""],
+      "key::84": ["communication","comunicazione","comuniciación","comunicação","Kommunikation","communication","επικοινωνία","iletişim","kommunikáció","komuniciranje","kommunikatsioon",""],
+      "key::85": ["justice","giustizia","justicia","justiça","Recht","Justiz","justitie","gerechtigheid","δικαιοσύνη","υπουργείοδικαιοσύνης","δίκαιο","adalet","igazságügy","pravo","õigus",""],
+      "key::86": ["aerospace","aerospaziale","aerospaziali","aeroespacio","aeroespaço","Luftfahrt","luchtvaart","ruimtevaart","αεροπορικός","αεροπορική","αεροπορικό","αεροναυπηγικός","αεροναυπηγική","αεροναυπηγικό","αεροναυπηγικά","havacılıkveuzay","légtér","zrakoplovstvo","atmosfäär","kosmos",""],
+      "key::87": ["dermatology","dermatologia","dermatología","dermatologia","Dermatologie","dermatologie","δρματολογία","dermatoloji","bőrgyógyászat","dermatológia","dermatologija","dermatoloogia",""],
+      "key::88": ["architecture","architettura","arquitectura","arquitetura","Architektur","architectuur","αρχιτεκτονική","mimarlık","építészet","arhitektura","arhitektuur",""],
+      "key::89": ["mathematics","matematica","matematiche","matemáticas","matemáticas","Mathematik","wiskunde","mathematica","μαθηματικά","matematik","matematika","matematika","matemaatika",""],
+      "key::90": ["language","lingue","linguistica","linguistiche","lenguaje","idioma","língua","idioma","Sprache","taal","taalkunde","γλώσσα","dil","nyelv","jezik","keel",""],
+      "key::91": ["neuroscience","neuroscienza","neurociencia","neurociência","Neurowissenschaft","neurowetenschappen","νευροεπιστήμη","nörobilim","idegtudomány","nevroznanost","neuroteadused",""],
+      "key::92": ["automation","automazione","automatización","automação","Automatisierung","automatisering","αυτοματοποίηση","otomasyon","automatizálás","avtomatizacija","automatiseeritud",""],
+      "key::93": ["pediatric","pediatria","pediatriche","pediatrico","pediátrico","pediatría","pediátrico","pediatria","pädiatrisch","pediatrische","παιδιατρική","pediatrik","gyermekgyógyászat","pediatrija","pediaatria",""],
+      "key::94": ["photonics","fotonica","fotoniche","fotónica","fotônica","Photonik","fotonica","φωτονική","fotonik","fotonika","fotonika","fotoonika",""],
+      "key::95": ["mechanics", "mechanical", "meccanica","meccaniche","mecánica","mecânica","Mechanik","Maschinenbau","mechanica","werktuigkunde","μηχανικής","mekanik","gépészet","mehanika","mehaanika",""],
+      "key::96": ["psychiatrics","psichiatria","psichiatrica","psichiatriche","psiquiatría","psiquiatria","Psychiatrie","psychiatrie","ψυχιατρική","psikiyatrik","pszihiátria","psihiatrija","psühhaatria",""],
+      "key::97": ["psychology","fisiologia","psicología","psicologia","Psychologie","psychologie","ψυχολογία","psikoloji","pszihológia","psihologija","psühholoogia",""],
+      "key::98": ["automotive","industriaautomobilistica","industriadelautomóvil","automotriz","industriaautomotriz","automotivo","Automobilindustrie","autoindustrie","αυτοκίνητος","αυτοκίνητη","αυτοκίνητο","αυτοκινούμενος","αυτοκινούμενη","αυτοκινούμενο","αυτοκινητιστικός","αυτοκινητιστική","αυτοκινητιστικό","otomotiv","autóipari","samogiben","avtomobilskaindustrija","auto-",""],
+      "key::99": ["neurology","neurologia","neurologiche","neurología","neurologia","Neurologie","neurologie","zenuwleer","νευρολογία","nöroloji","neurológia","ideggyógyászat","nevrologija","neuroloogia",""],
+      "key::100": ["geology","geologia","geologiche","geología","geologia","Geologie","geologie","aardkunde","γεωλογία","jeoloji","geológia","földtudomány","geologija","geoloogia",""],
+      "key::101": ["microbiology","microbiologia","micro-biologia","microbiologiche","microbiología","microbiologia","Mikrobiologie","microbiologie","μικροβιολογία","mikrobiyoloji","mikrobiológia","mikrobiologija","mikrobioloogia",""],
+      "key::102": ["informatics","informatica","informática","informática","informatica",""],
+      "key::103": ["forschungsgemeinschaft","comunita ricerca","research community","research foundation","research association"],
+      "key::104": ["commerce","ticaret","ticarət","commercio","trade","handel","comercio"],
+      "key::105" : ["state", "stato", "etade", "estado", "statale", "etat", "zustand", "estado"],
+      "key::106" : ["seminary", "seminario", "seminaire", "seminar"],
+      "key::107" : ["agricultural forestry", "af", "a f"],
+      "key::108" : ["agricultural mechanical", "am", "a m"]
+    }
+  }
+}

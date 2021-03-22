@@ -1,25 +1,25 @@
 package eu.dnetlib.pace.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import eu.dnetlib.pace.model.ClusteringDef;
+import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.util.PaceException;
+import org.antlr.stringtemplate.StringTemplate;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.BiFunction;
 
-import eu.dnetlib.pace.util.PaceException;
-import org.antlr.stringtemplate.StringTemplate;
-import org.apache.commons.io.IOUtils;
 
-import com.google.common.collect.Maps;
+import eu.dnetlib.pace.tree.support.TreeNodeDef;
 
-import eu.dnetlib.pace.condition.ConditionAlgo;
-import eu.dnetlib.pace.model.ClusteringDef;
-import eu.dnetlib.pace.model.FieldDef;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class DedupConfig implements Config, Serializable {
 
@@ -34,7 +34,6 @@ public class DedupConfig implements Config, Serializable {
 	private static Map<String, String> defaults = Maps.newHashMap();
 
 	static {
-		defaults.put("threshold", "0");
 		defaults.put("dedupRun", "001");
 		defaults.put("entityType", "result");
 		defaults.put("subEntityType", "resulttype");
@@ -45,6 +44,8 @@ public class DedupConfig implements Config, Serializable {
 		defaults.put("slidingWindowSize", "200");
 		defaults.put("rootBuilder", "result");
 		defaults.put("includeChildren", "true");
+		defaults.put("maxIterations", "20");
+		defaults.put("idPath", "$.id");
 	}
 
 	public DedupConfig() {}
@@ -116,6 +117,11 @@ public class DedupConfig implements Config, Serializable {
 	}
 
 	@Override
+	public Map<String, TreeNodeDef> decisionTree(){
+		return getPace().getDecisionTree();
+	}
+
+	@Override
 	public List<FieldDef> model() {
 		return getPace().getModel();
 	}
@@ -123,16 +129,6 @@ public class DedupConfig implements Config, Serializable {
 	@Override
 	public Map<String, FieldDef> modelMap() {
 		return getPace().getModelMap();
-	}
-
-	@Override
-	public List<ConditionAlgo> strictConditions() {
-		return getPace().getStrictConditionAlgos();
-	}
-
-	@Override
-	public List<ConditionAlgo> conditions() {
-		return getPace().getConditionAlgos();
 	}
 
 	@Override

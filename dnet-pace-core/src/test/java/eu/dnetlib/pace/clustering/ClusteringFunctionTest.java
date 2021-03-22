@@ -5,21 +5,19 @@ import com.google.common.collect.Maps;
 import eu.dnetlib.pace.AbstractPaceTest;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.DedupConfig;
-import eu.dnetlib.pace.distance.DistanceAlgoTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Map;
 
 public class ClusteringFunctionTest extends AbstractPaceTest {
 
-	private Map<String, Integer> params;
-	DedupConfig conf;
+	private static Map<String, Integer> params;
+	private static DedupConfig conf;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeAll
+	public static void setUp() throws Exception {
 		params = Maps.newHashMap();
-        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/org.curr.conf", ClusteringFunctionTest.class));
+        conf = DedupConfig.load(AbstractPaceFunctions.readFromClasspath("/eu/dnetlib/pace/config/organization.current.conf.json", ClusteringFunctionTest.class));
 	}
 
 	@Test
@@ -100,6 +98,43 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	}
 
 	@Test
+	public void testWordsSuffixPrefix() {
+
+		params.put("len", 3);
+		params.put("max", 4);
+
+		final ClusteringFunction sp = new WordsSuffixPrefix(params);
+
+		final String s = "Search for the Standard Model Higgs Boson";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+	}
+
+	@Test
+	public void testWordsStatsSuffixPrefix() {
+		params.put("mod", 10);
+
+		final ClusteringFunction sp = new WordsStatsSuffixPrefixChain(params);
+
+		String s = "Search for the Standard Model Higgs Boson";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "A Physical Education Teacher Is Like...: Examining Turkish Students  Perceptions of Physical Education Teachers Through Metaphor Analysis";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "Structure of a Eukaryotic Nonribosomal Peptide Synthetase Adenylation Domain That Activates a Large Hydroxamate Amino Acid in Siderophore Biosynthesis";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "Performance Evaluation";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+	}
+
+	@Test
 	public void testFieldValue() {
 
 		params.put("randomLength", 5);
@@ -109,15 +144,6 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		final String s = "Search for the Standard Model Higgs Boson";
 		System.out.println(s);
 		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
-	}
-
-	@Test
-	public void testPersonClustering2() {
-		final ClusteringFunction cf = new PersonClustering(params);
-
-		final String s = readFromClasspath("gt.author.json");
-		System.out.println(s);
-		System.out.println(cf.apply(conf, Lists.newArrayList(person(s))));
 	}
 
 	@Test

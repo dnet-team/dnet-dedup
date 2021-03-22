@@ -1,0 +1,20 @@
+[
+  {
+    "paramName": "e",
+    "paramLongName": "entitiesPath",
+    "paramDescription": "the input entities",
+    "paramRequired": true
+  },
+  {
+    "paramName": "w",
+    "paramLongName": "workingPath",
+    "paramDescription": "path of the working directory",
+    "paramRequired": true
+  },
+  {
+    "paramName": "np",
+    "paramLongName": "numPartitions",
+    "paramDescription": "number of partitions for the similarity relations intermediate phases",
+    "paramRequired": false
+  }
+]

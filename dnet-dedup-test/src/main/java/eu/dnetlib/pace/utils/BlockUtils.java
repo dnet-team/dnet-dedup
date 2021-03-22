@@ -1,7 +1,7 @@
 package eu.dnetlib.pace.utils;
 
 import com.google.common.collect.Lists;
-import eu.dnetlib.Block;
+import eu.dnetlib.support.Block;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import scala.Tuple2;
@@ -135,7 +135,7 @@ public class BlockUtils implements Serializable {
 
         System.out.println("optimalBlockSize = " + optimalBlockSize);
 
-        return blocks.filter(b -> b.getElements().size() < optimalBlockSize);
+        return blocks.filter(b -> b.elements() < optimalBlockSize);
     }
 
     //cut blocks basing on number of comparisons
@@ -152,7 +152,7 @@ public class BlockUtils implements Serializable {
         double RATIO = 0.85;
 
         return blocks
-                .flatMapToPair(b -> b.getElements().stream().map(e -> new Tuple2<>(e, new Tuple2<>(b.getKey(), b.comparisons()))).iterator())
+                .flatMapToPair(b -> b.getDocuments().stream().map(e -> new Tuple2<>(e, new Tuple2<>(b.getKey(), b.comparisons()))).iterator())
                 .groupByKey()
                 .mapToPair(es -> {
                     List<Tuple2<String, Integer>> b = Lists.newArrayList(es._2());

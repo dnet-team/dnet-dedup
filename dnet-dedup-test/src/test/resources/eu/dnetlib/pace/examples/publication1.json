@@ -1,0 +1,230 @@
+{
+  "journal": {
+    "name": "",
+    "issnPrinted": "",
+    "issnOnline": "",
+    "issnLinking": "",
+    "ep": "",
+    "iss": "",
+    "sp": "",
+    "vol": "",
+    "edition": "",
+    "conferenceplace": "",
+    "conferencedate": "",
+    "dataInfo": {
+      "invisible": false,
+      "inferred": false,
+      "deletedbyinference": false,
+      "inferenceprovenance": "",
+      "provenanceaction": {
+        "classid": "",
+        "classname": "",
+        "schemeid": "",
+        "schemename": ""
+      }
+    }
+  },
+  "author": [
+    {
+      "fullname": "Osti Guerrazzi, Amedeo",
+      "name": "Amedeo",
+      "surname": "Osti Guerrazzi",
+      "rank": 1,
+      "pid": [],
+      "affiliation": []
+    }
+  ],
+  "resulttype": {
+    "classid": "publication",
+    "classname": "publication",
+    "schemeid": "dnet:result_typologies",
+    "schemename": "dnet:result_typologies"
+  },
+  "language": {
+    "classid": "",
+    "classname": "",
+    "schemeid": "",
+    "schemename": ""
+  },
+  "country": [],
+  "subject": [],
+  "title": [
+    {
+      "value": "Rezension: Gabriele Rigano: L\u2019interprete di Auschwitz. Arminio Wachsberger un testimone d\u2019eccezione della deportazione degli ebrei di Roma (rezensiert von Amedeo Osti Guerrazzi)",
+      "qualifier": {
+        "classid": "main title",
+        "classname": "main title",
+        "schemeid": "dnet:dataCite_title",
+        "schemename": "dnet:dataCite_title"
+      },
+      "dataInfo": {
+        "invisible": false,
+        "inferred": false,
+        "deletedbyinference": false,
+        "inferenceprovenance": "",
+        "provenanceaction": {
+          "classid": "",
+          "classname": "",
+          "schemeid": "",
+          "schemename": ""
+        }
+      }
+    }
+  ],
+  "relevantdate": [],
+  "description": [],
+  "dateofacceptance": {
+    "value": "2018-01-01",
+    "dataInfo": {
+      "invisible": false,
+      "inferred": false,
+      "deletedbyinference": false,
+      "inferenceprovenance": "",
+      "provenanceaction": {
+        "classid": "",
+        "classname": "",
+        "schemeid": "",
+        "schemename": ""
+      }
+    }
+  },
+  "publisher": {
+    "value": "BSB - Bavarian State Library",
+    "dataInfo": {
+      "invisible": false,
+      "inferred": false,
+      "deletedbyinference": false,
+      "inferenceprovenance": "",
+      "provenanceaction": {
+        "classid": "",
+        "classname": "",
+        "schemeid": "",
+        "schemename": ""
+      }
+    }
+  },
+  "embargoenddate": {
+    "value": "",
+    "dataInfo": {
+      "invisible": false,
+      "inferred": false,
+      "deletedbyinference": false,
+      "inferenceprovenance": "",
+      "provenanceaction": {
+        "classid": "",
+        "classname": "",
+        "schemeid": "",
+        "schemename": ""
+      }
+    }
+  },
+  "source": [],
+  "fulltext": [],
+  "format": [],
+  "contributor": [],
+  "resourcetype": {
+    "classid": "RezensionReview",
+    "classname": "RezensionReview",
+    "schemeid": "dnet:dataCite_resource",
+    "schemename": "dnet:dataCite_resource"
+  },
+  "coverage": [],
+  "refereed": {
+    "value": "",
+    "dataInfo": {
+      "invisible": false,
+      "inferred": false,
+      "deletedbyinference": false,
+      "inferenceprovenance": "",
+      "provenanceaction": {
+        "classid": "",
+        "classname": "",
+        "schemeid": "",
+        "schemename": ""
+      }
+    }
+  },
+  "context": [],
+  "id": "50|datacite____::e23cad995f89bf6cfe63dcc83d41cce9",
+  "originalId": [
+    "http://dx.doi.org/10.15463/rec.2071701652",
+    "10.15463/rec.2071701652",
+    "https://doi.org/10.15463/rec.2071701652"
+  ],
+  "collectedfrom": [
+    {
+      "key": "10|openaire____::9e3be59865b2c1c335d32dae2fe7b254",
+      "value": "Datacite",
+      "dataInfo": {
+        "invisible": false,
+        "inferred": false,
+        "deletedbyinference": false,
+        "inferenceprovenance": "",
+        "provenanceaction": {
+          "classid": "",
+          "classname": "",
+          "schemeid": "",
+          "schemename": ""
+        }
+      }
+    }
+  ],
+  "pid": [
+    {
+      "value": "https://doi.org/10.15463/rec.2071701652",
+      "qualifier": {
+        "classid": "doi",
+        "classname": "doi",
+        "schemeid": "dnet:pid_types",
+        "schemename": "dnet:pid_types"
+      },
+      "dataInfo": {
+        "invisible": false,
+        "inferred": false,
+        "deletedbyinference": false,
+        "inferenceprovenance": "",
+        "provenanceaction": {
+          "classid": "",
+          "classname": "",
+          "schemeid": "",
+          "schemename": ""
+        }
+      }
+    },
+    {
+      "value": "10.15463/rec.2071701652",
+      "qualifier": {
+        "classid": "doi",
+        "classname": "doi",
+        "schemeid": "dnet:pid_types",
+        "schemename": "dnet:pid_types"
+      },
+      "dataInfo": {
+        "invisible": false,
+        "inferred": false,
+        "deletedbyinference": false,
+        "inferenceprovenance": "",
+        "provenanceaction": {
+          "classid": "",
+          "classname": "",
+          "schemeid": "",
+          "schemename": ""
+        }
+      }
+    }
+  ],
+  "extraInfo": [],
+  "dataInfo": {
+    "invisible": false,
+    "inferred": false,
+    "deletedbyinference": false,
+    "inferenceprovenance": "",
+    "provenanceaction": {
+      "classid": "sysimport:crosswalk:datasetarchive",
+      "classname": "sysimport:crosswalk:datasetarchive",
+      "schemeid": "dnet:provenanceActions",
+      "schemename": "dnet:provenanceActions"
+    }
+  },
+  "lastupdatetimestamp": 0
+}

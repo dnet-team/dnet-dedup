@@ -1,5 +1,6 @@
 package eu.dnetlib.pace;
 
+import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.Type;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldListImpl;
@@ -11,7 +12,7 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPaceTest {
+public abstract class AbstractPaceTest extends AbstractPaceFunctions {
 
 	protected String readFromClasspath(final String filename) {
 		final StringWriter sw = new StringWriter();

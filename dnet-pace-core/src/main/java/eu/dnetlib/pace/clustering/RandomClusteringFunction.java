@@ -13,7 +13,6 @@ public class RandomClusteringFunction extends AbstractClusteringFunction {
 
 	@Override
 	protected Collection<String> doApply(final Config conf, String s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

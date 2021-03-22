@@ -9,7 +9,7 @@ The decision tree has to be defined into the json configuration. The field decis
 <String nodeName, TreeNodeDef treeNodeDef>: the nodeName is the key, the treeNodeDef contains the definition of the node.
 
 In particular the TreeNodeDef contains:
- - List of FieldConf : list of fields processed by the node. Each field is associated to:
+ - List of FieldConf : list of fieldsCount processed by the node. Each field is associated to:
 	 - field: name of the field
 	 - comparator: name of the comparator to use for that particular field, it produces a similarity score, -1 if the comparison is not possible (missing field or few informations).
 	> Each FieldConf contains a comparator name which has to be defined. It is sufficient to implement the Comparator interface that exposes a "compare" method returning the similarity score. The new comparator must be annotated with @ComparatorClass("name") specifying the name used by the FieldConf to access to the right comparator.
@@ -21,19 +21,19 @@ if score>=th --- positive result
 if score==-1 --- undefined result
 if score<\th  --- negative result
 ```
- - aggregation: defines the type of aggregation to apply to the similarity scores of the fields in the list of fields
+ - aggregation: defines the type of aggregation to apply to the similarity scores of the fieldsCount in the list of fieldsCount
 	 - possible values: AVG(average), MAX, MIN, SUM
 	 - e.g. the similarity scores are multiplied with the weight and then the defined aggregation is applied
  - arcs: define the next node of the tree depending on the result
 	 - positive: specifies the key of the next node in case of positive result
 	 - negative: specifies the key of the next node in case of negative result
 	 - undefined: specifies the key of the next node in case of undefined result
- - ignoreMissing: defines the behavior of the treeNode in case of a missing field
-	> e.g. if a comparator on a particular field produces an undefined result (-1), if ignoreMissing=true that field is simply ignored, otherwise the entire treeNode score is considered to be -1
+ - countIfUndefined: defines the behavior of the treeNode in case of a missing field
+	> e.g. if a comparator on a particular field produces an undefined result (-1), if countIfUndefined=true that field is simply ignored, otherwise the entire treeNode score is considered to be -1
 
 In order to make the decision tree work, the BlockProcessor has been modified with the following changes:
  - if the decision tree is defined into the JSON configuration the deduplication process relies on it
- - if the decision tree is not defined the deduplication process is exactly like before (strict conditions, conditions, dinstance algos etc.)
+ - if the decision tree is not defined the deduplication process is exactly like before (strict necessaryConditions, necessaryConditions, dinstance algos etc.)
 
 
 # Cities and Keyword identification for organization deduplication

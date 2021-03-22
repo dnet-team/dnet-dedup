@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SparkReporter implements Serializable {
+public class SparkReporter implements Serializable, Reporter {
 
-    final List<Tuple2<String, String>> report = new ArrayList<>();
+    final List<Tuple2<String, String>> relations = new ArrayList<>();
     private static final Log log = LogFactory.getLog(SparkReporter.class);
+    Map<String, LongAccumulator> accumulators;
 
-    public SparkReporter(){}
+    public SparkReporter(Map<String, LongAccumulator> accumulators){
+        this.accumulators = accumulators;
+    }
 
     public void incrementCounter(String counterGroup, String counterName, long delta, Map<String, LongAccumulator> accumulators) {
 
@@ -27,11 +30,18 @@ public class SparkReporter implements Serializable {
 
     }
 
-    public void emit(String type, String from, String to) {
-        report.add(new Tuple2<>(from, to));
+    @Override
+    public void incrementCounter(String counterGroup, String counterName, long delta) {
+
+        incrementCounter(counterGroup, counterName, delta, accumulators);
     }
 
-    public List<Tuple2<String, String>> getReport() {
-        return report;
+    @Override
+    public void emit(String type, String from, String to) {
+        relations.add(new Tuple2<>(from, to));
+    }
+
+    public List<Tuple2<String, String>> getRelations() {
+        return relations;
     }
 }

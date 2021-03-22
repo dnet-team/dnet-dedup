@@ -4,12 +4,11 @@ import com.google.common.collect.Lists;
 import eu.dnetlib.pace.clustering.NGramUtils;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.config.WfConfig;
-import eu.dnetlib.pace.distance.PaceDocumentDistance;
-import eu.dnetlib.pace.distance.eval.ScoreResult;
+import eu.dnetlib.pace.tree.support.TreeProcessor;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.model.MapDocumentComparator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,13 +35,22 @@ public class BlockProcessor {
         this.dedupConf = dedupConf;
     }
 
+    public void processSortedBlock(final String key, final List<MapDocument> documents, final Reporter context)  {
+        if (documents.size() > 1) {
+//            log.info("reducing key: '" + key + "' records: " + q.size());
+            process(prepare(documents), context);
+
+        } else {
+            context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
+        }
+    }
+
     public void process(final String key, final Iterable<MapDocument> documents, final Reporter context)  {
 
         final Queue<MapDocument> q = prepare(documents);
 
         if (q.size() > 1) {
 //            log.info("reducing key: '" + key + "' records: " + q.size());
-            //process(q, context);
             process(simplifyQueue(q, key, context), context);
 
         } else {
@@ -116,8 +124,6 @@ public class BlockProcessor {
 
     private void process(final Queue<MapDocument> queue, final Reporter context)  {
 
-        final PaceDocumentDistance algo = new PaceDocumentDistance();
-
         while (!queue.isEmpty()) {
 
             final MapDocument pivot = queue.remove();
@@ -125,11 +131,9 @@ public class BlockProcessor {
 
             WfConfig wf = dedupConf.getWf();
             final Field fieldsPivot = pivot.values(wf.getOrderField());
-            final String fieldPivot = (fieldsPivot == null) || fieldsPivot.isEmpty() ? null : fieldsPivot.stringValue();
+            final String fieldPivot = (fieldsPivot == null) || fieldsPivot.isEmpty() ? "" : fieldsPivot.stringValue();
 
             if (fieldPivot != null) {
-                // System.out.println(idPivot + " --> " + fieldPivot);
-
                 int i = 0;
                 for (final MapDocument curr : queue) {
                     final String idCurr = curr.getIdentifier();
@@ -150,34 +154,23 @@ public class BlockProcessor {
 
                     if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                        final ScoreResult sr = similarity(algo, pivot, curr);
-//                        log.info(sr.toString()+"SCORE "+ sr.getScore());
-                        emitOutput(sr, idPivot, idCurr, context);
-                        i++;
+                        final TreeProcessor treeProcessor = new TreeProcessor(dedupConf);
+
+                        emitOutput(treeProcessor.compare(pivot, curr), idPivot, idCurr, context);
+
                     }
                 }
             }
         }
     }
 
-    private void emitOutput(final ScoreResult sr, final String idPivot, final String idCurr, final Reporter context)  {
-        final double d = sr.getScore();
+    private void emitOutput(final boolean result, final String idPivot, final String idCurr, final Reporter context)  {
 
-        if (d >= dedupConf.getWf().getThreshold()) {
-
+        if (result) {
             writeSimilarity(context, idPivot, idCurr);
             context.incrementCounter(dedupConf.getWf().getEntityType(), "dedupSimilarity (x2)", 1);
         } else {
             context.incrementCounter(dedupConf.getWf().getEntityType(), "d < " + dedupConf.getWf().getThreshold(), 1);
-        }
-    }
-
-    private ScoreResult similarity(final PaceDocumentDistance algo, final MapDocument a, final MapDocument b) {
-        try {
-            return algo.between(a, b, dedupConf);
-        } catch(Throwable e) {
-            log.error(String.format("\nA: %s\n----------------------\nB: %s", a, b), e);
-            throw new IllegalArgumentException(e);
         }
     }
 

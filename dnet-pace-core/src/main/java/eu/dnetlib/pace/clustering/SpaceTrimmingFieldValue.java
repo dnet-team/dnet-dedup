@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import eu.dnetlib.pace.config.Config;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
 

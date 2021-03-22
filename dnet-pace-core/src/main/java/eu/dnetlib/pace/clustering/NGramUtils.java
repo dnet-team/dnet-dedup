@@ -2,7 +2,7 @@ package eu.dnetlib.pace.clustering;
 
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 

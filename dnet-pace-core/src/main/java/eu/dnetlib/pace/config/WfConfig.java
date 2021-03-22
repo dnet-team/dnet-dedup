@@ -1,17 +1,17 @@
 package eu.dnetlib.pace.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import eu.dnetlib.pace.util.PaceException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gson.GsonBuilder;
-import eu.dnetlib.pace.util.PaceException;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class WfConfig implements Serializable {
 
@@ -76,6 +76,16 @@ public class WfConfig implements Serializable {
 	/** Maximum number of allowed children. */
 	private int maxChildren = MAX_CHILDREN;
 
+
+	/** Default maximum number of iterations. */
+	private final static int MAX_ITERATIONS = 20;
+
+	/** Maximum number of iterations */
+	private int maxIterations = MAX_ITERATIONS;
+
+	/** The Jquery path to retrieve the identifier */
+	private String  idPath = "$.id";
+
 	public WfConfig() {}
 
 	/**
@@ -89,8 +99,6 @@ public class WfConfig implements Serializable {
 	 *            the root builder families
 	 * @param dedupRun
 	 *            the dedup run
-	 * @param threshold
-	 *            the threshold
 	 * @param skipList
 	 *            the skip list
 	 * @param queueMaxSize
@@ -101,21 +109,25 @@ public class WfConfig implements Serializable {
 	 *            the sliding window size
 	 * @param includeChildren
 	 *            allows the children to be included in the representative records or not.
+	 * @param maxIterations
+	 * 			  the maximum number of iterations
+	 * @param idPath
+	 * 			  the path for the id of the entity
 	 */
 	public WfConfig(final String entityType, final String orderField, final List<String> rootBuilder, final String dedupRun,
-			final double threshold,
-			final Set<String> skipList, final int queueMaxSize, final int groupMaxSize, final int slidingWindowSize, final boolean includeChildren) {
+			final Set<String> skipList, final int queueMaxSize, final int groupMaxSize, final int slidingWindowSize, final boolean includeChildren, final int maxIterations, final String idPath) {
 		super();
 		this.entityType = entityType;
 		this.orderField = orderField;
 		this.rootBuilder = rootBuilder;
 		this.dedupRun = cleanupStringNumber(dedupRun);
-		this.threshold = threshold;
 		this.skipList = skipList;
 		this.queueMaxSize = queueMaxSize;
 		this.groupMaxSize = groupMaxSize;
 		this.slidingWindowSize = slidingWindowSize;
 		this.includeChildren = includeChildren;
+		this.maxIterations = maxIterations;
+		this.idPath = idPath;
 	}
 
 	/**
@@ -243,6 +255,24 @@ public class WfConfig implements Serializable {
 
 	public void setMaxChildren(final int maxChildren) {
 		this.maxChildren = maxChildren;
+	}
+
+
+	public int getMaxIterations() {
+		return maxIterations;
+	}
+
+	public void setMaxIterations(int maxIterations) {
+		this.maxIterations = maxIterations;
+	}
+
+	public String getIdPath() {
+		return idPath;
+	}
+
+	public void setIdPath(String idPath) {
+		this.idPath = idPath;
+
 	}
 
 	/*

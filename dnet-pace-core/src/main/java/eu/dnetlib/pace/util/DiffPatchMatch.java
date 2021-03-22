@@ -1390,7 +1390,7 @@ public class DiffPatchMatch {
     }
 
     /**
-     * Compute the Levenshtein distance; the number of inserted, deleted or
+     * Compute the Levenshtein compare; the number of inserted, deleted or
      * substituted characters.
      * @param diffs List of Diff objects.
      * @return Number of changes.
@@ -1655,7 +1655,7 @@ public class DiffPatchMatch {
                         score_threshold = score;
                         best_loc = j - 1;
                         if (best_loc > loc) {
-                            // When passing loc, don't exceed our current distance from loc.
+                            // When passing loc, don't exceed our current compare from loc.
                             start = Math.max(1, 2 * loc - best_loc);
                         } else {
                             // Already passed loc, downhill from here on in.

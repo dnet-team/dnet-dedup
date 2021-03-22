@@ -1,0 +1,156 @@
+{
+  "wf" : {
+    "threshold" : "0.99",
+    "dedupRun" : "001",
+    "entityType" : "organization",
+    "orderField" : "legalname",
+    "queueMaxSize" : "2000",
+    "groupMaxSize" : "50",
+    "slidingWindowSize" : "200",
+    "idPath":"$.id",
+    "rootBuilder" : [ "organization", "projectOrganization_participation_isParticipant", "datasourceOrganization_provision_isProvidedBy" ],
+    "includeChildren" : "true",
+    "maxIterations": "20"
+  },
+  "pace" : {
+    "clustering" : [
+      { "name" : "sortedngrampairs", "fields" : [ "legalname" ], "params" : { "max" : 2, "ngramLen" : "3"} },
+      { "name" : "suffixprefix", "fields" : [ "legalname" ], "params" : { "max" : 1, "len" : "3" } },
+      { "name" : "urlclustering", "fields" : [ "websiteurl" ], "params" : { } },
+      { "name" : "keywordsclustering", "fields" : [ "legalname" ], "params" : { "max": 2, "windowSize": 4} }
+    ],
+    "decisionTree" : {
+      "start": {
+        "fields": [
+          {
+            "field": "gridid",
+            "comparator": "exactMatch",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {}
+          }
+        ],
+        "threshold": 1,
+        "aggregation": "AVG",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "layer2",
+        "ignoreUndefined": "false"
+      },
+      "layer2": {
+        "fields": [
+          {
+            "field": "websiteurl",
+            "comparator": "domainExactMatch",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {}
+          },
+          {
+            "field": "country",
+            "comparator": "exactMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          },
+          {
+            "field": "legalname",
+            "comparator": "numbersMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          },
+          {
+            "field": "legalname",
+            "comparator": "romansMatch",
+            "weight": 1,
+            "countIfUndefined": "true",
+            "params": {}
+          }
+        ],
+        "threshold": 1,
+        "aggregation": "AND",
+        "positive": "layer3",
+        "negative": "NO_MATCH",
+        "undefined": "layer3",
+        "ignoreUndefined": "true"
+      },
+      "layer3": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "cityMatch",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          }
+        ],
+        "threshold": 0.7,
+        "aggregation": "W_MEAN",
+        "positive": "layer4",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      },
+      "layer4": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "keywordMatch",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          }
+        ],
+        "threshold": 0.9,
+        "aggregation": "AVG",
+        "positive": "layer5",
+        "negative": "NO_MATCH",
+        "undefined": "layer5",
+        "ignoreUndefined": "true"
+      },
+      "layer5": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "jaroWinklerNormalizedName",
+            "weight": 0.9,
+            "countIfUndefined": "true",
+            "params": {
+              "windowSize": "4"
+            }
+          },
+          {
+            "field": "legalshortname",
+            "comparator": "jaroWinklerNormalizedName",
+            "weight": 0.1,
+            "countIfUndefined": "false",
+            "params": {}
+          }
+        ],
+        "threshold": 0.99,
+        "aggregation": "W_MEAN",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      }
+    },
+    "model" : [
+      { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
+      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
+      { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
+      { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid.ac')].value"},
+      { "name" : "originalId", "type" : "String", "path" : "$.id" }
+    ],
+    "blacklists" : {
+      "legalname" : []
+    },
+    "synonyms": {}
+  }
+}

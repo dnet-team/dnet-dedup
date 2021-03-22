@@ -3,9 +3,9 @@ package eu.dnetlib.pace.config;
 import java.util.List;
 import java.util.Map;
 
-import eu.dnetlib.pace.condition.ConditionAlgo;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
+import eu.dnetlib.pace.tree.support.TreeNodeDef;
 
 /**
  * Interface for PACE configuration bean.
@@ -22,25 +22,18 @@ public interface Config {
 	public List<FieldDef> model();
 
 	/**
+	 * Decision Tree definition
+	 *
+	 * @return the map representing the decision tree
+	 */
+	public Map<String, TreeNodeDef> decisionTree();
+
+	/**
 	 * Field configuration definitions.
 	 *
 	 * @return the list of definitions
 	 */
 	public Map<String, FieldDef> modelMap();
-
-	/**
-	 * Strict Pre-Condition definitions.
-	 *
-	 * @return the list of conditions
-	 */
-	public List<ConditionAlgo> strictConditions();
-
-	/**
-	 * Pre-Condition definitions.
-	 *
-	 * @return the list of conditions
-	 */
-	public List<ConditionAlgo> conditions();
 
 	/**
 	 * Clusterings.
@@ -57,5 +50,10 @@ public interface Config {
 	public Map<String, List<String>> blacklists();
 
 
+	/**
+	 * Translation map.
+	 *
+	 * @return the map
+	 * */
 	public Map<String, String> translationMap();
 }

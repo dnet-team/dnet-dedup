@@ -16,9 +16,9 @@
 	"pace" : {
 		"clustering" : [
 		],
-		"strictConditions" : [
+		"sufficientConditions" : [
 		],
-		"conditions" : [
+		"necessaryConditions" : [
 		],
 		"model" : [
 		],
