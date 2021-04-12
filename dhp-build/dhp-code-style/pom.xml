@@ -15,12 +15,12 @@
         <snapshotRepository>
             <id>dnet45-snapshots</id>
             <name>DNet45 Snapshots</name>
-            <url>http://maven.research-infrastructures.eu/nexus/content/repositories/dnet45-snapshots</url>
+            <url>https://maven.d4science.org/nexus/content/repositories/dnet45-snapshots</url>
             <layout>default</layout>
         </snapshotRepository>
         <repository>
             <id>dnet45-releases</id>
-            <url>http://maven.research-infrastructures.eu/nexus/content/repositories/dnet45-releases</url>
+            <url>https://maven.d4science.org/nexus/content/repositories/dnet45-releases</url>
         </repository>
     </distributionManagement>
 
