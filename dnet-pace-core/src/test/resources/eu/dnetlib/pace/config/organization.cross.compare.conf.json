@@ -1,0 +1,52 @@
+{
+  "wf" : {
+    "threshold" : "0.99",
+    "dedupRun" : "001",
+    "entityType" : "organization",
+    "orderField" : "legalname",
+    "queueMaxSize" : "2000",
+    "groupMaxSize" : "50",
+    "slidingWindowSize" : "200",
+    "idPath":"$.id",
+    "rootBuilder" : [ "organization", "projectOrganization_participation_isParticipant", "datasourceOrganization_provision_isProvidedBy" ],
+    "includeChildren" : "true",
+    "maxIterations": "20"
+  },
+  "pace" : {
+    "clustering" : [
+      { "name" : "sortedngrampairs", "fields" : [ "legalname" ], "params" : { "max" : 2, "ngramLen" : "3"} },
+      { "name" : "suffixprefix", "fields" : [ "legalname" ], "params" : { "max" : 1, "len" : "3" } },
+      { "name" : "urlclustering", "fields" : [ "websiteurl" ], "params" : { } },
+      { "name" : "keywordsclustering", "fields" : [ "legalname" ], "params" : { "max": 2, "windowSize": 4} }
+    ],
+    "decisionTree" : {
+      "start": {
+        "fields": [
+          {
+            "field": "legalname",
+            "comparator": "levenstein",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {
+              "crossCompare" : "legalshortname"
+            }
+          }
+        ],
+        "threshold": 1,
+        "aggregation": "AVG",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "false"
+      }
+    },
+    "model" : [
+      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" }
+    ],
+    "blacklists" : {
+      "legalname" : []
+    },
+    "synonyms": {}
+  }
+}

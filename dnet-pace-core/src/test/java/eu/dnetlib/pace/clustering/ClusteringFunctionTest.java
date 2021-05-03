@@ -175,5 +175,4 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		System.out.println(cf.apply(conf, Lists.newArrayList(title(s5))));
 
 	}
-
 }

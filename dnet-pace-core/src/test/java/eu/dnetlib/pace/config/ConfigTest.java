@@ -2,16 +2,24 @@ package eu.dnetlib.pace.config;
 
 
 import eu.dnetlib.pace.AbstractPaceTest;
+import eu.dnetlib.pace.clustering.ClusteringClass;
+import eu.dnetlib.pace.clustering.ClusteringCombiner;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.tree.JsonListMatch;
+import eu.dnetlib.pace.tree.support.AggType;
+import eu.dnetlib.pace.tree.support.FieldConf;
+import eu.dnetlib.pace.tree.support.TreeNodeDef;
+import eu.dnetlib.pace.tree.support.TreeNodeStats;
 import eu.dnetlib.pace.util.MapDocumentUtil;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +28,14 @@ import java.util.stream.Collectors;
 
 public class ConfigTest extends AbstractPaceTest {
 
-	private Map<String, String> params;
+	private static Map<String, String> params;
 
 	@BeforeAll
-	public void setup() {
+	public static void setup() {
 		params = new HashMap<>();
 		params.put("jpath_value", "$.value");
 		params.put("jpath_classid", "$.qualifier.classid");
+
 	}
 
 	@Test
@@ -102,4 +111,37 @@ public class ConfigTest extends AbstractPaceTest {
 
         System.out.println("result = " + MapDocumentUtil.getJPathString(jpath, json));
     }
+
+    @Test
+	public void clusteringCombinerTest() {
+
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("publication.current.conf.json"));
+
+		final String json = readFromClasspath("publication.json");
+
+		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
+
+		String[] combine = ClusteringCombiner.combine(mapDocument, dedupConf).toArray(new String[3]);
+
+		assertEquals("test", combine[0].split(":")[1]);
+		assertEquals("title", combine[1].split(":")[1]);
+		assertEquals("doi", combine[2].split(":")[1]);
+	}
+
+	@Test
+	public void crossCompareTest() {
+
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("organization.cross.compare.conf.json"));
+
+		TreeNodeDef treeNode = dedupConf.decisionTree().get("start");
+
+		final String json = readFromClasspath("organization.json");
+
+		final MapDocument doc = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
+
+		TreeNodeStats nodeStats = treeNode.evaluate(doc, doc, dedupConf);
+
+		assertTrue(nodeStats.getFinalScore(AggType.MAX)>0.7);
+
+	}
 }

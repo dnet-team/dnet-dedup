@@ -5,12 +5,15 @@ import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.PaceConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.PaceException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 public class TreeNodeDef implements Serializable {
+
+    final static String CROSS_COMPARE = "crossCompare";
 
     private List<FieldConf> fields;
     private AggType aggregation;
@@ -45,7 +48,17 @@ public class TreeNodeDef implements Serializable {
 
             double weight = fieldConf.getWeight();
 
-            double result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
+            double result;
+
+            //if the param specifies a cross comparison (i.e. compare elements from different fields), compute the result for both sides and return the maximum
+            if(fieldConf.getParams().keySet().stream().anyMatch(k -> k.contains(CROSS_COMPARE))) {
+                String crossField = fieldConf.getParams().get(CROSS_COMPARE);
+                double result1 = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(crossField), conf);
+                double result2 = comparator(fieldConf).compare(doc1.getFieldMap().get(crossField), doc2.getFieldMap().get(fieldConf.getField()), conf);
+                result = Math.max(result1,result2);
+            }
+            else
+                result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
 
             stats.addFieldStats(
                     fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf),

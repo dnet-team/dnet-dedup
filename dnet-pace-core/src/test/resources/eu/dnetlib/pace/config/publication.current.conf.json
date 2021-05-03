@@ -29,7 +29,7 @@
 	},
 	"pace": {
 		"clustering" : [
-			{ "name" : "ngrampairs", "fields" : [ "title" ], "params" : { "max" : "1", "ngramLen" : "3"} },
+			{ "name" : "ngrampairs", "fields" : [ "title" ], "params" : { "max" : "1", "ngramLen" : "3", "collapseOn:test": ""} },
 			{ "name" : "suffixprefix", "fields" : [ "title" ], "params" : { "max" : "1", "len" : "3" } },
 			{ "name" : "lowercase", "fields" : [ "doi" ], "params" : { } }
 		],
