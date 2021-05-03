@@ -5,7 +5,7 @@
 
     <groupId>eu.dnetlib</groupId>
     <artifactId>dhp-code-style</artifactId>
-    <version>4.1.7-SNAPSHOT</version>
+    <version>4.1.7</version>
 
     <packaging>jar</packaging>
 
