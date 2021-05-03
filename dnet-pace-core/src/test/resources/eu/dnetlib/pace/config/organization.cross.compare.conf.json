@@ -15,7 +15,7 @@
   "pace" : {
     "clustering" : [
       { "name" : "sortedngrampairs", "fields" : [ "legalname" ], "params" : { "max" : 2, "ngramLen" : "3"} },
-      { "name" : "suffixprefix", "fields" : [ "legalname" ], "params" : { "max" : 1, "len" : "3" } },
+      { "name" : "suffixprefix", "fields" : [ "legalname" ], "params" : {"max" : 1, "len" : "3" } },
       { "name" : "urlclustering", "fields" : [ "websiteurl" ], "params" : { } },
       { "name" : "keywordsclustering", "fields" : [ "legalname" ], "params" : { "max": 2, "windowSize": 4} }
     ],
