@@ -228,7 +228,8 @@
         <google.guava.version>15.0</google.guava.version>
 
         <spark.version>2.2.0</spark.version>
-        <jackson.version>2.9.6</jackson.version>
+        <!--<jackson.version>2.9.6</jackson.version>-->
+        <jackson.version>2.6.5</jackson.version>
         <mockito-core.version>3.3.3</mockito-core.version>
 
         <commons.lang.version>3.5</commons.lang.version>
@@ -260,7 +261,7 @@
         <oozie.use.system.libpath>true</oozie.use.system.libpath>
         <properties.maven.plugin.version>2.0.1</properties.maven.plugin.version>
         <junit-jupiter.version>5.6.1</junit-jupiter.version>
-        <maven.dependency.eu.dnetlib.dhp.dhp-build-assembly-resources.jar.path>../dhp-build/dhp-build-assembly-resources/target/dhp-build-assembly-resources-4.0.6-SNAPSHOT.jar</maven.dependency.eu.dnetlib.dhp.dhp-build-assembly-resources.jar.path>
+        <maven.dependency.eu.dnetlib.dhp.dhp-build-assembly-resources.jar.path>../dhp-build/dhp-build-assembly-resources/target/dhp-build-assembly-resources-4.1.8-SNAPSHOT.jar</maven.dependency.eu.dnetlib.dhp.dhp-build-assembly-resources.jar.path>
 
     </properties>
 
@@ -409,6 +410,19 @@
                 <version>2.4.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>3.3.3</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>3.3.3</version>
+                <scope>test</scope>
+            </dependency>
 
 
         </dependencies>

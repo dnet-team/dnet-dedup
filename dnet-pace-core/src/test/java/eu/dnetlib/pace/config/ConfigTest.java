@@ -2,6 +2,7 @@ package eu.dnetlib.pace.config;
 
 
 import eu.dnetlib.pace.AbstractPaceTest;
+import eu.dnetlib.pace.clustering.BlacklistAwareClusteringCombiner;
 import eu.dnetlib.pace.clustering.ClusteringClass;
 import eu.dnetlib.pace.clustering.ClusteringCombiner;
 import eu.dnetlib.pace.model.Field;
@@ -126,6 +127,23 @@ public class ConfigTest extends AbstractPaceTest {
 		assertEquals("test", combine[0].split(":")[1]);
 		assertEquals("title", combine[1].split(":")[1]);
 		assertEquals("doi", combine[2].split(":")[1]);
+	}
+
+	@Test
+	public void filterAndCombineTest() {
+
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("pub.prod.conf.json"));
+
+		final String json = readFromClasspath("publication.example.json");
+
+		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
+
+		Collection<String> strings = BlacklistAwareClusteringCombiner.filterAndCombine(mapDocument, dedupConf);
+
+		for (String s: strings) {
+			System.out.println("s = " + s);
+		}
+
 	}
 
 	@Test

@@ -131,7 +131,7 @@
                 --conf spark.yarn.historyServer.address=${spark2YarnHistoryServerAddress}
                 --conf spark.eventLog.dir=${nameNode}${spark2EventLogDir}
                 --conf spark.sql.shuffle.partitions=3840
-                --conf spark.dynamicAllocation.enabled=false
+                --conf spark.dynamicAllocation.enabled=true
             </spark-opts>
             <arg>--entitiesPath</arg><arg>${entitiesPath}</arg>
             <arg>--workingPath</arg><arg>${workingPath}</arg>

@@ -22,5 +22,11 @@
     "paramLongName": "dedupConfPath",
     "paramDescription": "path of the dedup configuration",
     "paramRequired": true
+  },
+  {
+    "paramName": "ut",
+    "paramLongName": "useTree",
+    "paramDescription": "chose the tree configuration or not",
+    "paramRequired": true
   }
 ]

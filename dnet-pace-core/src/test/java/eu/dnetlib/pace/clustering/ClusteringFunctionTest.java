@@ -47,7 +47,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	@Test
 	public void testNgramPairs() {
 		params.put("ngramLen", 3);
-		params.put("max", 1);
+		params.put("max", 2);
 
 		final ClusteringFunction np = new NgramPairs(params);
 
@@ -59,7 +59,7 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 	@Test
 	public void testSortedNgramPairs() {
 		params.put("ngramLen", 3);
-		params.put("max", 1);
+		params.put("max", 2);
 
 		final ClusteringFunction np = new SortedNgramPairs(params);
 
@@ -70,6 +70,11 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		final String s2 = "Pisa University";
 		System.out.println(s2);
 		System.out.println(np.apply(conf, Lists.newArrayList(title(s2))));
+
+		final String s3 = "Parco Tecnologico Agroalimentare Umbria";
+		System.out.println(s3);
+		System.out.println(np.apply(conf, Lists.newArrayList(title(s3))));
+
 	}
 
 	@Test
@@ -129,6 +134,14 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
 
 		s = "Performance Evaluation";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "JRC Open Power Plants Database (JRC-PPDB-OPEN)";
+		System.out.println(s);
+		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
+
+		s = "JRC Open Power Plants Database";
 		System.out.println(s);
 		System.out.println(sp.apply(conf, Lists.newArrayList(title(s))));
 

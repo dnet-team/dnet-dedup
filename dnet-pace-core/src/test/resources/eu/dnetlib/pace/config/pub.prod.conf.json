@@ -1,3 +1,4 @@
+
 {
   "wf": {
     "threshold": "0.99",
@@ -6,9 +7,9 @@
     "subEntityType": "resulttype",
     "subEntityValue": "publication",
     "orderField": "title",
-    "queueMaxSize": "5000",
-    "groupMaxSize": "2000",
-    "maxChildren": "1000",
+    "queueMaxSize": "200",
+    "groupMaxSize": "100",
+    "maxChildren": "100",
     "slidingWindowSize": "50",
     "rootBuilder": [
       "result",
@@ -30,7 +31,7 @@
   "pace": {
     "clustering" : [
       { "name" : "wordsStatsSuffixPrefixChain", "fields" : [ "title" ], "params" : { "mod" : "10" } },
-      { "name" : "lowercase", "fields" : [ "doi" ], "params" : { } }
+      { "name" : "lowercase", "fields" : [ "doi", "altdoi" ], "params" : { "collapseOn:pid": "0"} }
     ],
     "decisionTree": {
       "start": {
@@ -44,13 +45,41 @@
               "jpath_value": "$.value",
               "jpath_classid": "$.qualifier.classid"
             }
+          },
+          {
+            "field": "pid",
+            "comparator": "jsonListMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "jpath_value": "$.value",
+              "jpath_classid": "$.qualifier.classid",
+              "crossCompare": "alternateid"
+            }
           }
         ],
         "threshold": 0.5,
-        "aggregation": "AVG",
-        "positive": "MATCH",
+        "aggregation": "MAX",
+        "positive": "layer1",
         "negative": "layer2",
         "undefined": "layer2",
+        "ignoreUndefined": "true"
+      },
+      "layer1": {
+        "fields": [
+          {
+            "field": "title",
+            "comparator": "levensteinTitle",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {}
+          }
+        ],
+        "threshold": 0.9,
+        "aggregation": "AVG",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
         "ignoreUndefined": "true"
       },
       "layer2": {
@@ -99,12 +128,23 @@
       {
         "name": "doi",
         "type": "String",
-        "path": "$.pid[?(@.qualifier.classid == 'doi')].value"
+        "path": "$.instance.pid[?(@.qualifier.classid == 'doi')].value"
+      },
+      {
+        "name": "altdoi",
+        "type": "String",
+        "path": "$.instance.alternateIdentifier[?(@.qualifier.classid == 'doi')].value"
       },
       {
         "name": "pid",
         "type": "JSON",
-        "path": "$.pid",
+        "path": "$.instance.pid",
+        "overrideMatch": "true"
+      },
+      {
+        "name": "alternateid",
+        "type": "JSON",
+        "path": "$.instance.alternateIdentifier",
         "overrideMatch": "true"
       },
       {

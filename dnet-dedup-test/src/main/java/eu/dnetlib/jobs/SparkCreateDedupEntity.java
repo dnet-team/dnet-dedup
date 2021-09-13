@@ -61,7 +61,7 @@ public class SparkCreateDedupEntity extends AbstractSparkJob {
             log.info("dedupConfPath: '{}'", dedupConfPath);
             log.info("numPartitions: '{}'", numPartitions);
 
-            DedupConfig dedupConf = DedupConfig.load(readResource("/jobs/parameters/createDedupEntity_parameters.json", SparkCreateDedupEntity.class));
+            DedupConfig dedupConf = DedupConfig.load(readFileFromHDFS(dedupConfPath));
 
             JavaPairRDD<String, String> entities = spark
                     .read()

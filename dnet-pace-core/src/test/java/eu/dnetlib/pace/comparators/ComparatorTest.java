@@ -14,7 +14,7 @@ import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ComparatorTest extends AbstractPaceFunctions {
 
 	private Map<String, String> params;
@@ -117,6 +117,42 @@ public class ComparatorTest extends AbstractPaceFunctions {
 		System.out.println("result = " + result);
 
 
+	}
+
+	@Test
+	public void jaroWinklerTest() {
+
+		final JaroWinkler jaroWinkler = new JaroWinkler(params);
+
+		double result = jaroWinkler.distance("Sofia", "Sofìa", conf);
+		System.out.println("result = " + result);
+
+		result = jaroWinkler.distance("University of Victoria Dataverse", "University of Windsor Dataverse", conf);
+		System.out.println("result = " + result);
+
+		result = jaroWinkler.distance("Victoria Dataverse", "Windsor Dataverse", conf);
+		System.out.println("result = " + result);
+
+		final Levenstein levenstein = new Levenstein(params);
+
+		result = levenstein.distance("Victoria", "Windsor", conf);
+		System.out.println("result = " + result);
+
+		//University of Victoria Dataverse
+		//University of British Columbia Dataverse
+		//University of Windsor Dataverse
+		//University of Waterloo Dataverse
+		//University of Toronto Dataverse
+		//University of Ottawa Dataverse
+	}
+
+	@Test
+	public void levensteinTitleTest() {
+
+		final LevensteinTitle levensteinTitle = new LevensteinTitle(params);
+		double result = levensteinTitle.distance("JRC: Open Power Plants Database", "JRC Open Power Plants Database (JRC-PPDB-OPEN)", conf);
+
+		System.out.println("result = " + result);
 	}
 
 	@Test

@@ -82,12 +82,7 @@ public class SparkCreateSimRels extends AbstractSparkJob {
         JavaPairRDD<String, Block> blocks = Deduper.createSortedBlocks(mapDocuments, dedupConfig);
 
         // create relations by comparing only elements in the same group
-        JavaRDD<Relation> relations;
-
-        if (useTree)
-            relations = Deduper.computeRelations(sc, blocks, dedupConfig);
-        else
-            relations = Deduper.computePublicationRelations(sc, blocks, dedupConfig);
+        JavaRDD<Relation> relations = Deduper.computeRelations(sc, blocks, dedupConfig, useTree);
 
         // save the simrel in the workingdir
         spark
