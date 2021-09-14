@@ -252,12 +252,12 @@ public class DedupLocalTest extends DedupTestUtils {
     @Ignore
     public void dedupTest() throws Exception {
         final String entitiesPath = Paths
-                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.to.fix.json").toURI())
+                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/openorgs.to.fix.json").toURI())
                 .toFile()
                 .getAbsolutePath();
 
         DedupConfig dedupConf = DedupConfig.load(readFileFromHDFS(Paths
-                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pub.prod.tree.conf.json").toURI())
+                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/orgs.tree.conf.json").toURI())
                 .toFile()
                 .getAbsolutePath()));
 
@@ -320,10 +320,11 @@ public class DedupLocalTest extends DedupTestUtils {
         int nCol = (int) Math.round(Math.ceil(Math.sqrt(nVertexes)));
         int cStepSize = 500;
         int rStepSize = 200;
-        for(int i = 0; i < nCol; i++){
-            for(int j = 0; j < nRow; j++){
-                frame.addNode(vertexes.get(i + nRow*j), 200 + j*cStepSize, 50 + i*rStepSize);
-                if (i+nRow*j == nVertexes)
+        for(int i = 0; i < nRow; i++){
+            for(int j = 0; j < nCol; j++){
+                int index = nCol*i + j;
+                frame.addNode(vertexes.get(index), 200 + j*cStepSize, 50 + i*rStepSize);
+                if (index == nVertexes-1)
                     continue;
             }
         }
