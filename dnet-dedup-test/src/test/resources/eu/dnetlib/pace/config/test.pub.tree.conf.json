@@ -28,29 +28,36 @@
     "idPath": "$.id"
   },
   "pace": {
-    "clustering": [
-      {
-        "name": "wordsStatsSuffixPrefixChain",
-        "fields": [
-          "title"
-        ],
-        "params": {
-          "mod": "10"
-        }
-      },
-      {
-        "name": "lowercase",
-        "fields": [
-          "doi",
-          "altdoi"
-        ],
-        "params": {
-          "collapseOn:pid": "0"
-        }
-      }
+    "clustering" : [
+      { "name" : "wordsStatsSuffixPrefixChain", "fields" : [ "title" ], "params" : { "mod" : "10" } },
+      { "name" : "lowercase", "fields" : [ "doi", "altdoi" ], "params" : { "collapseOn:pid": "0"} }
     ],
     "decisionTree": {
       "start": {
+        "fields": [
+          {
+            "field": "title",
+            "comparator": "titleVersionMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {}
+          },
+          {
+            "field": "authors",
+            "comparator": "sizeMatch",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {}
+          }
+        ],
+        "threshold": 1.0,
+        "aggregation": "AND",
+        "positive": "pid_check",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "false"
+      },
+      "pid_check": {
         "fields": [
           {
             "field": "pid",
@@ -76,12 +83,12 @@
         ],
         "threshold": 0.5,
         "aggregation": "MAX",
-        "positive": "layer1",
-        "negative": "layer2",
-        "undefined": "layer2",
+        "positive": "title_check_low_th",
+        "negative": "title_check_high_th",
+        "undefined": "title_check_high_th",
         "ignoreUndefined": "true"
       },
-      "layer1": {
+      "title_check_low_th": {
         "fields": [
           {
             "field": "title",
@@ -98,31 +105,7 @@
         "undefined": "NO_MATCH",
         "ignoreUndefined": "true"
       },
-      "layer2": {
-        "fields": [
-          {
-            "field": "title",
-            "comparator": "titleVersionMatch",
-            "weight": 1.0,
-            "countIfUndefined": "false",
-            "params": {}
-          },
-          {
-            "field": "authors",
-            "comparator": "sizeMatch",
-            "weight": 1.0,
-            "countIfUndefined": "false",
-            "params": {}
-          }
-        ],
-        "threshold": 1.0,
-        "aggregation": "AND",
-        "positive": "layer3",
-        "negative": "NO_MATCH",
-        "undefined": "layer3",
-        "ignoreUndefined": "false"
-      },
-      "layer3": {
+      "title_check_high_th": {
         "fields": [
           {
             "field": "title",

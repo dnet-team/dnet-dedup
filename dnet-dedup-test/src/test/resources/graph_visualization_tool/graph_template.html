@@ -1,0 +1,70 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <style type="text/css">
+        #mynetwork {
+            width: 1000px;
+            height: 700px;
+            border: 1px solid lightgray;
+        }
+
+        th, td {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+
+    // HTML parsing with all XSS goodness
+    function htmlTitle(html) {
+        const container = document.createElement("div");
+        container.innerHTML = html;
+        return container;
+    }
+
+    var nodesArray = %nodes%;
+    var edgesArray = %edges%;
+
+    for (var i = 0; i < nodesArray.length; i++) {
+        nodesArray[i].title = htmlTitle(nodesArray[i].title);
+    };
+
+    // create an array with nodes
+    var nodes = new vis.DataSet(nodesArray);
+
+    // create an array with edges
+    var edges = new vis.DataSet(edgesArray);
+
+    // HTML parsing with all XSS goodness
+    function htmlTitle(html) {
+        const container = document.createElement("div");
+        container.innerHTML = html;
+        return container;
+    }
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    var options = {
+        physics:{enabled: false},
+        edges:{physics:false},
+        nodes:{font:{size:10}},
+        layout: {improvedLayout:true}
+    };
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+
+</script>
+</body>
+</html>
