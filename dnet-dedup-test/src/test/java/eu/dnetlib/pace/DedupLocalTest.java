@@ -177,11 +177,19 @@ public class DedupLocalTest extends DedupTestUtils {
     @Ignore
     public void deduplicationTest() throws IOException {
 
+        //custom parameters for this test
+        DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS("/Users/miconis/IdeaProjects/DnetDedup/dnet-dedup/dnet-dedup-test/src/test/resources/eu/dnetlib/pace/config/ds.tree.conf.json"));
+        String inputPath = "/Users/miconis/Desktop/Fairsharing dedup/datasources";
+        String workingPath = "/tmp/fairsharing_working_dir";
+        String simRelsPath = workingPath + "/simrels";
+        String mergeRelsPath = workingPath + "/mergerels";
+        String outputPath = workingPath + "/dedup";
+
         long before_simrels = System.currentTimeMillis();
         Deduper.createSimRels(
-                config,
+                dedupConfig,
                 spark,
-                entitiesPath,
+                inputPath,
                 simRelsPath,
                 true
         );
@@ -191,8 +199,8 @@ public class DedupLocalTest extends DedupTestUtils {
 
         long before_mergerels = System.currentTimeMillis();
         Deduper.createMergeRels(
-                config,
-                entitiesPath,
+                dedupConfig,
+                inputPath,
                 mergeRelsPath,
                 simRelsPath,
                 spark
@@ -203,15 +211,15 @@ public class DedupLocalTest extends DedupTestUtils {
 
         long before_dedupentity = System.currentTimeMillis();
         Deduper.createDedupEntity(
-                config,
+                dedupConfig,
                 mergeRelsPath,
-                entitiesPath,
+                inputPath,
                 spark,
-                dedupEntityPath
+                outputPath
         );
         long dedupentity_time = System.currentTimeMillis() - before_dedupentity;
 
-        long dedupentity_number = context.textFile(dedupEntityPath).count();
+        long dedupentity_number = context.textFile(outputPath).count();
 
         System.out.println("Number of simrels                   : " + simrels_number);
         System.out.println("Number of mergerels                 : " + mergerels_number);

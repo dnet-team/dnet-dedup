@@ -40,7 +40,7 @@
         "fields": [
           {
             "field": "name",
-            "comparator": "jaroWinkler",
+            "comparator": "levensteinTitle",
             "weight": 1.0,
             "countIfUndefined": "true",
             "params": {
