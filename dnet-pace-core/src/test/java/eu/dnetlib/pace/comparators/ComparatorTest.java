@@ -1,6 +1,10 @@
 package eu.dnetlib.pace.comparators;
 
+import eu.dnetlib.pace.AbstractPaceTest;
 import eu.dnetlib.pace.clustering.NGramUtils;
+import eu.dnetlib.pace.model.Field;
+import eu.dnetlib.pace.model.FieldListImpl;
+import eu.dnetlib.pace.model.FieldValueImpl;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.tree.*;
 import eu.dnetlib.pace.config.DedupConfig;
@@ -11,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ComparatorTest extends AbstractPaceFunctions {
+public class ComparatorTest extends AbstractPaceTest {
 
 	private Map<String, String> params;
 	private DedupConfig conf;
@@ -138,12 +144,6 @@ public class ComparatorTest extends AbstractPaceFunctions {
 		result = levenstein.distance("Victoria", "Windsor", conf);
 		System.out.println("result = " + result);
 
-		//University of Victoria Dataverse
-		//University of British Columbia Dataverse
-		//University of Windsor Dataverse
-		//University of Waterloo Dataverse
-		//University of Toronto Dataverse
-		//University of Ottawa Dataverse
 	}
 
 	@Test
@@ -156,8 +156,32 @@ public class ComparatorTest extends AbstractPaceFunctions {
 	}
 
 	@Test
-	public void jsonListMatchTest(){
+	public void instanceTypeMatchTest() {
 
+		final InstanceTypeMatch instanceTypeMatch = new InstanceTypeMatch(params);
+
+		Field a = createFieldList(Arrays.asList("Article", "Article", "Article"), "instanceType");
+		Field b = createFieldList(Arrays.asList("Article", "Article", "Article"), "instanceType");
+		double result = instanceTypeMatch.compare(a, b, conf);
+
+		assertEquals(1.0, result);
+
+		Field c = createFieldList(Arrays.asList("Conference object", "Conference object", "Conference object"), "instanceType");
+		result = instanceTypeMatch.compare(c, b, conf);
+
+		assertEquals(1.0, result);
+
+		Field d = createFieldList(Arrays.asList("Master thesis", "Master thesis", "Master thesis"), "instanceType");
+		Field e = createFieldList(Arrays.asList("Bachelor thesis", "Bachelor thesis", "Bachelor thesis"), "instanceType");
+		result = instanceTypeMatch.compare(d, e, conf);
+
+		assertEquals(1.0, result);
+
+		Field g = createFieldList(Arrays.asList("Software Paper", "Software Paper"), "instanceType");
+		result = instanceTypeMatch.compare(e, g, conf);
+
+		assertEquals(0.0, result);
 	}
+
 
 }
