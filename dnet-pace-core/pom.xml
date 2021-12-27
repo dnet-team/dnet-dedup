@@ -67,8 +67,6 @@
 			<artifactId>json-path</artifactId>
 		</dependency>
 
-
-
 	</dependencies>
 
 </project>

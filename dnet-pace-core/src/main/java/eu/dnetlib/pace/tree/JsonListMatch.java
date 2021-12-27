@@ -21,9 +21,13 @@ public class JsonListMatch extends AbstractComparator {
     private static final Log log = LogFactory.getLog(JsonListMatch.class);
     private Map<String, String> params;
 
+    private String MODE; //"percentage" or "count"
+
     public JsonListMatch(final Map<String, String> params) {
         super(params);
         this.params = params;
+
+        MODE = params.getOrDefault("mode", "percentage");
     }
 
     @Override
@@ -46,7 +50,10 @@ public class JsonListMatch extends AbstractComparator {
             return 0.0;
         }
 
-        return (double)incommon / (incommon + simDiff);
+        if (MODE.equals("percentage"))
+            return (double)incommon / (incommon + simDiff);
+        else
+            return incommon;
 
     }
 

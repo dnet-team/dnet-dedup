@@ -7,11 +7,7 @@ import eu.dnetlib.pace.config.WfConfig;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.model.MapDocumentComparator;
-import eu.dnetlib.pace.tree.JsonListMatch;
-import eu.dnetlib.pace.tree.LevensteinTitle;
-import eu.dnetlib.pace.tree.SizeMatch;
-import eu.dnetlib.pace.tree.TitleVersionMatch;
-import eu.dnetlib.pace.tree.support.FieldStats;
+import eu.dnetlib.pace.tree.*;
 import eu.dnetlib.pace.tree.support.TreeProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -159,19 +155,30 @@ public class BlockProcessorForTesting {
 
                         if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-//                            if (new TreeProcessor(dedupConf).compare(pivot, curr) == true && publicationCompare(pivot, curr, dedupConf) == false)
-//                                emitOutput(true, idPivot, idCurr, context);
-//
-                            if(useTree)
+                            if(!compareInstanceType(pivot, curr, dedupConf)){
                                 emitOutput(new TreeProcessor(dedupConf).compare(pivot, curr), idPivot, idCurr, context);
-                            else
-                                emitOutput(publicationCompare(pivot, curr, dedupConf), idPivot, idCurr, context);
+                            }
+                            else {
+                                emitOutput(false, idPivot, idCurr, context);
+                            }
+
+//                            if(useTree)
+//                                emitOutput(new TreeProcessor(dedupConf).compare(pivot, curr), idPivot, idCurr, context);
+//                            else
+//                                emitOutput(publicationCompare(pivot, curr, dedupConf), idPivot, idCurr, context);
 
                         }
                     }
                 }
             }
         }
+
+    protected static boolean compareInstanceType(MapDocument a, MapDocument b, DedupConfig conf) {
+        Map<String, String> params = new HashMap<>();
+        InstanceTypeMatch instanceTypeMatch = new InstanceTypeMatch(params);
+        double compare = instanceTypeMatch.compare(a.getFieldMap().get("instance"), b.getFieldMap().get("instance"), conf);
+        return compare>=1.0;
+    }
 
         private boolean publicationCompare(MapDocument a, MapDocument b, DedupConfig config) {
 

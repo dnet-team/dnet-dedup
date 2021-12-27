@@ -11,42 +11,48 @@ import java.util.Map;
  *
  * @author miconis
  * */
-@ComparatorClass("containsMatch")
-public class ContainsMatch extends AbstractComparator {
+@ComparatorClass("stringContainsMatch")
+public class StringContainsMatch extends AbstractComparator {
 
     private Map<String, String> params;
 
-    public ContainsMatch(Map<String, String> params) {
+    private boolean CASE_SENSITIVE;
+    private String STRING;
+    private String AGGREGATOR;
+
+    public StringContainsMatch(Map<String, String> params) {
         super(params);
         this.params = params;
+
+        //read parameters
+        CASE_SENSITIVE = Boolean.parseBoolean(params.getOrDefault("caseSensitive", "false"));
+        STRING = params.get("string");
+        AGGREGATOR = params.get("aggregator");
+
     }
 
     @Override
     public double distance(final String a, final String b, final Config conf) {
 
-        //read parameters
-        boolean caseSensitive = Boolean.parseBoolean(params.getOrDefault("caseSensitive", "false"));
-        String string = params.get("string");
-        String agg = params.get("bool");
-
         String ca = a;
         String cb = b;
-        if (!caseSensitive) {
+        if (!CASE_SENSITIVE) {
             ca = a.toLowerCase();
             cb = b.toLowerCase();
+            STRING = STRING.toLowerCase();
         }
 
-        switch(agg) {
+        switch(AGGREGATOR) {
             case "AND":
-                if(ca.contains(string) && cb.contains(string))
+                if(ca.contains(STRING) && cb.contains(STRING))
                     return 1.0;
                 break;
             case "OR":
-                if(ca.contains(string) || cb.contains(string))
+                if(ca.contains(STRING) || cb.contains(STRING))
                     return 1.0;
                 break;
             case "XOR":
-                if(ca.contains(string) ^ cb.contains(string))
+                if(ca.contains(STRING) ^ cb.contains(STRING))
                     return 1.0;
                 break;
             default:

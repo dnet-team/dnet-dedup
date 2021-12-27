@@ -178,9 +178,9 @@ public class DedupLocalTest extends DedupTestUtils {
     public void deduplicationTest() throws IOException {
 
         //custom parameters for this test
-        DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS("/Users/miconis/IdeaProjects/DnetDedup/dnet-dedup/dnet-dedup-test/src/test/resources/eu/dnetlib/pace/config/ds.tree.conf.json"));
-        String inputPath = "/Users/miconis/Desktop/Fairsharing dedup/datasources";
-        String workingPath = "/tmp/fairsharing_working_dir";
+        DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS("/Users/miconis/IdeaProjects/DnetDedup/dnet-dedup/dnet-dedup-test/src/test/resources/eu/dnetlib/pace/config/pub.instancetype.tree.conf.json"));
+        String inputPath = "/Users/miconis/Desktop/FDup paper/publications_dump_10Mi";
+        String workingPath = "/tmp/dedup_working_dir";
         String simRelsPath = workingPath + "/simrels";
         String mergeRelsPath = workingPath + "/mergerels";
         String outputPath = workingPath + "/dedup";
@@ -228,7 +228,7 @@ public class DedupLocalTest extends DedupTestUtils {
         System.out.println("Total time for mergerels creation   : " + mergerels_time);
         System.out.println("Total time for dedupentity creation : " + dedupentity_time);
 
-        cleanup();
+        FileUtils.deleteDirectory(new File(workingPath));
     }
 
     @Test //test the match between two JSON
@@ -333,6 +333,20 @@ public class DedupLocalTest extends DedupTestUtils {
         return minDegree;
     }
 
+    @Test
+    @Ignore
+    public void asMapDocument() throws IOException {
+
+        final String json = "{\"context\": [], \"dataInfo\": {\"invisible\": false, \"trust\": \"0.9\", \"provenanceaction\": {\"classid\": \"sysimport:actionset\", \"classname\": \"sysimport:actionset\", \"schemeid\": \"dnet:provenanceActions\", \"schemename\": \"dnet:provenanceActions\"}, \"inferred\": false, \"deletedbyinference\": false}, \"resourcetype\": {\"classid\": \"0013\", \"classname\": \"0013\", \"schemeid\": \"dnet:dataCite_resource\", \"schemename\": \"dnet:dataCite_resource\"}, \"pid\": [{\"qualifier\": {\"classid\": \"doi\", \"classname\": \"doi\", \"schemeid\": \"dnet:pid_types\", \"schemename\": \"dnet:pid_types\"}, \"value\": \"10.1016/b978-0-323-54696-6.00057-4\"}], \"contributor\": [], \"bestaccessright\": {\"classid\": \"RESTRICTED\", \"classname\": \"Restricted\", \"schemeid\": \"dnet:access_modes\", \"schemename\": \"dnet:access_modes\"}, \"relevantdate\": [{\"qualifier\": {\"classid\": \"created\", \"classname\": \"created\", \"schemeid\": \"dnet:dataCite_date\", \"schemename\": \"dnet:dataCite_date\"}, \"value\": \"2018-11-30T10:52:46Z\"}], \"collectedfrom\": [{\"key\": \"10|openaire____::081b82f96300b6a6e3d282bad31cb6e2\", \"value\": \"Crossref\"}], \"id\": \"50|doiboost____::0a5280c186efacdc7c8ce845cec3fceb\", \"subject\": [], \"lastupdatetimestamp\": 1585062372132, \"author\": [{\"fullname\": \"Eric Caumes\", \"surname\": \"Caumes\", \"name\": \"Eric\", \"rank\": 1}], \"instance\": [{\"hostedby\": {\"key\": \"10|openaire____::55045bd2a65019fd8e6741a755395c8c\", \"value\": \"Unknown Repository\"}, \"license\": {\"value\": \"https://www.elsevier.com/tdm/userlicense/1.0/\"}, \"url\": [\"https://api.elsevier.com/content/article/PII:B9780323546966000574?httpAccept=text/xml\", \"https://api.elsevier.com/content/article/PII:B9780323546966000574?httpAccept=text/plain\", \"http://dx.doi.org/10.1016/b978-0-323-54696-6.00057-4\"], \"dateofacceptance\": {\"value\": \"2018-11-30T10:52:46Z\"}, \"collectedfrom\": {\"key\": \"10|openaire____::081b82f96300b6a6e3d282bad31cb6e2\", \"value\": \"Crossref\"}, \"accessright\": {\"classid\": \"RESTRICTED\", \"classname\": \"Restricted\", \"schemeid\": \"dnet:access_modes\", \"schemename\": \"dnet:access_modes\"}, \"instancetype\": {\"classid\": \"0013\", \"classname\": \"Part of book or chapter of book\", \"schemeid\": \"dnet:publication_resource\", \"schemename\": \"dnet:publication_resource\"}}], \"dateofcollection\": \"2020-03-24T15:06:12Z\", \"fulltext\": [], \"description\": [], \"format\": [], \"measures\": [], \"coverage\": [], \"externalReference\": [], \"publisher\": {\"value\": \"Elsevier\"}, \"resulttype\": {\"classid\": \"publication\", \"classname\": \"publication\", \"schemeid\": \"dnet:result_typologies\", \"schemename\": \"dnet:result_typologies\"}, \"country\": [], \"extraInfo\": [], \"originalId\": [\"10.1016/b978-0-323-54696-6.00057-4\"], \"source\": [{\"value\": \"Crossref\"}, {\"value\": \"Travel Medicine ISBN: 9780323546966\"}], \"dateofacceptance\": {\"value\": \"2018-11-30T10:52:46Z\"}, \"title\": [{\"qualifier\": {\"classid\": \"main title\", \"classname\": \"main title\", \"schemeid\": \"dnet:dataCite_title\", \"schemename\": \"dnet:dataCite_title\"}, \"value\": \"Skin Diseases\"}]}\n";
+
+        DedupConfig dedupConf = DedupConfig.load(readFileFromHDFS("/Users/miconis/IdeaProjects/DnetDedup/dnet-dedup/dnet-dedup-test/src/test/resources/eu/dnetlib/pace/config/pub.instancetype.tree.conf.json"));
+
+        final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
+
+        for(String field: mapDocument.getFieldMap().keySet()) {
+            System.out.println(field + ": " + mapDocument.getFieldMap().get(field).stringValue());
+        }
+    }
 }
 
 // function mocking the tree processor by considering every comparison instead of using early exits

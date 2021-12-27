@@ -44,6 +44,9 @@ public abstract class AbstractPaceFunctions {
     //blacklist of ngrams: to avoid generic keys
     protected static Set<String> ngramBlacklist = loadFromClasspath("/eu/dnetlib/pace/config/ngram_blacklist.txt");
 
+    //html regex for normalization
+    public final String HTML_REGEX = "<[^>]*>";
+
     private static final String alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
     private static final String aliases_from = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎àáâäæãåāèéêëēėęəîïíīįìôöòóœøōõûüùúūßśšłžźżçćčñń";
     private static final String aliases_to = "0123456789+-=()n0123456789+-=()aaaaaaaaeeeeeeeeiiiiiioooooooouuuuussslzzzcccnn";
@@ -62,7 +65,9 @@ public abstract class AbstractPaceFunctions {
     }
 
     protected String cleanup(final String s) {
-        final String s0 = unicodeNormalization(s.toLowerCase());
+
+        final String s00 = s.replaceAll(HTML_REGEX, "");
+        final String s0 = unicodeNormalization(s00.toLowerCase());
         final String s1 = fixAliases(s0);
         final String s2 = nfd(s1);
         final String s3 = s2.replaceAll("&ndash;", " ");

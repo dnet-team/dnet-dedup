@@ -101,7 +101,6 @@ public class ConfigTest extends AbstractPaceTest {
 
 		System.out.println("mapDocument = " + mapDocument.getFieldMap().get("title").stringValue());
 
-
     }
 
     @Test

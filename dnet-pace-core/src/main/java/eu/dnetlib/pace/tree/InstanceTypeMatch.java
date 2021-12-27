@@ -5,6 +5,7 @@ import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
+import eu.dnetlib.pace.tree.support.ComparatorClass;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@ComparatorClass("instanceTypeMatch")
 public class InstanceTypeMatch extends AbstractComparator {
 
     final Map<String, String> translationMap = new HashMap<>();
@@ -40,6 +42,10 @@ public class InstanceTypeMatch extends AbstractComparator {
 
     @Override
     public double compare(final Field a, final Field b, final Config conf) {
+
+        if (a == null || b == null) {
+            return -1;
+        }
 
         final List<String> sa = ((FieldList) a).stringList();
         final List<String> sb = ((FieldList) b).stringList();

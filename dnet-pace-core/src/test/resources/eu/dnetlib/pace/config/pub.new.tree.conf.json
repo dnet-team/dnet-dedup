@@ -1,0 +1,465 @@
+{
+  "wf": {
+    "threshold": "0.99",
+    "dedupRun": "001",
+    "entityType": "result",
+    "subEntityType": "resulttype",
+    "subEntityValue": "publication",
+    "orderField": "title",
+    "queueMaxSize": "200",
+    "groupMaxSize": "100",
+    "maxChildren": "100",
+    "slidingWindowSize": "50",
+    "rootBuilder": [
+      "result",
+      "resultProject_outcome_isProducedBy",
+      "resultResult_publicationDataset_isRelatedTo",
+      "resultResult_similarity_isAmongTopNSimilarDocuments",
+      "resultResult_similarity_hasAmongTopNSimilarDocuments",
+      "resultOrganization_affiliation_isAffiliatedWith",
+      "resultResult_part_hasPart",
+      "resultResult_part_isPartOf",
+      "resultResult_supplement_isSupplementTo",
+      "resultResult_supplement_isSupplementedBy",
+      "resultResult_version_isVersionOf"
+    ],
+    "includeChildren": "true",
+    "maxIterations": 20,
+    "idPath": "$.id"
+  },
+  "pace": {
+    "clustering": [
+      {
+        "name": "wordsStatsSuffixPrefixChain",
+        "fields": [
+          "title"
+        ],
+        "params": {
+          "mod": "10"
+        }
+      },
+      {
+        "name": "lowercase",
+        "fields": [
+          "doi",
+          "altdoi"
+        ],
+        "params": {
+          "collapseOn:pid": "0"
+        }
+      }
+    ],
+    "decisionTree": {
+      "start": {
+        "fields": [
+          {
+            "field": "pid",
+            "comparator": "jsonListMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "jpath_value": "$.value",
+              "jpath_classid": "$.qualifier.classid",
+              "mode": "count"
+            }
+          }
+        ],
+        "threshold": 1.0,
+        "aggregation": "MAX",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "instanceTypeCheck",
+        "ignoreUndefined": "false"
+      },
+      "instanceTypeCheck": {
+        "fields": [
+          {
+            "field": "instance",
+            "comparator": "instanceTypeMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {}
+          }
+        ],
+        "threshold": 0.5,
+        "aggregation": "MAX",
+        "positive": "pidVSaltid",
+        "negative": "NO_MATCH",
+        "undefined": "pidVSaltid",
+        "ignoreUndefined": "true"
+      },
+      "pidVSaltid": {
+        "fields": [
+          {
+            "field": "pid",
+            "comparator": "jsonListMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "jpath_value": "$.value",
+              "jpath_classid": "$.qualifier.classid",
+              "crossCompare": "alternateid",
+              "mode": "count"
+            }
+          }
+        ],
+        "threshold": 1.0,
+        "aggregation": "MAX",
+        "positive": "softCheck",
+        "negative": "earlyExits",
+        "undefined": "earlyExits",
+        "ignoreUndefined": "true"
+      },
+      "softCheck": {
+        "fields": [
+          {
+            "field": "title",
+            "comparator": "levensteinTitle",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {}
+          }
+        ],
+        "threshold": 0.9,
+        "aggregation": "AVG",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      },
+      "earlyExits": {
+        "fields": [
+          {
+            "field": "title",
+            "comparator": "titleVersionMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {}
+          },
+          {
+            "field": "authors",
+            "comparator": "sizeMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {}
+          },
+          {
+            "field": "authors",
+            "comparator": "authorsMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "surname_th": 0.99,
+              "fullname_th": 0.95,
+              "mode": "surname"
+            }
+          }
+        ],
+        "threshold": 1.0,
+        "aggregation": "AND",
+        "positive": "strongCheck",
+        "negative": "NO_MATCH",
+        "undefined": "strongCheck",
+        "ignoreUndefined": "false"
+      },
+      "strongCheck": {
+        "fields": [
+          {
+            "field": "title",
+            "comparator": "levensteinTitle",
+            "weight": 1.0,
+            "countIfUndefined": "true",
+            "params": {}
+          }
+        ],
+        "threshold": 0.99,
+        "aggregation": "AVG",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      }
+    },
+    "model": [
+      {
+        "name": "doi",
+        "type": "String",
+        "path": "$.instance[*].pid[?(@.qualifier.classid == 'doi')].value"
+      },
+      {
+        "name": "altdoi",
+        "type": "String",
+        "path": "$.instance[*].alternateIdentifier[?(@.qualifier.classid == 'doi')].value"
+      },
+      {
+        "name": "pid",
+        "type": "JSON",
+        "path": "$.instance[*].pid[*]",
+        "overrideMatch": "true"
+      },
+      {
+        "name": "alternateid",
+        "type": "JSON",
+        "path": "$.instance[*].alternateIdentifier[*]",
+        "overrideMatch": "true"
+      },
+      {
+        "name": "title",
+        "type": "String",
+        "path": "$.title[?(@.qualifier.classid == 'main title')].value",
+        "length": 250,
+        "size": 5
+      },
+      {
+        "name": "authors",
+        "type": "List",
+        "path": "$.author[*].fullname",
+        "size": 200
+      },
+      {
+        "name": "resulttype",
+        "type": "String",
+        "path": "$.resulttype.classid"
+      },
+      {
+        "name": "instance",
+        "type": "List",
+        "path": "$.instance[*].instancetype.classname"
+      }
+    ],
+    "blacklists": {
+      "title": [
+        "(?i)^Data Management Plan",
+        "^Inside Front Cover$",
+        "(?i)^Poster presentations$",
+        "^THE ASSOCIATION AND THE GENERAL MEDICAL COUNCIL$",
+        "^Problems with perinatal pathology\\.?$",
+        "(?i)^Cases? of Puerperal Convulsions$",
+        "(?i)^Operative Gyna?ecology$",
+        "(?i)^Mind the gap\\!?\\:?$",
+        "^Chronic fatigue syndrome\\.?$",
+        "^Cartas? ao editor Letters? to the Editor$",
+        "^Note from the Editor$",
+        "^Anesthesia Abstract$",
+        "^Annual report$",
+        "(?i)^“?THE RADICAL PREVENTION OF VENEREAL DISEASE\\.?”?$",
+        "(?i)^Graph and Table of Infectious Diseases?$",
+        "^Presentation$",
+        "(?i)^Reviews and Information on Publications$",
+        "(?i)^PUBLIC HEALTH SERVICES?$",
+        "(?i)^COMBINED TEXT-?BOOK OF OBSTETRICS AND GYN(Æ|ae)COLOGY$",
+        "(?i)^Adrese autora$",
+        "(?i)^Systematic Part .*\\. Catalogus Fossilium Austriae, Band 2: Echinoidea neogenica$",
+        "(?i)^Acknowledgement to Referees$",
+        "(?i)^Behçet's disease\\.?$",
+        "(?i)^Isolation and identification of restriction endonuclease.*$",
+        "(?i)^CEREBROVASCULAR DISEASES?.?$",
+        "(?i)^Screening for abdominal aortic aneurysms?\\.?$",
+        "^Event management$",
+        "(?i)^Breakfast and Crohn's disease.*\\.?$",
+        "^Cálculo de concentraciones en disoluciones acuosas. Ejercicio interactivo\\..*\\.$",
+        "(?i)^Genetic and functional analyses of SHANK2 mutations suggest a multiple hit model of Autism spectrum disorders?\\.?$",
+        "^Gushi hakubutsugaku$",
+        "^Starobosanski nadpisi u Bosni i Hercegovini \\(.*\\)$",
+        "^Intestinal spirocha?etosis$",
+        "^Treatment of Rodent Ulcer$",
+        "(?i)^\\W*Cloud Computing\\W*$",
+        "^Compendio mathematico : en que se contienen todas las materias mas principales de las Ciencias que tratan de la cantidad$",
+        "^Free Communications, Poster Presentations: Session [A-F]$",
+        "^“The Historical Aspects? of Quackery\\.?”$",
+        "^A designated centre for people with disabilities operated by St John of God Community Services (Limited|Ltd), Louth$",
+        "^P(er|re)-Mile Premiums for Auto Insurance\\.?$",
+        "(?i)^Case Report$",
+        "^Boletín Informativo$",
+        "(?i)^Glioblastoma Multiforme$",
+        "(?i)^Nuevos táxones animales descritos en la península Ibérica y Macaronesia desde 1994 \\(.*\\)$",
+        "^Zaměstnanecké výhody$",
+        "(?i)^The Economics of Terrorism and Counter-Terrorism: A Survey \\(Part .*\\)$",
+        "(?i)^Carotid body tumours?\\.?$",
+        "(?i)^\\[Españoles en Francia : La condición Emigrante.*\\]$",
+        "^Avant-propos$",
+        "(?i)^St\\. Patrick's Cathedral, Dublin, County Dublin - Head(s)? and Capital(s)?$",
+        "(?i)^St\\. Patrick's Cathedral, Dublin, County Dublin - Bases?$",
+        "(?i)^PUBLIC HEALTH VERSUS THE STATE$",
+        "^Viñetas de Cortázar$",
+        "(?i)^Search for heavy neutrinos and W(\\[|_|\\(|_\\{|-)?R(\\]|\\)|\\})? bosons with right-handed couplings in a left-right symmetric model in pp collisions at.*TeV(\\.)?$",
+        "(?i)^Measurement of the pseudorapidity and centrality dependence of the transverse energy density in Pb(-?)Pb collisions at.*tev(\\.?)$",
+        "(?i)^Search for resonances decaying into top-quark pairs using fully hadronic decays in pp collisions with ATLAS at.*TeV$",
+        "(?i)^Search for neutral minimal supersymmetric standard model Higgs bosons decaying to tau pairs in pp collisions at.*tev$",
+        "(?i)^Relatório de Estágio (de|em) Angiologia e Cirurgia Vascular$",
+        "^Aus der AGMB$",
+        "^Znanstveno-stručni prilozi$",
+        "(?i)^Zhodnocení finanční situace podniku a návrhy na zlepšení$",
+        "(?i)^Evaluation of the Financial Situation in the Firm and Proposals to its Improvement$",
+        "(?i)^Hodnocení finanční situace podniku a návrhy na její zlepšení$",
+        "^Finanční analýza podniku$",
+        "^Financial analysis( of business)?$",
+        "(?i)^Textbook of Gyn(a)?(Æ)?(e)?cology$",
+        "^Jikken nihon shūshinsho$",
+        "(?i)^CORONER('|s)(s|') INQUESTS$",
+        "(?i)^(Μελέτη παραγόντων )?risk management( για ανάπτυξη και εφαρμογή ενός πληροφοριακού συστήματος| και ανάπτυξη συστήματος)?$",
+        "(?i)^Consultants' contract(s)?$",
+        "(?i)^Upute autorima$",
+        "(?i)^Bijdrage tot de Kennis van den Godsdienst der Dajaks van Lan(d|f)ak en Tajan$",
+        "^Joshi shin kokubun$",
+        "^Kōtō shōgaku dokuhon nōson'yō$",
+        "^Jinjō shōgaku shōka$",
+        "^Shōgaku shūjichō$",
+        "^Nihon joshi dokuhon$",
+        "^Joshi shin dokuhon$",
+        "^Chūtō kanbun dokuhon$",
+        "^Wabun dokuhon$",
+        "(?i)^(Analysis of economy selected village or town|Rozbor hospodaření vybrané obce či města)$",
+        "(?i)^cardiac rehabilitation$",
+        "(?i)^Analytical summary$",
+        "^Thesaurus resolutionum Sacrae Congregationis Concilii$",
+        "(?i)^Sumario analítico(\\s{1})?(Analitic summary)?$",
+        "^Prikazi i osvrti$",
+        "^Rodinný dům s provozovnou$",
+        "^Family house with an establishment$",
+        "^Shinsei chūtō shin kokugun$",
+        "^Pulmonary alveolar proteinosis(\\.?)$",
+        "^Shinshū kanbun$",
+        "^Viñeta(s?) de Rodríguez$",
+        "(?i)^RUBRIKA UREDNIKA$",
+        "^A Matching Model of the Academic Publication Market$",
+        "^Yōgaku kōyō$",
+        "^Internetový marketing$",
+        "^Internet marketing$",
+        "^Chūtō kokugo dokuhon$",
+        "^Kokugo dokuhon$",
+        "^Antibiotic Cover for Dental Extraction(s?)$",
+        "^Strategie podniku$",
+        "^Strategy of an Enterprise$",
+        "(?i)^respiratory disease(s?)(\\.?)$",
+        "^Award(s?) for Gallantry in Civil Defence$",
+        "^Podniková kultura$",
+        "^Corporate Culture$",
+        "^Severe hyponatraemia in hospital inpatient(s?)(\\.?)$",
+        "^Pracovní motivace$",
+        "^Work Motivation$",
+        "^Kaitei kōtō jogaku dokuhon$",
+        "^Konsolidovaná účetní závěrka$",
+        "^Consolidated Financial Statements$",
+        "(?i)^intracranial tumour(s?)$",
+        "^Climate Change Mitigation Options and Directed Technical Change: A Decentralized Equilibrium Analysis$",
+        "^\\[CERVECERIAS MAHOU(\\.|\\:) INTERIOR\\] \\[Material gráfico\\]$",
+        "^Housing Market Dynamics(\\:|\\.) On the Contribution of Income Shocks and Credit Constraint(s?)$",
+        "^\\[Funciones auxiliares de la música en Radio París,.*\\]$",
+        "^Úroveň motivačního procesu jako způsobu vedení lidí$",
+        "^The level of motivation process as a leadership$",
+        "^Pay-beds in N(\\.?)H(\\.?)S(\\.?) Hospitals$",
+        "(?i)^news and events$",
+        "(?i)^NOVOSTI I DOGAĐAJI$",
+        "^Sansū no gakushū$",
+        "^Posouzení informačního systému firmy a návrh změn$",
+        "^Information System Assessment and Proposal for ICT Modification$",
+        "^Stresové zatížení pracovníků ve vybrané profesi$",
+        "^Stress load in a specific job$",
+        "^Sunday: Poster Sessions, Pt.*$",
+        "^Monday: Poster Sessions, Pt.*$",
+        "^Wednesday: Poster Sessions, Pt.*",
+        "^Tuesday: Poster Sessions, Pt.*$",
+        "^Analýza reklamy$",
+        "^Analysis of advertising$",
+        "^Shōgaku shūshinsho$",
+        "^Shōgaku sansū$",
+        "^Shintei joshi kokubun$",
+        "^Taishō joshi kokubun dokuhon$",
+        "^Joshi kokubun$",
+        "^Účetní uzávěrka a účetní závěrka v ČR$",
+        "(?i)^The \"?Causes\"? of Cancer$",
+        "^Normas para la publicación de artículos$",
+        "^Editor('|s)(s|') [Rr]eply$",
+        "^Editor(’|s)(s|’) letter$",
+        "^Redaktoriaus žodis$",
+        "^DISCUSSION ON THE PRECEDING PAPER$",
+        "^Kōtō shōgaku shūshinsho jidōyō$",
+        "^Shōgaku nihon rekishi$",
+        "^(Theory of the flow of action currents in isolated myelinated nerve fibers).*$",
+        "^Préface$",
+        "^Occupational [Hh]ealth [Ss]ervices.$",
+        "^In Memoriam Professor Toshiyuki TAKESHIMA$",
+        "^Účetní závěrka ve vybraném podniku.*$",
+        "^Financial statements in selected company$",
+        "^Abdominal [Aa]ortic [Aa]neurysms.*$",
+        "^Pseudomyxoma peritonei$",
+        "^Kazalo autora$",
+        "(?i)^uvodna riječ$",
+        "^Motivace jako způsob vedení lidí$",
+        "^Motivation as a leadership$",
+        "^Polyfunkční dům$",
+        "^Multi\\-funkcional building$",
+        "^Podnikatelský plán$",
+        "(?i)^Podnikatelský záměr$",
+        "(?i)^Business Plan$",
+        "^Oceňování nemovitostí$",
+        "^Marketingová komunikace$",
+        "^Marketing communication$",
+        "^Sumario Analítico$",
+        "^Riječ uredništva$",
+        "^Savjetovanja i priredbe$",
+        "^Índice$",
+        "^(Starobosanski nadpisi).*$",
+        "^Vzdělávání pracovníků v organizaci$",
+        "^Staff training in organization$",
+        "^(Life Histories of North American Geometridae).*$",
+        "^Strategická analýza podniku$",
+        "^Strategic Analysis of an Enterprise$",
+        "^Sadržaj$",
+        "^Upute suradnicima$",
+        "^Rodinný dům$",
+        "(?i)^Fami(l)?ly house$",
+        "^Upute autorima$",
+        "^Strategic Analysis$",
+        "^Finanční analýza vybraného podniku$",
+        "^Finanční analýza$",
+        "^Riječ urednika$",
+        "(?i)^Content(s?)$",
+        "(?i)^Inhalt$",
+        "^Jinjō shōgaku shūshinsho jidōyō$",
+        "(?i)^Index$",
+        "^Chūgaku kokubun kyōkasho$",
+        "^Retrato de una mujer$",
+        "^Retrato de un hombre$",
+        "^Kōtō shōgaku dokuhon$",
+        "^Shotōka kokugo$",
+        "^Shōgaku dokuhon$",
+        "^Jinjō shōgaku kokugo dokuhon$",
+        "^Shinsei kokugo dokuhon$",
+        "^Teikoku dokuhon$",
+        "^Instructions to Authors$",
+        "^KİTAP TAHLİLİ$",
+        "^PRZEGLĄD PIŚMIENNICTWA$",
+        "(?i)^Presentación$",
+        "^İçindekiler$",
+        "(?i)^Tabl?e of contents$",
+        "^(CODICE DEL BEATO DE LOS REYES FERNANDO I Y SANCHA).*$",
+        "^(\\[MADRID\\. BIBL\\. NAC\\. N.*KING FERDINAND I.*FROM SAN ISIDORO DE LEON\\. FACUNDUS SCRIPSIT DATED.*\\]).*",
+        "^Editorial( Board)?$",
+        "(?i)^Editorial \\(English\\)$",
+        "^Editörden$",
+        "^(Corpus Oral Dialectal \\(COD\\)\\.).*$",
+        "^(Kiri Karl Morgensternile).*$",
+        "^(\\[Eksliibris Aleksandr).*\\]$",
+        "^(\\[Eksliibris Aleksandr).*$",
+        "^(Eksliibris Aleksandr).*$",
+        "^(Kiri A\\. de Vignolles).*$",
+        "^(2 kirja Karl Morgensternile).*$",
+        "^(Pirita kloostri idaosa arheoloogilised).*$",
+        "^(Kiri tundmatule).*$",
+        "^(Kiri Jenaer Allgemeine Literaturzeitung toimetusele).*$",
+        "^(Eksliibris Nikolai Birukovile).*$",
+        "^(Eksliibris Nikolai Issakovile).*$",
+        "^(WHP Cruise Summary Information of section).*$",
+        "^(Measurement of the top quark\\-pair production cross section with ATLAS in pp collisions at).*$",
+        "^(Measurement of the spin\\-dependent structure function).*",
+        "(?i)^.*authors['’′]? reply\\.?$",
+        "(?i)^.*authors['’′]? response\\.?$",
+        "^Data [mM]anagement [sS]ervices\\.$",
+        "Research and Advanced Technology for Digital Libraries"
+      ]
+    },
+    "synonyms": {}
+  }
+}

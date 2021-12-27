@@ -72,6 +72,7 @@ public class SparkCreateSimRels extends AbstractSparkJob {
 
         JavaPairRDD<String, MapDocument> mapDocuments = sc
                 .textFile(entitiesPath)
+                .repartition(numPartitions)
                 .mapToPair(
                         (PairFunction<String, String, MapDocument>) s -> {
                             MapDocument d = MapDocumentUtil.asMapDocumentWithJPath(dedupConfig, s);
