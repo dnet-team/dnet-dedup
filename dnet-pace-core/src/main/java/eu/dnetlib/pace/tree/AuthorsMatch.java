@@ -60,7 +60,10 @@ public class AuthorsMatch extends AbstractComparator {
                 //both persons are inaccurate
                 if (!p1.isAccurate() && !p2.isAccurate()) {
                     //compare just normalized fullnames
-                    if (ssalgo.score(normalization(p1.getNormalisedFullname()), normalization(p2.getNormalisedFullname())) > FULLNAME_THRESHOLD) {
+                    String fullname1 = normalization(p1.getNormalisedFullname().isEmpty()? p1.getOriginal() : p1.getNormalisedFullname());
+                    String fullname2 = normalization(p2.getNormalisedFullname().isEmpty()? p2.getOriginal() : p2.getNormalisedFullname());
+
+                    if (ssalgo.score(fullname1, fullname2) > FULLNAME_THRESHOLD) {
                         common += 1;
                         break;
                     }
@@ -69,10 +72,12 @@ public class AuthorsMatch extends AbstractComparator {
                 //one person is inaccurate
                 if (p1.isAccurate() ^ p2.isAccurate()) {
                     //prepare data
-                    String name = p1.isAccurate()? normalization(p1.getNormalisedFirstName()) : normalization(p2.getNormalisedFirstName());
-                    String surname = p1.isAccurate()? normalization(p2.getNormalisedSurname()) : normalization(p2.getNormalisedSurname());
+                    String name = normalization(p1.isAccurate()? p1.getNormalisedFirstName() : p2.getNormalisedFirstName());
+                    String surname = normalization(p1.isAccurate()? p2.getNormalisedSurname() : p2.getNormalisedSurname());
 
-                    String fullname = p1.isAccurate()? normalization(p2.getNormalisedFullname()) : normalization(p1.getNormalisedFullname());
+                    String fullname = normalization(
+                            p1.isAccurate() ? ((p1.getNormalisedFullname().isEmpty()) ? p1.getOriginal() : p1.getNormalisedFullname()) : (p2.getNormalisedFullname().isEmpty() ? p2.getOriginal() : p2.getNormalisedFullname())
+                    );
 
                     if (fullname.contains(surname)) {
                         if (MODE.equals("full")) {
