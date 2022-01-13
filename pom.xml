@@ -5,7 +5,7 @@
 
     <groupId>eu.dnetlib</groupId>
     <artifactId>dnet-dedup</artifactId>
-    <version>4.1.10</version>
+    <version>4.1.11-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -22,7 +22,7 @@
 
     <scm>
         <developerConnection>scm:git:https://code-repo.d4science.org/D-Net/dnet-dedup.git</developerConnection>
-        <tag>dnet-dedup-4.1.10</tag>
+        <tag>dnet-dedup-4.0.3</tag>
     </scm>
 
     <modules>
