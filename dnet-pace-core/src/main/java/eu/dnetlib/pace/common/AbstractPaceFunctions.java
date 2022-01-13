@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.function.Function;
@@ -158,6 +160,11 @@ public abstract class AbstractPaceFunctions {
 
     public String nfd(final String s) {
         return Normalizer.normalize(s, Normalizer.Form.NFD);
+    }
+
+    public String utf8(final String s) {
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public String unicodeNormalization(final String s) {

@@ -1,13 +1,13 @@
 package eu.dnetlib.pace.tree;
 
 import com.google.common.collect.Iterables;
-import com.wcohen.ss.JaroWinkler;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Field;
 import eu.dnetlib.pace.model.FieldList;
 import eu.dnetlib.pace.model.Person;
 import eu.dnetlib.pace.tree.support.AbstractComparator;
 import eu.dnetlib.pace.tree.support.ComparatorClass;
+import com.wcohen.ss.AbstractStringDistance;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,6 +25,7 @@ public class AuthorsMatch extends AbstractComparator {
     private double NAME_THRESHOLD;
     private double FULLNAME_THRESHOLD;
     private String MODE; //full or surname
+    private int common;
 
     public AuthorsMatch(Map<String, String> params){
         super(params, new com.wcohen.ss.JaroWinkler());
@@ -34,6 +35,11 @@ public class AuthorsMatch extends AbstractComparator {
         SURNAME_THRESHOLD = Double.parseDouble(params.getOrDefault("surname_th", "0.95"));
         NAME_THRESHOLD = Double.parseDouble(params.getOrDefault("name_th", "0.95"));
         FULLNAME_THRESHOLD = Double.parseDouble(params.getOrDefault("fullname_th", "0.9"));
+        common = 0;
+    }
+
+    protected AuthorsMatch(double w, AbstractStringDistance ssalgo) {
+        super(w, ssalgo);
     }
 
     @Override
@@ -45,41 +51,85 @@ public class AuthorsMatch extends AbstractComparator {
         List<Person> aList = ((FieldList) a).stringList().stream().map(author -> new Person(author, false)).collect(Collectors.toList());
         List<Person> bList = ((FieldList) b).stringList().stream().map(author -> new Person(author, false)).collect(Collectors.toList());
 
-        int common = 0;
+        common = 0;
+        //compare each element of List1 with each element of List2
         for (Person p1 : aList)
-            for (Person p2 : bList)
-                if(MODE.equals("full")) {
-                    if (personComparator(p1, p2))
+
+            for (Person p2 : bList) {
+
+                //both persons are inaccurate
+                if (!p1.isAccurate() && !p2.isAccurate()) {
+                    //compare just normalized fullnames
+                    if (ssalgo.score(normalization(p1.getNormalisedFullname()), normalization(p2.getNormalisedFullname())) > FULLNAME_THRESHOLD) {
                         common += 1;
-                }
-                else {
-                    if (surnameComparator(p1, p2))
-                        common += 1;
+                        break;
+                    }
                 }
 
-        return (double)common / (aList.size() + bList.size() - common);
+                //one person is inaccurate
+                if (p1.isAccurate() ^ p2.isAccurate()) {
+                    //prepare data
+                    String name = p1.isAccurate()? normalization(p1.getNormalisedFirstName()) : normalization(p2.getNormalisedFirstName());
+                    String surname = p1.isAccurate()? normalization(p2.getNormalisedSurname()) : normalization(p2.getNormalisedSurname());
+
+                    String fullname = p1.isAccurate()? normalization(p2.getNormalisedFullname()) : normalization(p1.getNormalisedFullname());
+
+                    if (fullname.contains(surname)) {
+                        if (MODE.equals("full")) {
+                            if (fullname.contains(name)) {
+                                common += 1;
+                                break;
+                            }
+                        }
+                        else { //MODE equals "surname"
+                            common += 1;
+                            break;
+                        }
+                    }
+                }
+
+                //both persons are accurate
+                if (p1.isAccurate() && p2.isAccurate()) {
+
+                    if (compareSurname(p1, p2)) {
+                        if (MODE.equals("full")) {
+                            if(compareFirstname(p1, p2)) {
+                                common += 1;
+                                break;
+                            }
+                        }
+                        else { //MODE equals "surname"
+                            common += 1;
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+
+        //normalization factor to compute the score
+        int normFactor = aList.size() == bList.size() ? aList.size() : (aList.size() + bList.size() - common);
+
+        return (double)common / normFactor;
     }
 
-    public boolean personComparator(Person p1, Person p2) {
-
-        if(!p1.isAccurate() || !p2.isAccurate())
-            return ssalgo.score(p1.getOriginal(), p2.getOriginal()) > FULLNAME_THRESHOLD;
-
-        if(ssalgo.score(p1.getSurnameString(),p2.getSurnameString()) > SURNAME_THRESHOLD)
-            if(p1.getNameString().length()<=2 || p2.getNameString().length()<=2)
-                return firstLC(p1.getNameString()).equals(firstLC(p2.getNameString()));
-            else
-                return ssalgo.score(p1.getNameString(), p2.getNameString()) > NAME_THRESHOLD;
-        else
-            return false;
+    public boolean compareSurname(Person p1, Person p2) {
+        return ssalgo.score(normalization(p1.getNormalisedSurname()), normalization(p2.getNormalisedSurname())) > SURNAME_THRESHOLD;
     }
 
-    public boolean surnameComparator(Person p1, Person p2) {
+    public boolean compareFirstname(Person p1, Person p2) {
 
-        if(!p1.isAccurate() || !p2.isAccurate())
-            return ssalgo.score(p1.getOriginal(), p2.getOriginal()) > FULLNAME_THRESHOLD;
+        if(p1.getNormalisedFirstName().length()<=2 || p2.getNormalisedFirstName().length()<=2) {
+            if (firstLC(p1.getNormalisedFirstName()).equals(firstLC(p2.getNormalisedFirstName())))
+                return true;
+        }
 
-        return ssalgo.score(p1.getSurnameString(), p2.getSurnameString()) > SURNAME_THRESHOLD;
+        return ssalgo.score(normalization(p1.getNormalisedFirstName()), normalization(p2.getNormalisedFirstName())) > NAME_THRESHOLD;
+    }
+
+    public String normalization(String s) {
+        return normalize(utf8(cleanup(s)));
     }
 
 }

@@ -36,23 +36,23 @@ public class BlockProcessorForTesting {
             this.dedupConf = dedupConf;
         }
 
-        public void processSortedBlock(final String key, final List<MapDocument> documents, final Reporter context, boolean useTree)  {
+        public void processSortedBlock(final String key, final List<MapDocument> documents, final Reporter context, boolean useTree, boolean noMatch)  {
             if (documents.size() > 1) {
 //            log.info("reducing key: '" + key + "' records: " + q.size());
-                process(prepare(documents), context, useTree);
+                process(prepare(documents), context, useTree, noMatch);
 
             } else {
                 context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
             }
         }
 
-        public void process(final String key, final Iterable<MapDocument> documents, final Reporter context, boolean useTree)  {
+        public void process(final String key, final Iterable<MapDocument> documents, final Reporter context, boolean useTree, boolean noMatch)  {
 
             final Queue<MapDocument> q = prepare(documents);
 
             if (q.size() > 1) {
 //            log.info("reducing key: '" + key + "' records: " + q.size());
-                process(simplifyQueue(q, key, context), context, useTree);
+                process(simplifyQueue(q, key, context), context, useTree, noMatch);
 
             } else {
                 context.incrementCounter(dedupConf.getWf().getEntityType(), "records per hash key = 1", 1);
@@ -123,7 +123,7 @@ public class BlockProcessorForTesting {
             }
         }
 
-        private void process(final Queue<MapDocument> queue, final Reporter context, boolean useTree)  {
+        private void process(final Queue<MapDocument> queue, final Reporter context, boolean useTree, boolean noMatch)  {
 
             while (!queue.isEmpty()) {
 
@@ -155,17 +155,17 @@ public class BlockProcessorForTesting {
 
                         if (!idCurr.equals(idPivot) && (fieldCurr != null)) {
 
-                            if(!compareInstanceType(pivot, curr, dedupConf)){
-                                emitOutput(new TreeProcessor(dedupConf).compare(pivot, curr), idPivot, idCurr, context);
+                            //draws no match relations (test purpose)
+                            if (noMatch) {
+                                emitOutput(!new TreeProcessor(dedupConf).compare(pivot, curr), idPivot, idCurr, context);
                             }
                             else {
-                                emitOutput(false, idPivot, idCurr, context);
+                                //use the decision tree implementation or the "normal" implementation of the similarity score (valid only for publications)
+                                if(useTree)
+                                    emitOutput(new TreeProcessor(dedupConf).compare(pivot, curr), idPivot, idCurr, context);
+                                else
+                                    emitOutput(publicationCompare(pivot, curr, dedupConf), idPivot, idCurr, context);
                             }
-
-//                            if(useTree)
-//                                emitOutput(new TreeProcessor(dedupConf).compare(pivot, curr), idPivot, idCurr, context);
-//                            else
-//                                emitOutput(publicationCompare(pivot, curr, dedupConf), idPivot, idCurr, context);
 
                         }
                     }

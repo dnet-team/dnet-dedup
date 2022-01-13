@@ -85,7 +85,7 @@ public class Deduper implements Serializable {
     }
 
     public static JavaRDD<Relation> computeRelations(
-            JavaSparkContext context, JavaPairRDD<String, Block> blocks, DedupConfig config, boolean useTree) {
+            JavaSparkContext context, JavaPairRDD<String, Block> blocks, DedupConfig config, boolean useTree, boolean noMatch) {
         Map<String, LongAccumulator> accumulators = Utility.constructAccumulator(config, context.sc());
 
         return blocks
@@ -93,7 +93,7 @@ public class Deduper implements Serializable {
                         it -> {
                             final SparkReporter reporter = new SparkReporter(accumulators);
                             new BlockProcessorForTesting(config)
-                                    .processSortedBlock(it._1(), it._2().getDocuments(), reporter, useTree);
+                                    .processSortedBlock(it._1(), it._2().getDocuments(), reporter, useTree, noMatch);
                             return reporter.getRelations().iterator();
                         })
                 .mapToPair(it -> new Tuple2<>(it._1() + it._2(), new Relation(it._1(), it._2(), "simRel")))
@@ -101,7 +101,7 @@ public class Deduper implements Serializable {
                 .map(Tuple2::_2);
     }
 
-    public static void createSimRels(DedupConfig dedupConf, SparkSession spark, String entitiesPath, String simRelsPath, boolean useTree){
+    public static void createSimRels(DedupConfig dedupConf, SparkSession spark, String entitiesPath, String simRelsPath, boolean useTree, boolean noMatch){
 
         JavaSparkContext sc = JavaSparkContext.fromSparkContext(spark.sparkContext());
 
@@ -117,7 +117,7 @@ public class Deduper implements Serializable {
         JavaPairRDD<String, Block> blocks = Deduper.createSortedBlocks(mapDocuments, dedupConf);
 
         // create relations by comparing only elements in the same group
-        JavaRDD<Relation> relations = Deduper.computeRelations(sc, blocks, dedupConf, useTree);
+        JavaRDD<Relation> relations = Deduper.computeRelations(sc, blocks, dedupConf, useTree, noMatch);
 
         // save the simrel in the workingdir
         spark

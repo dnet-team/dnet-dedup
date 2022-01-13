@@ -165,11 +165,6 @@ public class ComparatorTest extends AbstractPaceTest {
 		result = jaroWinkler.distance("Victoria Dataverse", "Windsor Dataverse", conf);
 		System.out.println("result = " + result);
 
-		final Levenstein levenstein = new Levenstein(params);
-
-		result = levenstein.distance("Victoria", "Windsor", conf);
-		System.out.println("result = " + result);
-
 	}
 
 	@Test
@@ -179,6 +174,14 @@ public class ComparatorTest extends AbstractPaceTest {
 
 		double result = levensteinTitle.distance("Degradation of lignin β‐aryl ether units in Arabidopsis thaliana expressing LigD, LigF and LigG from Sphingomonas paucimobilis SYK‐6", "Degradation of lignin β-aryl ether units in <i>Arabidopsis thaliana</i> expressing <i>LigD</i>, <i>LigF</i> and <i>LigG</i> from <i>Sphingomonas paucimobilis</i> SYK-6", conf);
 
+		System.out.println("result = " + result);
+	}
+
+	@Test
+	public void levensteinTest() {
+		final Levenstein levenstein = new Levenstein(params);
+
+		double result = levenstein.distance("la bruzzo", "la bruzzo", conf);
 		System.out.println("result = " + result);
 	}
 
@@ -237,6 +240,11 @@ public class ComparatorTest extends AbstractPaceTest {
 		result = authorsMatch.compare(c, d, conf);
 
 		assertEquals(1.0, result);
+
+		Field e = createFieldList(Arrays.asList("Manghi, Paolo", "Atzori, Claudio"), "authors");
+		result = authorsMatch.compare(a, e, conf);
+
+		assertEquals(0.25, result);
 
 	}
 

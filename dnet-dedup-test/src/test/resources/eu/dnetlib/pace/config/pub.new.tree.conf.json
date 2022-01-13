@@ -53,6 +53,27 @@
       "start": {
         "fields": [
           {
+            "field": "pid",
+            "comparator": "jsonListMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "jpath_value": "$.value",
+              "jpath_classid": "$.qualifier.classid",
+              "mode": "count"
+            }
+          }
+        ],
+        "threshold": 1.0,
+        "aggregation": "MAX",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "instanceTypeCheck",
+        "ignoreUndefined": "false"
+      },
+      "instanceTypeCheck": {
+        "fields": [
+          {
             "field": "instance",
             "comparator": "instanceTypeMatch",
             "weight": 1.0,
@@ -62,12 +83,12 @@
         ],
         "threshold": 0.5,
         "aggregation": "MAX",
-        "positive": "layer1",
+        "positive": "pidVSaltid",
         "negative": "NO_MATCH",
-        "undefined": "layer1",
+        "undefined": "pidVSaltid",
         "ignoreUndefined": "true"
       },
-      "layer1": {
+      "pidVSaltid": {
         "fields": [
           {
             "field": "pid",
@@ -76,29 +97,20 @@
             "countIfUndefined": "false",
             "params": {
               "jpath_value": "$.value",
-              "jpath_classid": "$.qualifier.classid"
-            }
-          },
-          {
-            "field": "pid",
-            "comparator": "jsonListMatch",
-            "weight": 1.0,
-            "countIfUndefined": "false",
-            "params": {
-              "jpath_value": "$.value",
               "jpath_classid": "$.qualifier.classid",
-              "crossCompare": "alternateid"
+              "crossCompare": "alternateid",
+              "mode": "count"
             }
           }
         ],
-        "threshold": 0.5,
+        "threshold": 1.0,
         "aggregation": "MAX",
-        "positive": "layer2",
-        "negative": "layer3",
-        "undefined": "layer3",
+        "positive": "softCheck",
+        "negative": "earlyExits",
+        "undefined": "earlyExits",
         "ignoreUndefined": "true"
       },
-      "layer2": {
+      "softCheck": {
         "fields": [
           {
             "field": "title",
@@ -115,7 +127,7 @@
         "undefined": "NO_MATCH",
         "ignoreUndefined": "true"
       },
-      "layer3": {
+      "earlyExits": {
         "fields": [
           {
             "field": "title",
@@ -134,12 +146,12 @@
         ],
         "threshold": 1.0,
         "aggregation": "AND",
-        "positive": "layer4",
+        "positive": "strongCheck",
         "negative": "NO_MATCH",
-        "undefined": "layer4",
+        "undefined": "strongCheck",
         "ignoreUndefined": "false"
       },
-      "layer4": {
+      "strongCheck": {
         "fields": [
           {
             "field": "title",
@@ -151,9 +163,30 @@
         ],
         "threshold": 0.99,
         "aggregation": "AVG",
-        "positive": "MATCH",
+        "positive": "surnames",
         "negative": "NO_MATCH",
         "undefined": "NO_MATCH",
+        "ignoreUndefined": "true"
+      },
+      "surnames": {
+        "fields": [
+          {
+            "field": "authors",
+            "comparator": "authorsMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "surname_th": 0.75,
+              "fullname_th": 0.75,
+              "mode": "surname"
+            }
+          }
+        ],
+        "threshold": 0.6,
+        "aggregation": "MAX",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "MATCH",
         "ignoreUndefined": "true"
       }
     },
