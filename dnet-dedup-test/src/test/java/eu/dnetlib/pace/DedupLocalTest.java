@@ -364,8 +364,7 @@ public class DedupLocalTest extends DedupTestUtils {
         DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS(
                 Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pub.new.tree.conf.json").toURI()).toFile().getAbsolutePath()
         ));
-//        String inputPath = Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json").toURI()).toFile().getAbsolutePath();
-        String inputPath = "/Users/miconis/IdeaProjects/DnetHadoop/dnet-hadoop/dhp-workflows/dhp-dedup-openaire/src/test/resources/eu/dnetlib/dhp/dedup/entities/publication/publication.gz";
+        String inputPath = Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json").toURI()).toFile().getAbsolutePath();
         String simRelsPath = workingPath + "/simrels";
 
         Deduper.createSimRels(
