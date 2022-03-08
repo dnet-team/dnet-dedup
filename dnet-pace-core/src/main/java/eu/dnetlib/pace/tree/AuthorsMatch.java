@@ -25,6 +25,7 @@ public class AuthorsMatch extends AbstractComparator {
     private double NAME_THRESHOLD;
     private double FULLNAME_THRESHOLD;
     private String MODE; //full or surname
+    private int SIZE_THRESHOLD;
     private int common;
 
     public AuthorsMatch(Map<String, String> params){
@@ -35,6 +36,7 @@ public class AuthorsMatch extends AbstractComparator {
         SURNAME_THRESHOLD = Double.parseDouble(params.getOrDefault("surname_th", "0.95"));
         NAME_THRESHOLD = Double.parseDouble(params.getOrDefault("name_th", "0.95"));
         FULLNAME_THRESHOLD = Double.parseDouble(params.getOrDefault("fullname_th", "0.9"));
+        SIZE_THRESHOLD = Integer.parseInt(params.getOrDefault("size_th", "20"));
         common = 0;
     }
 
@@ -47,6 +49,9 @@ public class AuthorsMatch extends AbstractComparator {
 
         if (a.isEmpty() || b.isEmpty())
             return -1;
+
+        if (((FieldList) a).size() > SIZE_THRESHOLD || ((FieldList) a).size() > SIZE_THRESHOLD)
+            return 1.0;
 
         List<Person> aList = ((FieldList) a).stringList().stream().map(author -> new Person(author, false)).collect(Collectors.toList());
         List<Person> bList = ((FieldList) b).stringList().stream().map(author -> new Person(author, false)).collect(Collectors.toList());
