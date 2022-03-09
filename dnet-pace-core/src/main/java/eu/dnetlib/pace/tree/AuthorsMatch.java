@@ -77,11 +77,13 @@ public class AuthorsMatch extends AbstractComparator {
                 //one person is inaccurate
                 if (p1.isAccurate() ^ p2.isAccurate()) {
                     //prepare data
+                    //data for the accurate person
                     String name = normalization(p1.isAccurate()? p1.getNormalisedFirstName() : p2.getNormalisedFirstName());
-                    String surname = normalization(p1.isAccurate()? p2.getNormalisedSurname() : p2.getNormalisedSurname());
+                    String surname = normalization(p1.isAccurate()? p1.getNormalisedSurname() : p2.getNormalisedSurname());
 
+                    //data for the inaccurate person
                     String fullname = normalization(
-                            p1.isAccurate() ? ((p1.getNormalisedFullname().isEmpty()) ? p1.getOriginal() : p1.getNormalisedFullname()) : (p2.getNormalisedFullname().isEmpty() ? p2.getOriginal() : p2.getNormalisedFullname())
+                            p1.isAccurate() ? ((p2.getNormalisedFullname().isEmpty()) ? p2.getOriginal() : p2.getNormalisedFullname()) : (p1.getNormalisedFullname().isEmpty() ? p1.getOriginal() : p1.getNormalisedFullname())
                     );
 
                     if (fullname.contains(surname)) {

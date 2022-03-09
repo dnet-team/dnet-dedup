@@ -15,6 +15,7 @@ import net.minidev.json.JSONArray;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MapDocumentUtil {
 
@@ -44,6 +45,17 @@ public class MapDocumentUtil {
                             .map(item -> new FieldValueImpl(Type.String, fdef.getName(), item))
                             .forEach(fi::add);
                     stringField.put(fdef.getName(), fi);
+                    break;
+                case StringConcat:
+                    String[] jpaths = fdef.getPath().split("\\|\\|\\|");
+                    stringField.put(
+                            fdef.getName(),
+                            new FieldValueImpl(Type.String,
+                                    fdef.getName(),
+                                    truncateValue(Arrays.stream(jpaths).map(jpath -> getJPathString(jpath, json)).collect(Collectors.joining(" ")),
+                                            fdef.getLength())
+                            )
+                    );
                     break;
             }
         });

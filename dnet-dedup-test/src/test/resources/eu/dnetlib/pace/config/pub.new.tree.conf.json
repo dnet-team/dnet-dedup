@@ -178,6 +178,7 @@
             "params": {
               "surname_th": 0.75,
               "fullname_th": 0.75,
+              "size_th": 20,
               "mode": "surname"
             }
           }
@@ -215,8 +216,8 @@
       },
       {
         "name": "title",
-        "type": "String",
-        "path": "$.title[?(@.qualifier.classid == 'main title')].value",
+        "type": "StringConcat",
+        "path": "$.title[?(@.qualifier.classid == 'main title')].value|||$.title[?(@.qualifier.classid == 'subtitle')].value",
         "length": 250,
         "size": 5
       },
