@@ -2,12 +2,15 @@ package eu.dnetlib.pace.clustering;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import eu.dnetlib.pace.AbstractPaceTest;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.config.DedupConfig;
 import org.junit.jupiter.api.*;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ClusteringFunctionTest extends AbstractPaceTest {
 
@@ -187,5 +190,14 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 		System.out.println("s5 = " + s5);
 		System.out.println(cf.apply(conf, Lists.newArrayList(title(s5))));
 
+		final String s6 = "National and Kapodistrian University of Athens";
+		System.out.println("s6 = " + s6);
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s6))));
+
+		final String s7 = "Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών";
+		System.out.println("s7 = " + s7);
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s7))));
+
 	}
+
 }

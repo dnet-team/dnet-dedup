@@ -41,7 +41,7 @@ public class KeywordsClustering extends AbstractClusteringFunction {
     public Collection<String> apply(final Config conf, List<Field> fields) {
         return fields.stream().filter(f -> !f.isEmpty())
                 .map(Field::stringValue)
-                .map(this::cleanup) //TODO can I add this to the AbstractClusteringFunction without overriding the method here?
+                .map(this::cleanup)
                 .map(this::normalize)
                 .map(s -> filterAllStopWords(s))
                 .map(s -> doApply(conf, s))

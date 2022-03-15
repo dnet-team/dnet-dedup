@@ -24,6 +24,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import com.ibm.icu.text.Transliterator;
 
 /**
  * Set of common functions for the framework
@@ -36,12 +37,16 @@ public abstract class AbstractPaceFunctions {
     private static Map<String, String> cityMap = AbstractPaceFunctions.loadMapFromClasspath("/eu/dnetlib/pace/config/city_map.csv");
 
     //list of stopwords in different languages
+    protected static Set<String> stopwords_gr = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_gr.txt");
     protected static Set<String> stopwords_en = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_en.txt");
     protected static Set<String> stopwords_de = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_de.txt");
     protected static Set<String> stopwords_es = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_es.txt");
     protected static Set<String> stopwords_fr = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_fr.txt");
     protected static Set<String> stopwords_it = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_it.txt");
     protected static Set<String> stopwords_pt = loadFromClasspath("/eu/dnetlib/pace/config/stopwords_pt.txt");
+
+    //transliterator
+    protected static Transliterator transliterator = Transliterator.getInstance("Any-Eng");
 
     //blacklist of ngrams: to avoid generic keys
     protected static Set<String> ngramBlacklist = loadFromClasspath("/eu/dnetlib/pace/config/ngram_blacklist.txt");
@@ -68,21 +73,27 @@ public abstract class AbstractPaceFunctions {
 
     protected String cleanup(final String s) {
 
-        final String s00 = s.replaceAll(HTML_REGEX, "");
-        final String s0 = unicodeNormalization(s00.toLowerCase());
-        final String s1 = fixAliases(s0);
-        final String s2 = nfd(s1);
-        final String s3 = s2.replaceAll("&ndash;", " ");
-        final String s4 = s3.replaceAll("&amp;", " ");
-        final String s5 = s4.replaceAll("&quot;", " ");
-        final String s6 = s5.replaceAll("&minus;", " ");
-        final String s7 = s6.replaceAll("([0-9]+)", " $1 ");
+        final String s1 = s.replaceAll(HTML_REGEX, "");
+        final String s2 = unicodeNormalization(s1.toLowerCase());
+        final String s3 = nfd(s2);
+        final String s4 = fixXML(s3);
+        final String s5 = s4.replaceAll("([0-9]+)", " $1 ");
+        final String s6 = transliterate(s5);
+        final String s7 = fixAliases(s6);
         final String s8 = s7.replaceAll("[^\\p{ASCII}]", "");
         final String s9 = s8.replaceAll("[\\p{Punct}]", " ");
         final String s10 = s9.replaceAll("\\n", " ");
         final String s11 = s10.replaceAll("(?m)\\s+", " ");
         final String s12 = s11.trim();
         return s12;
+    }
+
+    protected String fixXML(final String a){
+
+        return a.replaceAll("&ndash;", " ")
+                .replaceAll("&amp;", " ")
+                .replaceAll("&quot;", " ")
+                .replaceAll("&minus;", " ");
     }
 
     protected boolean checkNumbers(final String a, final String b) {
@@ -129,6 +140,15 @@ public abstract class AbstractPaceFunctions {
         return sb.toString();
     }
 
+    protected static String transliterate(final String s) {
+        try {
+            return transliterator.transliterate(s);
+        }
+        catch(Exception e) {
+            return s;
+        }
+    }
+
     protected String removeSymbols(final String s) {
         final StringBuilder sb = new StringBuilder();
 
@@ -147,7 +167,7 @@ public abstract class AbstractPaceFunctions {
     }
 
     protected String normalize(final String s) {
-        return nfd(unicodeNormalization(s))
+        return fixAliases(transliterate(nfd(unicodeNormalization(s))))
                 .toLowerCase()
                 // do not compact the regexes in a single expression, would cause StackOverflowError in case of large input strings
                 .replaceAll("[^ \\w]+", "")
@@ -200,6 +220,7 @@ public abstract class AbstractPaceFunctions {
         s = filterStopWords(s, stopwords_fr);
         s = filterStopWords(s, stopwords_pt);
         s = filterStopWords(s, stopwords_es);
+        s = filterStopWords(s, stopwords_gr);
 
         return s;
     }
@@ -215,10 +236,13 @@ public abstract class AbstractPaceFunctions {
     }
 
     public static Set<String> loadFromClasspath(final String classpath) {
+
+        Transliterator transliterator = Transliterator.getInstance("Any-Eng");
+
         final Set<String> h = Sets.newHashSet();
         try {
             for (final String s : IOUtils.readLines(NGramUtils.class.getResourceAsStream(classpath))) {
-                h.add(s);
+                h.add(fixAliases(transliterator.transliterate(s))); //transliteration of the stopwords
             }
         } catch (final Throwable e) {
             return Sets.newHashSet();
@@ -227,6 +251,9 @@ public abstract class AbstractPaceFunctions {
     }
 
     public static Map<String, String> loadMapFromClasspath(final String classpath) {
+
+        Transliterator transliterator = Transliterator.getInstance("Any-Eng");
+
         final Map<String, String> m = new HashMap<>();
         try {
             for (final String s : IOUtils.readLines(AbstractPaceFunctions.class.getResourceAsStream(classpath))) {
@@ -234,7 +261,7 @@ public abstract class AbstractPaceFunctions {
                 String[] line = s.split(";");
                 String value = line[0];
                 for (int i = 1; i < line.length; i++) {
-                    m.put(line[i].toLowerCase(), value);
+                    m.put(fixAliases(transliterator.transliterate(line[i].toLowerCase())), value);
                 }
             }
         } catch (final Throwable e) {

@@ -3,6 +3,7 @@ package eu.dnetlib.pace.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
+import com.ibm.icu.text.Transliterator;
 import eu.dnetlib.pace.common.AbstractPaceFunctions;
 import eu.dnetlib.pace.model.ClusteringDef;
 import eu.dnetlib.pace.model.FieldDef;
@@ -43,10 +44,12 @@ public class PaceConfig extends AbstractPaceFunctions implements Serializable {
 
 	public void initTranslationMap(){
 		translationMap = Maps.newHashMap();
+
+		Transliterator transliterator = Transliterator.getInstance("Any-Eng");
 		for (String key : synonyms.keySet()) {
 			for (String term : synonyms.get(key)){
 				translationMap.put(
-						normalize(term.toLowerCase()),
+						fixAliases(transliterator.transliterate(term.toLowerCase())),
 				key);
 			}
 		}

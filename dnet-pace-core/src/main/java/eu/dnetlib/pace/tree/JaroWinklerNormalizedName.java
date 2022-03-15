@@ -50,6 +50,9 @@ public class JaroWinklerNormalizedName extends AbstractComparator {
         cb = removeKeywords(cb, keywords2);
         cb = removeKeywords(cb, cities2);
 
+        ca = ca.replaceAll("[ ]{2,}", " ");
+        cb = cb.replaceAll("[ ]{2,}", " ");
+
         if (ca.isEmpty() && cb.isEmpty())
             return 1.0;
         else

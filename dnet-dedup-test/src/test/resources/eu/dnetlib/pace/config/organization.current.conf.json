@@ -3,8 +3,9 @@
     "threshold" : "0.99",
     "dedupRun" : "001",
     "entityType" : "organization",
+    "subEntityValue": "organization",
     "orderField" : "legalname",
-    "queueMaxSize" : "2000",
+    "queueMaxSize" : "100000",
     "groupMaxSize" : "50",
     "slidingWindowSize" : "200",
     "idPath":"$.id",
@@ -143,10 +144,10 @@
       }
     },
     "model" : [
-      { "name" : "country", "type" : "String", "path" : "$.organization.metadata.country.classid"},
-      { "name" : "legalshortname", "type" : "String", "path" : "$.organization.metadata.legalshortname.value"},
-      { "name" : "legalname", "type" : "String", "path" : "$.organization.metadata.legalname.value" },
-      { "name" : "websiteurl", "type" : "URL", "path" : "$.organization.metadata.websiteurl.value" },
+      { "name" : "country", "type" : "String", "path" : "$.country.classid"},
+      { "name" : "legalshortname", "type" : "String", "path" : "$.legalshortname.value"},
+      { "name" : "legalname", "type" : "String", "path" : "$.legalname.value" },
+      { "name" : "websiteurl", "type" : "URL", "path" : "$.websiteurl.value" },
       { "name" : "gridid", "type" : "String", "path" : "$.pid[?(@.qualifier.classid =='grid')].value"},
       { "name" : "originalId", "type" : "String", "path" : "$.id" }
     ],
@@ -154,7 +155,7 @@
       "legalname" : []
     },
     "synonyms": {
-      "key::1": ["university","università", "universitas", "università studi","universitario","universitaria","université", "universite", "universitaire","universitaires","universidad","universitade","Universität","universitaet","Uniwersytet","университет","universiteit","πανεπιστήμιο","universitesi","universiteti", "universiti"],
+      "key::1": ["university","università", "universitas", "università studi","universitario","universitaria","université", "universite", "universitaire","universitaires","universidad","universitade","Universität","universitaet","Uniwersytet","университет","universiteit","πανεπιστήμιο","universitesi","universiteti", "universiti", "Πανεπιστήμιο", "panepistemio"],
       "key::2": ["studies","studi","études","estudios","estudos","Studien","studia","исследования","studies","σπουδές"],
       "key::3": ["advanced","superiore","supérieur","supérieure","supérieurs","supérieures","avancado","avancados","fortgeschrittene","fortgeschritten","zaawansowany","передовой","gevorderd","gevorderde","προχωρημένος","προχωρημένη","προχωρημένο","προχωρημένες","προχωρημένα","wyzsza"],
       "key::4": ["institute","istituto","institut","instituto","instituto","Institut","instytut","институт","instituut","ινστιτούτο"],
@@ -163,7 +164,7 @@
       "key::7": ["college","collegio","colegio","faculdade","Hochschule","Szkoła Wyższa","Высшая школа","κολλέγιο"],
       "key::8": ["foundation","fondazione","fondation","fundación","fundação","Stiftung","Fundacja","фонд","stichting","ίδρυμα","idryma"],
       "key::9": ["center","centro","centre","centro","centro","zentrum","centrum","центр","centrum","κέντρο"],
-      "key::10": ["national","nazionale","national","nationale","nationaux","nationales","nacional","nacional","national","krajowy","национальный","nationaal","nationale","εθνικό"],
+      "key::10": ["national","nazionale","national","nationale","nationaux","nationales","nacional","nacional","national","krajowy","национальный","nationaal","nationale","εθνικό", "eθνικό"],
       "key::11": ["association","associazione","association","asociación","associação","Verein","verband","stowarzyszenie","ассоциация","associatie"],
       "key::12": ["society","societa","société","sociedad","sociedade","gesellschaft","społeczeństwo","общество","maatschappij","κοινωνία"],
       "key::13": ["international","internazionale","international","internacional","internacional","international","międzynarodowy","Международный","internationaal","internationale","διεθνής","διεθνή","διεθνές"],

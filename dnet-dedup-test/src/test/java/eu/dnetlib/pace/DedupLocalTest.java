@@ -261,12 +261,12 @@ public class DedupLocalTest extends DedupTestUtils {
     @Ignore
     public void dedupTest() throws Exception {
         final String entitiesPath = Paths
-                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.to.fix.json").toURI())
+                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/openorgs.to.fix.json").toURI())
                 .toFile()
                 .getAbsolutePath();
 
         DedupConfig dedupConf = DedupConfig.load(readFileFromHDFS(Paths
-                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pub.new.tree.conf.json").toURI())
+                .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/organization.current.conf.json").toURI())
                 .toFile()
                 .getAbsolutePath()));
 
