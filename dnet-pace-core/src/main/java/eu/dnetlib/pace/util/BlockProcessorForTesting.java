@@ -182,34 +182,40 @@ public class BlockProcessorForTesting {
 
         private boolean publicationCompare(MapDocument a, MapDocument b, DedupConfig config) {
 
-            double score = 0.0;
-            //LAYER 1 - comparison of the PIDs json lists
+            boolean startLayer = false;
+            boolean hardcheck1Layer = false;
+
+            //START - comparison of the PIDs json lists
             Map<String, String> params = new HashMap<>();
             params.put("jpath_value", "$.value");
             params.put("jpath_classid", "$.qualifier.classid");
             JsonListMatch jsonListMatch = new JsonListMatch(params);
             double result = jsonListMatch.compare(a.getFieldMap().get("pid"), b.getFieldMap().get("pid"), config);
             if (result >= 0.5) //if the result of the comparison is greater than the threshold
-                score += 10.0;  //high score because it should match when the first condition is satisfied
-            else
-                score += 0.0;
+                startLayer = true;
 
-            //LAYER 2 - comparison of the title version and the size of the authors lists
+            //HARDCHECK1 - comparison of title versions and authors size
             TitleVersionMatch titleVersionMatch = new TitleVersionMatch(params);
             double result1 = titleVersionMatch.compare(a.getFieldMap().get("title"), b.getFieldMap().get("title"), config);
             SizeMatch sizeMatch = new SizeMatch(params);
             double result2 = sizeMatch.compare(a.getFieldMap().get("authors"), b.getFieldMap().get("authors"), config);
             if (Math.min(result1, result2) != 0)
-                score+=0;
-            else
-                score-=2;
+                hardcheck1Layer = true;
 
-            //LAYER 3 - computation of levenshtein on titles
+            //SOFTCHECK and HARDCHECK2 - comparison of the titles
             LevensteinTitle levensteinTitle = new LevensteinTitle(params);
             double result3 = levensteinTitle.compare(a.getFieldMap().get("title"), b.getFieldMap().get("title"), config);
-            score += Double.isNaN(result3)?0.0:result3;
+            double titleScore = Double.isNaN(result3)?0.0:result3;
 
-            return score >= 0.99;
+            if (startLayer) {
+                return titleScore >= 0.90;
+            }
+            else {
+                if (hardcheck1Layer) {
+                    return titleScore >= 0.99;
+                }
+            }
+            return false;
         }
 
         private void emitOutput(final boolean result, final String idPivot, final String idCurr, final Reporter context)  {

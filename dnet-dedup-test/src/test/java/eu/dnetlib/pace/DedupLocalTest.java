@@ -53,7 +53,7 @@ public class DedupLocalTest extends DedupTestUtils {
     static JavaSparkContext context;
 
     final String entitiesPath   = Paths
-            .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/organization").toURI())
+            .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json").toURI())
             .toFile()
             .getAbsolutePath();
 
@@ -61,7 +61,7 @@ public class DedupLocalTest extends DedupTestUtils {
     final static String numPartitions  = "20";
 
     final String dedupConfPath = Paths
-            .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/orgs.tree.conf.json").toURI())
+            .get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pubs.fdup.exp.json").toURI())
             .toFile()
             .getAbsolutePath();
 
