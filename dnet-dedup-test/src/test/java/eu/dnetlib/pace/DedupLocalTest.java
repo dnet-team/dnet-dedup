@@ -23,7 +23,6 @@ import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +30,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import scala.Tuple2;
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -184,7 +181,9 @@ public class DedupLocalTest extends DedupTestUtils {
         DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS(
                 Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pub.instancetype.tree.conf.json").toURI()).toFile().getAbsolutePath()
         ));
+
         String inputPath = Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json").toURI()).toFile().getAbsolutePath();
+
         String simRelsPath = workingPath + "/simrels";
         String mergeRelsPath = workingPath + "/mergerels";
         String outputPath = workingPath + "/dedup";

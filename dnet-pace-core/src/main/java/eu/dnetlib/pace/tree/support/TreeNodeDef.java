@@ -1,5 +1,6 @@
 package eu.dnetlib.pace.tree.support;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.config.PaceConfig;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.List;
 
 public class TreeNodeDef implements Serializable {
@@ -57,8 +59,9 @@ public class TreeNodeDef implements Serializable {
                 double result2 = comparator(fieldConf).compare(doc1.getFieldMap().get(crossField), doc2.getFieldMap().get(fieldConf.getField()), conf);
                 result = Math.max(result1,result2);
             }
-            else
+            else {
                 result = comparator(fieldConf).compare(doc1.getFieldMap().get(fieldConf.getField()), doc2.getFieldMap().get(fieldConf.getField()), conf);
+            }
 
             stats.addFieldStats(
                     fieldConf.getComparator() + " on " + fieldConf.getField() + " " + fields.indexOf(fieldConf),

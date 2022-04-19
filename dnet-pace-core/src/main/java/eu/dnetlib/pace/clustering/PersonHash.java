@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import eu.dnetlib.pace.config.Config;
 import eu.dnetlib.pace.model.Person;
 
-@ClusteringClass("personhash")
+@ClusteringClass("personHash")
 public class PersonHash extends AbstractClusteringFunction {
 
 	private boolean DEFAULT_AGGRESSIVE = false;

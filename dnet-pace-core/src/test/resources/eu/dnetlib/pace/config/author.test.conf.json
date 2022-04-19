@@ -1,0 +1,102 @@
+{
+  "wf": {
+    "threshold": "0.99",
+    "dedupRun": "001",
+    "entityType": "author",
+    "subEntityType": "author",
+    "subEntityValue": "author",
+    "orderField": "fullname",
+    "queueMaxSize": "200",
+    "groupMaxSize": "100",
+    "maxChildren": "100",
+    "slidingWindowSize": "50",
+    "rootBuilder": [
+      "result",
+      "resultProject_outcome_isProducedBy",
+      "resultResult_publicationDataset_isRelatedTo",
+      "resultResult_similarity_isAmongTopNSimilarDocuments",
+      "resultResult_similarity_hasAmongTopNSimilarDocuments",
+      "resultOrganization_affiliation_isAffiliatedWith",
+      "resultResult_part_hasPart",
+      "resultResult_part_isPartOf",
+      "resultResult_supplement_isSupplementTo",
+      "resultResult_supplement_isSupplementedBy",
+      "resultResult_version_isVersionOf"
+    ],
+    "includeChildren": "true",
+    "maxIterations": 20,
+    "idPath": "$.id"
+  },
+  "pace": {
+    "clustering" : [
+      { "name" : "personClustering", "fields" : [ "fullname" ], "params" : {} },
+      { "name" : "personHash", "fields" : [ "fullname" ], "params" : {} }
+    ],
+    "decisionTree": {
+      "start": {
+        "fields": [
+          {
+            "field": "year",
+            "comparator": "numbersComparator",
+            "weight": 1,
+            "countIfUndefined": "false",
+            "params": {}
+          }
+        ],
+        "threshold": 50,
+        "aggregation": "MAX",
+        "positive": "NO_MATCH",
+        "negative": "surnames",
+        "undefined": "surnames",
+        "ignoreUndefined": "true"
+      },
+      "surnames": {
+        "fields": [
+          {
+            "field": "coauthors",
+            "comparator": "authorsMatch",
+            "weight": 1.0,
+            "countIfUndefined": "false",
+            "params": {
+              "surname_th": 0.75,
+              "fullname_th": 0.75,
+              "size_th": 20,
+              "mode": "surname"
+            }
+          }
+        ],
+        "threshold": 0.6,
+        "aggregation": "MAX",
+        "positive": "MATCH",
+        "negative": "NO_MATCH",
+        "undefined": "MATCH",
+        "ignoreUndefined": "true"
+      }
+    },
+    "model": [
+      {
+        "name": "fullname",
+        "type": "String",
+        "path": "$.name"
+      },
+      {
+        "name": "coauthors",
+        "type": "List",
+        "path": "$.coauthors[*].name",
+        "size": 200
+      },
+      {
+        "name": "year",
+        "type": "String",
+        "path": "$.publication.year"
+      },
+      {
+        "name": "title",
+        "type": "String",
+        "path": "$.publication.title"
+      }
+    ],
+    "blacklists": {},
+    "synonyms": {}
+  }
+}

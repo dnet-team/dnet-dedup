@@ -9,6 +9,7 @@ import eu.dnetlib.pace.config.DedupConfig;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -245,6 +246,10 @@ public class ComparatorTest extends AbstractPaceTest {
 		result = authorsMatch.compare(a, e, conf);
 
 		assertEquals(0.25, result);
+
+		Field f = createFieldList(new ArrayList<>(), "authors");
+		result = authorsMatch.compare(f,f, conf);
+		System.out.println("result = " + result);
 
 	}
 

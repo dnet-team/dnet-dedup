@@ -200,4 +200,32 @@ public class ClusteringFunctionTest extends AbstractPaceTest {
 
 	}
 
+	@Test
+	public void testPersonClustering(){
+
+		final ClusteringFunction cf = new PersonClustering(params);
+		final String s = "Abd-Alla, Abo-el-nour N.";
+		System.out.println("s = " + s);
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s))));
+
+		final String s1 = "Manghi, Paolo";
+		System.out.println("s1 = " + s1);
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s1))));
+
+	}
+
+	@Test
+	public void testPersonHash(){
+
+		final ClusteringFunction cf = new PersonHash(params);
+		final String s = "Manghi, Paolo";
+		System.out.println("s = " + s);
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s))));
+
+		final String s1 = "Manghi, P.";
+		System.out.println("s = " + s1);
+		System.out.println(cf.apply(conf, Lists.newArrayList(title(s1))));
+
+	}
+
 }

@@ -85,7 +85,7 @@ public class ConfigTest extends AbstractPaceTest {
 	}
 
 	@Test
-	public void asMapDocumentTest() {
+	public void asMapDocumentTest1() {
 
 		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("publication.current.conf.json"));
 
@@ -102,6 +102,19 @@ public class ConfigTest extends AbstractPaceTest {
 		System.out.println("mapDocument = " + mapDocument.getFieldMap().get("title").stringValue());
 
     }
+
+	@Test
+	public void asMapDocumentTest2() {
+
+		DedupConfig dedupConf = DedupConfig.load(readFromClasspath("author.test.conf.json"));
+
+		final String json = readFromClasspath("author.json");
+
+		final MapDocument mapDocument = MapDocumentUtil.asMapDocumentWithJPath(dedupConf, json);
+
+		System.out.println("mapDocument = " + mapDocument.getFieldMap().get("coauthors").stringValue());
+
+	}
 
     @Test
     public  void testJPath()  {
