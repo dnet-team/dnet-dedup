@@ -1,6 +1,7 @@
 package eu.dnetlib.pace;
 
 import eu.dnetlib.Deduper;
+import eu.dnetlib.graph.JavaGraphProcessor;
 import eu.dnetlib.jobs.SparkCreateDedupEntity;
 import eu.dnetlib.jobs.SparkCreateMergeRels;
 import eu.dnetlib.jobs.SparkCreateSimRels;
@@ -11,6 +12,7 @@ import eu.dnetlib.pace.util.MapDocumentUtil;
 import eu.dnetlib.pace.utils.Utility;
 import eu.dnetlib.support.ArgumentApplicationParser;
 import eu.dnetlib.support.Block;
+import eu.dnetlib.support.ConnectedComponent;
 import eu.dnetlib.support.Relation;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -21,6 +23,8 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.graphx.Edge;
+import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
@@ -179,10 +183,10 @@ public class DedupLocalTest extends DedupTestUtils {
 
         //custom parameters for this test
         DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS(
-                Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pub.instancetype.tree.conf.json").toURI()).toFile().getAbsolutePath()
+                Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pubs.fdup.exp.json").toURI()).toFile().getAbsolutePath()
         ));
 
-        String inputPath = Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.dump.1000.json").toURI()).toFile().getAbsolutePath();
+        String inputPath = Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.to.fix.json").toURI()).toFile().getAbsolutePath();
 
         String simRelsPath = workingPath + "/simrels";
         String mergeRelsPath = workingPath + "/mergerels";

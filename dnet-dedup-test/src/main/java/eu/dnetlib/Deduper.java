@@ -1,7 +1,7 @@
 package eu.dnetlib;
 
 import com.google.common.hash.Hashing;
-import eu.dnetlib.graph.GraphProcessor;
+import eu.dnetlib.graph.JavaGraphProcessor;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.model.MapDocument;
 import eu.dnetlib.pace.util.BlockProcessorForTesting;
@@ -19,7 +19,6 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.graphx.Edge;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SaveMode;
@@ -138,16 +137,15 @@ public class Deduper implements Serializable {
                 .map(s -> MapDocumentUtil.getJPathString(dedupConf.getWf().getIdPath(), s))
                 .mapToPair((PairFunction<String, Object, String>) s -> new Tuple2<>(hash(s), s));
 
-        final RDD<Edge<String>> edgeRdd = spark
+        final JavaRDD<Edge<String>> edgeRdd = spark
                 .read()
                 .load(simRelsPath)
                 .as(Encoders.bean(Relation.class))
                 .javaRDD()
-                .map(Relation::toEdgeRdd)
-                .rdd();
+                .map(Relation::toEdgeRdd);
 
-        JavaRDD<ConnectedComponent> ccs = GraphProcessor
-                .findCCs(vertexes.rdd(), edgeRdd, maxIterations)
+        JavaRDD<ConnectedComponent> ccs = JavaGraphProcessor
+                .findCCs(vertexes, edgeRdd, maxIterations)
                 .toJavaRDD();
 
         JavaRDD<Relation> mergeRel = ccs

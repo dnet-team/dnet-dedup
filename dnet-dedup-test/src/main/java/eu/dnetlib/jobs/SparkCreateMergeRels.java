@@ -1,7 +1,7 @@
 package eu.dnetlib.jobs;
 
 import eu.dnetlib.Deduper;
-import eu.dnetlib.graph.GraphProcessor;
+import eu.dnetlib.graph.JavaGraphProcessor;
 import eu.dnetlib.pace.config.DedupConfig;
 import eu.dnetlib.pace.util.MapDocumentUtil;
 import eu.dnetlib.pace.utils.Utility;
@@ -78,16 +78,15 @@ public class SparkCreateMergeRels extends AbstractSparkJob {
                 .map(s -> MapDocumentUtil.getJPathString(dedupConf.getWf().getIdPath(), s))
                 .mapToPair((PairFunction<String, Object, String>) s -> new Tuple2<>(hash(s), s));
 
-        final RDD<Edge<String>> edgeRdd = spark
+        final JavaRDD<Edge<String>> edgeRdd = spark
                 .read()
                 .load(workingPath + "/simrels")
                 .as(Encoders.bean(Relation.class))
                 .javaRDD()
-                .map(Relation::toEdgeRdd)
-                .rdd();
+                .map(Relation::toEdgeRdd);
 
-        JavaRDD<ConnectedComponent> ccs = GraphProcessor
-                .findCCs(vertexes.rdd(), edgeRdd, dedupConf.getWf().getMaxIterations())
+        JavaRDD<ConnectedComponent> ccs = JavaGraphProcessor
+                .findCCs(vertexes, edgeRdd, dedupConf.getWf().getMaxIterations())
                 .toJavaRDD();
 
         JavaRDD<Relation> mergeRel = ccs
