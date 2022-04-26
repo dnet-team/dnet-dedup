@@ -183,7 +183,7 @@ public class DedupLocalTest extends DedupTestUtils {
 
         //custom parameters for this test
         DedupConfig dedupConfig = DedupConfig.load(readFileFromHDFS(
-                Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/pubs.fdup.exp.json").toURI()).toFile().getAbsolutePath()
+                Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/config/ds.tree.conf.json").toURI()).toFile().getAbsolutePath()
         ));
 
         String inputPath = Paths.get(DedupLocalTest.class.getResource("/eu/dnetlib/pace/examples/publications.to.fix.json").toURI()).toFile().getAbsolutePath();
@@ -236,7 +236,7 @@ public class DedupLocalTest extends DedupTestUtils {
         System.out.println("Total time for mergerels creation   : " + mergerels_time);
         System.out.println("Total time for dedupentity creation : " + dedupentity_time);
 
-        FileUtils.deleteDirectory(new File(workingPath));
+//        FileUtils.deleteDirectory(new File(workingPath));
     }
 
     @Test //test the match between two JSON
